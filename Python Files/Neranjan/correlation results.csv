@@ -1,0 +1,34 @@
+description,correlation coefficient,abs
+all cause,0.336330566,0.336330566
+Neonatal disorders,-0.914407395,0.914407395
+Maternal disorders,-0.880456056,0.880456056
+Meningitis,-0.876482358,0.876482358
+Diarrheal diseases,-0.798681696,0.798681696
+Tuberculosis,-0.760103988,0.760103988
+Parkinson disease,0.750034657,0.750034657
+Alzheimer disease and other dementias,0.745988745,0.745988745
+Malaria,-0.74093907,0.74093907
+Nutritional deficiencies,-0.738744445,0.738744445
+Protein-energy malnutrition,-0.737721671,0.737721671
+Neoplasms,0.718175724,0.718175724
+Hepatitis,-0.70463455,0.70463455
+Cardiovascular diseases,0.621100231,0.621100231
+HIV/AIDS,-0.577531667,0.577531667
+Lower respiratory infections,-0.485705755,0.485705755
+Poisonings,-0.45676691,0.45676691
+Terrorism (deaths),-0.439545705,0.439545705
+Drowning,-0.433883935,0.433883935
+Drug use disorders,0.433452722,0.433452722
+Road injuries,-0.40911418,0.40911418
+Self-harm,0.374883382,0.374883382
+Alcohol use disorders,0.370685916,0.370685916
+"Fire, heat, and hot substances",-0.356417103,0.356417103
+Chronic respiratory diseases,0.332262478,0.332262478
+Interpersonal violence,-0.290122763,0.290122763
+Conflict and terrorism,-0.257398014,0.257398014
+Chronic kidney disease,0.210116617,0.210116617
+Digestive diseases,0.140486203,0.140486203
+Cirrhosis and other chronic liver diseases,0.087677809,0.087677809
+Diabetes mellitus,0.074932297,0.074932297
+Exposure to forces of nature,0.055866124,0.055866124
+Environmental heat and cold exposure,0.009682794,0.009682794

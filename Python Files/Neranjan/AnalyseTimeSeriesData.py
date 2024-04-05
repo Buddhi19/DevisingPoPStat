@@ -49,7 +49,7 @@ def detect_waves(data_signal, time_stamps, peak_locations, trough_locations):
             peak_locations, trough_locations = np.delete(peak_locations, 0), np.delete(trough_locations, 0)
 
 
-path = 'C:/Users/pc-user/Desktop/population study/my files/'
+path = './population_study/my_files/'
 
 file_names = os.listdir(path)
 first_wave_locations = list()
@@ -103,7 +103,7 @@ for file_index in range(360, len(file_names), 2):
     print(f'{len(file_names)//2}||{file_index//2+1}')
 
     # save first wave locations
-    path_save = 'C:/Users/pc-user/Desktop/population study/'
+    path_save = './population_study/'
     df = pd.DataFrame(first_wave_locations)
     file_name = path_save + 'first_wave_locations_8.csv'
     df.to_csv(file_name, index=False)

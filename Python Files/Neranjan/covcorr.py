@@ -10,10 +10,10 @@ import math
 from dictances import bhattacharyya, bhattacharyya_coefficient
 from scipy.stats import wasserstein_distance
 #%%
-path = 'D:/COVID-NER/pop pyramid/Pyramid/POPU_data/'
+path = './POPU_data/'
 data = get_names_and_data()
 county, country_name_map = data[:2]
-path1 = 'D:/COVID-NER/pop pyramid/Pyramid/covid_final_date.csv'
+path1 = './Pyramid/covid_final_date.csv'
 df = pd.read_csv(path1)
 df2=df['location'].tolist()
 

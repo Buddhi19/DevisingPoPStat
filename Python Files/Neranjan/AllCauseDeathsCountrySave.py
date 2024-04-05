@@ -4,11 +4,11 @@ import math
 from scipy.io import loadmat, savemat
 
 # load files for all cause mortality deaths
-path = 'C:/Users/pc-user/Desktop/population study/all cause deaths/all cause deaths.csv'
+path = './test data/all cause deaths.csv'
 death_df = pd.read_csv(path)
 
 # load files for population pyramid data
-path = 'C:/Users/pc-user/Desktop/population study/test data/age_data.csv'
+path = './test data/age_data.csv'
 population_df = pd.read_csv(path)
 
 # extract data for year 2017
@@ -34,7 +34,7 @@ for index in death_index:
     country = country_death_data[0].lower()
     death_data[country] = [0 if math.isnan(param) else param for param in country_death_data[4:]]
 
-country_name_map = pd.read_csv('C:/Users/pc-user/PycharmProjects/pythonProject/death_population_countryname_map.csv', header=None)
+country_name_map = pd.read_csv('death_population_countryname_map.csv', header=None)
 
 keywords = ['world', 'europe', 'central', 'asia', 'country', 'south']
 

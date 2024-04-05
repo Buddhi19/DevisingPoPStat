@@ -16,14 +16,8 @@ def load_files(path_header):
     print('Covid data files are loaded.')
 
     # load population data files
-    url_age_dataset = "https://drive.google.com/drive/folders/1YgWyeiuyj2bQePu3IY21hpuwqvltWxKR"
-    url_age_dataset = 'https://drive.google.com/uc?id=' + url_age_dataset.split('/')[-2]
-
-    try:
-        path = path_header + 'age_data.csv'
-    except:
-        path = url_age_dataset
-    
+    path = path_header + "test data/age_data.csv"
+    print(path)
     population_data = pd.read_csv(path)
     print('Population pyramid data files are loaded.\n')
 

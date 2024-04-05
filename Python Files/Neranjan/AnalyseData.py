@@ -26,7 +26,7 @@ def dict2array(countries_data):
             print(f'{len(countries_data)}/{index + 1} countries are computed.{eta_statement}')
 
     # write data to csv
-    path_header = "D:/COVID-NER/pop pyramid/Pyramid/test data/"
+    path_header = "./test data/"
     with open(path_header+'analyse data.csv', 'w') as f:
         write = csv.writer(f)
         write.writerows(countries_data_list)

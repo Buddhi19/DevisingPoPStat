@@ -88,7 +88,7 @@ corr_coef = [correlation_coefficient]
 
 # specific cause mortality correlation with population pyramid
 # load files for all cause mortality deaths
-path = 'C:/Users/pc-user/Desktop/population study/all cause deaths/all cause deaths.csv'
+path = './test data/all cause deaths.csv'
 death_df = pd.read_csv(path)
 death_causes = list(death_df.keys()[4:])
 

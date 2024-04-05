@@ -9,12 +9,21 @@ import csv
 
 def load_files(path_header):
     # load covid data files
-    path = path_header + 'owid_covid_data.csv'
+    url_owid_dataset = "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/latest/owid-covid-latest.csv "
+    path = url_owid_dataset
+    # path = path_header + 'owid_covid_data.csv'
     covid_data_files = pd.read_csv(path)
     print('Covid data files are loaded.')
 
     # load population data files
-    path = path_header + 'age_data.csv'
+    url_age_dataset = "https://drive.google.com/drive/folders/1YgWyeiuyj2bQePu3IY21hpuwqvltWxKR"
+    url_age_dataset = 'https://drive.google.com/uc?id=' + url_age_dataset.split('/')[-2]
+
+    try:
+        path = path_header + 'age_data.csv'
+    except:
+        path = url_age_dataset
+    
     population_data = pd.read_csv(path)
     print('Population pyramid data files are loaded.\n')
 

@@ -49,7 +49,7 @@ def detect_waves(data_signal, time_stamps, peak_locations, trough_locations):
             peak_locations, trough_locations = np.delete(peak_locations, 0), np.delete(trough_locations, 0)
 
 
-path = './population_study/my_files/'
+path = 'population_study/my_files/'
 
 file_names = os.listdir(path)
 first_wave_locations = list()

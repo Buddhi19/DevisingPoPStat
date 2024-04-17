@@ -3,9 +3,11 @@ import numpy as np
 from matplotlib import pyplot as plt
 import pandas as pd
 import re
+import os
 
 # load mat file with population data and all cause mortality data
-prime_dict = loadmat('all cause mortality.mat')
+path = os.path.abspath('Python Files/Neranjan/all cause mortality.mat')
+prime_dict = loadmat(path)
 
 
 # calculate the distance between two population pyramids
@@ -88,7 +90,7 @@ corr_coef = [correlation_coefficient]
 
 # specific cause mortality correlation with population pyramid
 # load files for all cause mortality deaths
-path = './test data/all cause deaths.csv'
+path = 'test data/annual-number-of-deaths-by-cause.csv'
 death_df = pd.read_csv(path)
 death_causes = list(death_df.keys()[4:])
 

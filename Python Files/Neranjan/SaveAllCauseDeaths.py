@@ -4,11 +4,11 @@ import math
 from scipy.io import loadmat, savemat
 
 # load files for all cause mortality deaths
-path = './test data/all cause deaths.csv'
+path = 'test data/annual-number-of-deaths-by-cause.csv'
 death_df = pd.read_csv(path)
 
 # load files for population pyramid data
-path = './test data/age_data.csv'
+path = 'test data/age_data.csv'
 population_df = pd.read_csv(path)
 
 # extract data for year 2017
@@ -35,7 +35,7 @@ for index in death_index:
     death_data[country] = [0 if math.isnan(param) else param for param in country_death_data[4:]]
 
 # get the country names mapping csv file
-country_name_map = pd.read_csv('death_population_countryname_map_2.csv').values
+country_name_map = pd.read_csv('Python Files/Neranjan/death_population_countryname_map_2.csv').values
 
 
 # get the shortest name for the country
@@ -59,4 +59,4 @@ for death_country, population_country in country_name_map:
                     'population_in_million': population_in_million}
     prime_dict[short_name] = country_data
 
-savemat('all cause mortality.mat', prime_dict)
+savemat('Python Files/Neranjan/all cause mortality.mat', prime_dict)

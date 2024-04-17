@@ -2,13 +2,15 @@ import pandas as pd
 import numpy as np
 import math
 from scipy.io import loadmat, savemat
+import os
 
 # load files for all cause mortality deaths
-path = '.test data/all cause deaths.csv'
+path = 'test data/annual-number-of-deaths-by-cause.csv'
+print(os.path.abspath(path))
 death_df = pd.read_csv(path)
 
 # load files for population pyramid data
-path = './test data/age_data.csv'
+path = 'test data/age_data.csv'
 population_df = pd.read_csv(path)
 
 # extract data for year 2017

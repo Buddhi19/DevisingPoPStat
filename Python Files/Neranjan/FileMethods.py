@@ -18,6 +18,9 @@ def load_files(path_header):
     # load population data files
     path = path_header + "test data/age_data.csv"
     print(path)
+    #print global path
+    import os
+    print(os.path.abspath(path))
     population_data = pd.read_csv(path)
     print('Population pyramid data files are loaded.\n')
 

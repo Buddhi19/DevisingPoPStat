@@ -6,7 +6,7 @@ import time
 def get_names_and_data():
 
     # path header for the covid and population data
-    path_header = "../../"
+    path_header = "./"
     # loading covid data files and population pyramid data files
     covid_data_df, population_df = load_files(path_header)
 

@@ -1,2 +1,4 @@
 .test data/age_data.csv
 *.csv
+# ignore pycache
+__pycache__/

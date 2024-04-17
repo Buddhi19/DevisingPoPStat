@@ -1,2 +1,2 @@
 .test data/age_data.csv
-.age_data.csv
+*.csv

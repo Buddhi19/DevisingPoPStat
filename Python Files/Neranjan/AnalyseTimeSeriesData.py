@@ -53,11 +53,14 @@ path = 'population_study/my_files/'
 print(os.path.abspath(path))
 
 file_names = os.listdir(path)
+print(len(file_names))
+
 first_wave_locations = list()
 
 
-for file_index in range(360, len(file_names), 2):
-
+# for file_index in range(360, len(file_names), 2):
+for file_index in range(len(file_names)):
+    print("passing")
     df_covid = pd.read_csv(path+file_names[file_index])
 
     # time span to separate
@@ -90,7 +93,6 @@ for file_index in range(360, len(file_names), 2):
         plt.text(trough, smooth_signal[trough], index)
 
     plt.title(file_names[file_index].split('_')[0])
-    plt.show()
 
     first_wave_location = input('Enter wave location: ')
     if len(first_wave_location) == 0:

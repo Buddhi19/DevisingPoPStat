@@ -82,7 +82,7 @@ def get_country_list():
 
         country_name = ref_country_data[0]
         file_name = path + country_name
-        covid_data = pd.read_csv(file_name+'_covid.csv')['new_cases_smoothed_per_million']
+        covid_data = pd.read_csv(file_name+'_covid_data.csv')['new_cases_smoothed_per_million']
         population_data = pd.read_csv(file_name+'_population.csv')['total']
 
         time_span = 28  # days
@@ -94,7 +94,7 @@ def get_country_list():
         for target_index in range(ref_index+1, len(countries_data)):
             country_name = countries_data[target_index][0]
             file_name = path + country_name
-            covid_data = pd.read_csv(file_name+'_covid.csv')['new_cases_smoothed_per_million']
+            covid_data = pd.read_csv(file_name+'_covid_data.csv')['new_cases_smoothed_per_million']
             population_data = pd.read_csv(file_name+'_population.csv')['total']
 
             time_span = 28  # days

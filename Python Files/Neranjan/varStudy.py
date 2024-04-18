@@ -4,10 +4,10 @@ from scipy.io import savemat
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
-path = 'C:/Users/pc-user/Desktop/population study'
+path = 'population_study'
 df = pd.read_csv(path + '/first_wave_locations.csv')
 countries_data = df.values
-path += '/my files/'
+path += '/my_files/'
 
 country_count = len(countries_data)
 corr_mat, pop_dist_mat = np.zeros((country_count, country_count)), np.zeros((country_count, 1))

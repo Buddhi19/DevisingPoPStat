@@ -50,6 +50,7 @@ def detect_waves(data_signal, time_stamps, peak_locations, trough_locations):
 
 
 path = 'population_study/my_files/'
+print(os.path.abspath(path))
 
 file_names = os.listdir(path)
 first_wave_locations = list()

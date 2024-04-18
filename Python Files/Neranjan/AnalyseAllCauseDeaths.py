@@ -155,7 +155,7 @@ for index, cause in enumerate(death_causes):
         reference_country = reference_country[0].upper() + reference_country[1:]
         plt.xlabel(f'Disparity with {reference_country} demography distribution', fontsize=label_font)
         plt.ylabel(f'Deaths per million', fontsize=label_font)
-        fig_path = 'population study/all cause deaths/paper/' + \
+        fig_path = 'population_study/all cause deaths/paper/' + \
                    '_'.join(re.split(' |/', cause)).lower() + '.png'
         plt.title(cause)
         print(cause, fig_path)

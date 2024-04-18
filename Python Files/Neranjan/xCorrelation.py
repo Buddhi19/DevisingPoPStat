@@ -17,7 +17,7 @@ def not_important():
     file_name = path + 'blacklist_countries.csv'
     df.to_csv(file_name, index=False)'''
 
-    path = 'C:/Users/pc-user/Desktop/population study/first_wave_locations_'
+    path = 'population_study/first_wave_locations_'
 
     first_wave_locations = list()
     for file_index in range(1, 9):
@@ -26,7 +26,7 @@ def not_important():
         for mini_list in df:
             first_wave_locations.append([mini_list[0], mini_list[1]])
 
-    path = 'C:/Users/pc-user/Desktop/population study/first_wave_locations'
+    path = 'population_study/first_wave_locations'
     df = pd.DataFrame(first_wave_locations)
     file_name = path + '.csv'
     df.to_csv(file_name, index=False)
@@ -70,10 +70,10 @@ def align_wave(signal1, signal2):
 
 
 def get_country_list():
-    path = 'C:/Users/pc-user/Desktop/population study'
+    path = 'population_study'
     df = pd.read_csv(path + '/first_wave_locations.csv')
     countries_data = df.values
-    path += '/my files/'
+    path += '/my_files/'
 
     country_count = len(countries_data)
     corr_mat, pop_dist_mat = np.zeros((country_count, country_count)), np.zeros((country_count, country_count))
@@ -131,7 +131,7 @@ ref_ind_vector = np.delete(ref_ind_vector, max_index)
 
 plt.scatter(ref_ind_vector, ref_dep_vector)
 
-file_name = 'C:/Users/pc-user/Desktop/population study/first_wave_locations.csv'
+file_name = 'population_study/first_wave_locations.csv'
 ref_country = pd.read_csv(file_name)['0'][max_index]
 
 plt.title(f'Reference country {ref_country} with a corr coef {np.corrcoef(ref_ind_vector, ref_dep_vector)}')

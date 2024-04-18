@@ -70,7 +70,7 @@ def get_country_covid_data(country,owid_covid_data, headers=list()):
 
     time_series_data = dict()
     # save the time series for which the data is given for the country
-    time_series_data['time series'] = list(owid_covid_data['date'])[country_start: country_end]
+    time_series_data['time series'] = list(owid_covid_data['last_updated_date'])[country_start: country_end]
 
     # save the time series of the items in the 'headers' list
     for item in headers:

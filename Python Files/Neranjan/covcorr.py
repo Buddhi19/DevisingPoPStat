@@ -9,15 +9,13 @@ from scipy.special import rel_entr
 import math
 from dictances import bhattacharyya, bhattacharyya_coefficient
 from scipy.stats import wasserstein_distance
-#%%
-path = './POPU_data/'
+path = 'POPU_data/'
 data = get_names_and_data()
 county, country_name_map = data[:2]
 path1 = './Pyramid/covid_final_date.csv'
 df = pd.read_csv(path1)
 df2=df['location'].tolist()
 
-#%%
 def common_elements(list1, list2):
     result = []
     for element in list1:
@@ -35,7 +33,7 @@ for i in range (len(S)):
     iden = np.where(boolean)[0]
     #print(iden)
     where.append(iden[0])
-#%%    
+   
 POP_M=[]
 POP_F=[]
 POP_T=[]
@@ -149,7 +147,7 @@ CS_lg=[]
 for i in range(len(CS)):
     lg=math.log(CS[i])
     CS_lg.append(lg)
-#%%
+
 '''<<<<<<<<<<<<< PLOT SECTION >>>>>>>>>>>>'''
 import matplotlib.pyplot as plt
 for i in range(3):
@@ -195,7 +193,7 @@ for i in range(3):
     a, b = np.polyfit(np.array(x4[i]), CS_lg, 1)
     plt.plot(np.array(x4[i]), a*np.array(x4[i])+b)
     plt.show()
-#%%
+    
 ''' <<<<<<<<<<< Correlation Calculation >>>>>>>>>>>>>> '''
 Cr1=np.corrcoef(x1[0],CS_lg)
 Cr2=np.corrcoef(x1[1],CS_lg)

@@ -37,8 +37,8 @@ scaled_stat_mat = mat_scaler.fit_transform(stat_mat)
 train_data = np.concatenate((scaled_stat_mat, pop_dist_mat), axis=1)
 
 print(stat_mat.shape, pop_dist_mat.shape, train_data.shape)
-mdict = {'train data': train_data}
-savemat('train_data.mat', mdict)
+m_dict = {'train data': train_data}
+savemat('train_data.mat', m_dict)
 
 '''# Apply PCA to the scaled dataset
 pca = PCA(n_components=2)

@@ -33,7 +33,7 @@ def data_collection():
 
 def save_countries_data(countries_data):
 
-    path = './POPU_data/'
+    path = 'POPU_data/'
     country_list = countries_data.keys()
     for country in country_list:
         country_data = countries_data[country]

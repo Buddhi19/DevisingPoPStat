@@ -84,4 +84,4 @@ death_country_dict, population_country_dict = list(exact_pairs.keys()), list(exa
 df = pd.DataFrame({'death_country_dict': death_country_dict,
                    'population_country_dict': population_country_dict
                    })
-df.to_csv('death_population_countryname_map.csv')
+df.to_csv('Python Files/Neranjan/death_population_countryname_map.csv')

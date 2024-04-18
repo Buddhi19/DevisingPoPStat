@@ -61,4 +61,4 @@ for country1, country2 in zip(list1,list2):
 df = pd.DataFrame({'death_country_dict': death_country_dict,
                    'population_country_dict': population_country_dict
                    })
-df.to_csv('death_population_countryname_map_2.csv', index=False)
+df.to_csv('Python Files/Neranjan/death_population_countryname_map_2.csv', index=False)

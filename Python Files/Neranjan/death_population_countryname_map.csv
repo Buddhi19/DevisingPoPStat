@@ -1,190 +1,170 @@
-afghanistan,afghanistan
-albania,albania
-algeria,algeria
-angola,angola
-antigua and barbuda,antigua and barbuda
-argentina,argentina
-armenia,armenia
-australia,australia
-austria,austria
-azerbaijan,azerbaijan
-bahamas,bahamas
-bahrain,bahrain
-bangladesh,bangladesh
-barbados,barbados
-belarus,belarus
-belgium,belgium
-belize,belize
-benin,benin
-bhutan,bhutan
-bolivia,bolivia (plurinational state of)
-bosnia and herzegovina,bosnia and herzegovina
-botswana,botswana
-brazil,brazil
-brunei,brunei darussalam
-bulgaria,bulgaria
-burkina faso,burkina faso
-burundi,burundi
-cambodia,cambodia
-cameroon,cameroon
-canada,canada
-caribbean,caribbean
-central african republic,central african republic
-central asia,central asia
-chad,chad
-chile,chile
-china,china
-colombia,colombia
-comoros,comoros
-congo,congo
-costa rica,costa rica
-croatia,croatia
-cuba,cuba
-cyprus,cyprus
-czechia,czechia
-death_country_dict,population_country_dict
-denmark,denmark
-djibouti,djibouti
-dominican republic,dominican republic
-eastern europe,eastern europe
-ecuador,ecuador
-egypt,egypt
-el salvador,el salvador
-equatorial guinea,equatorial guinea
-eritrea,eritrea
-estonia,estonia
-eswatini,eswatini
-ethiopia,ethiopia
-fiji,fiji
-finland,finland
-france,france
-gabon,gabon
-gambia,gambia
-georgia,georgia
-germany,germany
-ghana,ghana
-greece,greece
-grenada,grenada
-guam,guam
-guatemala,guatemala
-guinea,guinea
-guinea-bissau,guinea-bissau
-guyana,guyana
-haiti,haiti
-honduras,honduras
-hungary,hungary
-iceland,iceland
-india,india
-indonesia,indonesia
-iran,iran (islamic republic of)
-iraq,iraq
-ireland,ireland
-israel,israel
-italy,italy
-jamaica,jamaica
-japan,japan
-jordan,jordan
-kazakhstan,kazakhstan
-kenya,kenya
-kiribati,kiribati
-kuwait,kuwait
-kyrgyzstan,kyrgyzstan
-latvia,latvia
-lebanon,lebanon
-lesotho,lesotho
-liberia,liberia
-libya,libya
-lithuania,lithuania
-luxembourg,luxembourg
-madagascar,madagascar
-malawi,malawi
-malaysia,malaysia
-maldives,maldives
-mali,mali
-malta,malta
-mauritania,mauritania
-mauritius,mauritius
-mexico,mexico
-micronesia (country),micronesia
-moldova,republic of moldova
-mongolia,mongolia
-montenegro,montenegro
-morocco,morocco
-mozambique,mozambique
-myanmar,myanmar
-namibia,namibia
-nepal,nepal
-netherlands,netherlands
-new zealand,new zealand
-nicaragua,nicaragua
-niger,niger
-nigeria,nigeria
-north macedonia,north macedonia
-norway,norway
-oceania,oceania
-oman,oman
-pakistan,pakistan
-palestine,state of palestine
-panama,panama
-papua new guinea,papua new guinea
-paraguay,paraguay
-peru,peru
-philippines,philippines
-poland,poland
-portugal,portugal
-puerto rico,puerto rico
-qatar,qatar
-romania,romania
-russia,russian federation
-rwanda,rwanda
-saint lucia,saint lucia
-saint vincent and the grenadines,saint vincent and the grenadines
-samoa,samoa
-sao tome and principe,sao tome and principe
-saudi arabia,saudi arabia
-senegal,senegal
-serbia,serbia
-seychelles,seychelles
-sierra leone,sierra leone
-singapore,singapore
-slovakia,slovakia
-slovenia,slovenia
-solomon islands,solomon islands
-somalia,somalia
-south africa,south africa
-south america,south america
-south sudan,south sudan
-spain,spain
-sri lanka,sri lanka
-sub-saharan africa,sub-saharan africa
-sudan,sudan
-suriname,suriname
-sweden,sweden
-switzerland,switzerland
-syria,syrian arab republic
-taiwan,"china, taiwan province of china"
-tajikistan,tajikistan
-tanzania,united republic of tanzania
-thailand,thailand
-timor,timor-leste
-togo,togo
-tonga,tonga
-trinidad and tobago,trinidad and tobago
-tunisia,tunisia
-turkey,turkey
-turkmenistan,turkmenistan
-uganda,uganda
-ukraine,ukraine
-united arab emirates,united arab emirates
-united kingdom,united kingdom
-united states,united states of america
-united states virgin islands,united states virgin islands
-uruguay,uruguay
-uzbekistan,uzbekistan
-vanuatu,vanuatu
-venezuela,venezuela (bolivarian republic of)
-western europe,western europe
-world,world
-yemen,yemen
-zambia,zambia
-zimbabwe,zimbabwe
+,death_country_dict,population_country_dict
+0,afghanistan,afghanistan
+1,albania,albania
+2,algeria,algeria
+3,angola,angola
+4,antigua and barbuda,antigua and barbuda
+5,argentina,argentina
+6,armenia,armenia
+7,australia,australia
+8,austria,austria
+9,azerbaijan,azerbaijan
+10,bahamas,bahamas
+11,bahrain,bahrain
+12,bangladesh,bangladesh
+13,barbados,barbados
+14,belarus,belarus
+15,belgium,belgium
+16,belize,belize
+17,benin,benin
+18,bhutan,bhutan
+19,bosnia and herzegovina,bosnia and herzegovina
+20,botswana,botswana
+21,brazil,brazil
+22,bulgaria,bulgaria
+23,burkina faso,burkina faso
+24,burundi,burundi
+25,cambodia,cambodia
+26,cameroon,cameroon
+27,canada,canada
+28,central african republic,central african republic
+29,chad,chad
+30,chile,chile
+31,china,china
+32,colombia,colombia
+33,comoros,comoros
+34,congo,congo
+35,costa rica,costa rica
+36,croatia,croatia
+37,cuba,cuba
+38,cyprus,cyprus
+39,czechia,czechia
+40,denmark,denmark
+41,djibouti,djibouti
+42,dominican republic,dominican republic
+43,ecuador,ecuador
+44,egypt,egypt
+45,el salvador,el salvador
+46,equatorial guinea,equatorial guinea
+47,eritrea,eritrea
+48,estonia,estonia
+49,eswatini,eswatini
+50,ethiopia,ethiopia
+51,fiji,fiji
+52,finland,finland
+53,france,france
+54,gabon,gabon
+55,gambia,gambia
+56,georgia,georgia
+57,germany,germany
+58,ghana,ghana
+59,greece,greece
+60,grenada,grenada
+61,guam,guam
+62,guatemala,guatemala
+63,guinea,guinea
+64,guinea-bissau,guinea-bissau
+65,guyana,guyana
+66,haiti,haiti
+67,honduras,honduras
+68,hungary,hungary
+69,iceland,iceland
+70,india,india
+71,indonesia,indonesia
+72,iraq,iraq
+73,ireland,ireland
+74,israel,israel
+75,italy,italy
+76,jamaica,jamaica
+77,japan,japan
+78,jordan,jordan
+79,kazakhstan,kazakhstan
+80,kenya,kenya
+81,kiribati,kiribati
+82,kuwait,kuwait
+83,kyrgyzstan,kyrgyzstan
+84,latvia,latvia
+85,lebanon,lebanon
+86,lesotho,lesotho
+87,liberia,liberia
+88,libya,libya
+89,lithuania,lithuania
+90,luxembourg,luxembourg
+91,madagascar,madagascar
+92,malawi,malawi
+93,malaysia,malaysia
+94,maldives,maldives
+95,mali,mali
+96,malta,malta
+97,mauritania,mauritania
+98,mauritius,mauritius
+99,mexico,mexico
+100,mongolia,mongolia
+101,montenegro,montenegro
+102,morocco,morocco
+103,mozambique,mozambique
+104,myanmar,myanmar
+105,namibia,namibia
+106,nepal,nepal
+107,netherlands,netherlands
+108,new zealand,new zealand
+109,nicaragua,nicaragua
+110,niger,niger
+111,nigeria,nigeria
+112,north macedonia,north macedonia
+113,norway,norway
+114,oman,oman
+115,pakistan,pakistan
+116,panama,panama
+117,papua new guinea,papua new guinea
+118,paraguay,paraguay
+119,peru,peru
+120,philippines,philippines
+121,poland,poland
+122,portugal,portugal
+123,puerto rico,puerto rico
+124,qatar,qatar
+125,romania,romania
+126,rwanda,rwanda
+127,saint lucia,saint lucia
+128,saint vincent and the grenadines,saint vincent and the grenadines
+129,samoa,samoa
+130,sao tome and principe,sao tome and principe
+131,saudi arabia,saudi arabia
+132,senegal,senegal
+133,serbia,serbia
+134,seychelles,seychelles
+135,sierra leone,sierra leone
+136,singapore,singapore
+137,slovakia,slovakia
+138,slovenia,slovenia
+139,solomon islands,solomon islands
+140,somalia,somalia
+141,south africa,south africa
+142,south sudan,south sudan
+143,spain,spain
+144,sri lanka,sri lanka
+145,sudan,sudan
+146,suriname,suriname
+147,sweden,sweden
+148,switzerland,switzerland
+149,tajikistan,tajikistan
+150,thailand,thailand
+151,togo,togo
+152,tonga,tonga
+153,trinidad and tobago,trinidad and tobago
+154,tunisia,tunisia
+155,turkey,turkey
+156,turkmenistan,turkmenistan
+157,uganda,uganda
+158,ukraine,ukraine
+159,united arab emirates,united arab emirates
+160,united kingdom,united kingdom
+161,united states virgin islands,united states virgin islands
+162,uruguay,uruguay
+163,uzbekistan,uzbekistan
+164,vanuatu,vanuatu
+165,world,world
+166,yemen,yemen
+167,zambia,zambia
+168,zimbabwe,zimbabwe

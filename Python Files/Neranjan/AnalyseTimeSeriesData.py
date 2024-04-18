@@ -103,7 +103,7 @@ for file_index in range(360, len(file_names), 2):
     print(f'{len(file_names)//2}||{file_index//2+1}')
 
     # save first wave locations
-    path_save = './population_study/'
+    path_save = 'population_study/'
     df = pd.DataFrame(first_wave_locations)
     file_name = path_save + 'first_wave_locations_8.csv'
     df.to_csv(file_name, index=False)

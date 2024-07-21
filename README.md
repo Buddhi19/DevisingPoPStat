@@ -11,7 +11,7 @@ Download all dependencies and setup workspace
 ```
 bash ./setup_environment.sh
 ```
-If data not properly downloaded manually download from here
+### If data not properly downloaded manually download from here
 
 [Age Dataset](https://population.un.org/wpp2019/Download/Standard/CSV/)
 

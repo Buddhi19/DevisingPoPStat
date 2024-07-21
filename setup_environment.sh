@@ -27,10 +27,9 @@ make_directories() {
 
 # Function to load data
 load_data() {
-    cd "$current_dir/DATA/owid_covid_data"
-    wget -O owid-covid-data.csv https://github.com/owid/covid-19-data/raw/master/public/data/owid-covid-data.csv
-    cd "$current_dir/DATA/population_data_with_age"
-    wget -O age_data.csv "https://population.un.org/wpp2019/Download/Files/1_Indicators%20(Standard)/CSV_FILES/WPP2019_PopulationByAgeSex_Medium.csv"
+    cd "$current_dir"
+    wget -O /DATA/owid_covid_data/owid-covid-data.csv https://github.com/owid/covid-19-data/raw/master/public/data/owid-covid-data.csv
+    wget -O /DATA/population_data_with_age/age_data.csv "https://population.un.org/wpp2019/Download/Files/1_Indicators%20(Standard)/CSV_FILES/WPP2019_PopulationByAgeSex_Medium.csv"
 }
 
 make_directory_for_POPSTAT(){

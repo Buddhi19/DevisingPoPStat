@@ -2,6 +2,7 @@
 NOT YET FULLY IMPLEMENTED
     ISSUES : Country names in the population data and COVID data are not matching.
            : Population data has other data like population of ASIA, EUROPE, etc.
+           : ratawal hoyaganna. age data wala duplicates ain karanna 
 """
 import pandas as pd
 import os

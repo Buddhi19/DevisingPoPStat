@@ -10,51 +10,51 @@ from Plot_Population_Data import PLOT_POPULATION_DATA
 from Pop_Stat_Calculation import POP_STAT_CALCULATION
 from Plot_Pop_Stat import PLOT_POP_STAT
 from Plot_other_Metrics import PLOT_OTHER_METRICS
-
-COUNTRY_DATA_PATH = os.path.join(main_dir, 'Data\\countries\\country_names.csv')
+from Population_Data_For_Date import POPULATION_DATA_FOR_DATE
 
 class ANALYSIS:
     def __init__(self):
         self.REFERENCE_COUNTRY = 'japan'
-    def construct_countries(self):
-        data = pd.read_csv(COUNTRY_DATA_PATH).iloc[:, 0]
-        countries = []
-        for country in data:
-            if not country:
-                continue
-            countries.append(country.lower())
+        self.common_countries = []
 
-        with open(os.path.join(main_dir, 'ANALYSIS\\COUNTRIES.py'), 'w') as f:
-            f.write(f'COUNTRIES = {countries}')
+    @staticmethod
+    def create_country_population_data():
+        date = input("Date in YYYY or Press Enter to set year as 2020 : ")
+        if date == "":
+            date = '2020'
+        POPULATION_DATA_FOR_DATE(date)
 
-    def create_country_data(self):
+    @staticmethod
+    def create_country_covid_data():
         DATE_AS_PER_PAPER = '2022-04-08'
         date = input(f"Date in YYYY-MM-DD or Press Enter to set date as {DATE_AS_PER_PAPER} : ")
         if date == "":
             date = DATE_AS_PER_PAPER
         COVID_DATA_FOR_DATE(date)
 
-    def plot_population_data(self):
+    @staticmethod
+    def plot_population_data():
         plotter = PLOT_POPULATION_DATA()
         plotter.run()
+
+    def plot_other_metrics(self):
+        plotter = PLOT_OTHER_METRICS(self.common_countries)
+        plotter.MEDIAN_AGE()
+        plotter.GDP_PER_CAPITA()
+        plotter.POPULATION_DENSITY()
 
     def calculate_pop_stat(self):
         calculator = POP_STAT_CALCULATION()
         self.REFERENCE_COUNTRY = calculator.run()
+        self.common_countries = calculator.common_countries
 
     def plot_pop_stat(self):
         plotter = PLOT_POP_STAT(self.REFERENCE_COUNTRY)
         plotter.run()
 
-    def plot_other_metrics(self):
-        plotter = PLOT_OTHER_METRICS()
-        plotter.MEDIAN_AGE()
-        plotter.GDP_PER_CAPITA()
-        plotter.POPULATION_DENSITY()
-
     def run(self):
-        self.construct_countries()
-        self.create_country_data()
+        self.create_country_population_data()
+        self.create_country_covid_data()
         self.plot_population_data()
         self.calculate_pop_stat()
         self.plot_pop_stat()

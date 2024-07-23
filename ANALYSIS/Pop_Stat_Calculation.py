@@ -7,8 +7,6 @@ main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 sys.path.append(main_dir)
 
-from ANALYSIS.COUNTRIES import COUNTRIES
-
 POPULATION_DIR = os.path.join(main_dir, 'Data\\population_data_by_country')
 COVID_DIR = os.path.join(main_dir, 'Data\\covid_data_by_country')
 RESULTS_DIR = os.path.join(main_dir, 'RESULTS\\POPSTAT_COUNTRY_DATA')
@@ -20,8 +18,6 @@ class POP_STAT_CALCULATION:
             if not file_name.endswith('.csv'):
                 continue
             country_name = file_name.split('_')[0]
-            if country_name.lower() not in COUNTRIES:
-                continue
             data = pd.read_csv(os.path.join(POPULATION_DIR, file_name))
             population_array = np.array(data['total']/data['total'].sum())
             self.population_data[country_name] = population_array
@@ -35,6 +31,8 @@ class POP_STAT_CALCULATION:
             total_deaths_per_million = data['total_deaths_per_million'].tolist()[0]
             total_cases_per_million = data['total_cases_per_million'].tolist()[0]
             self.covid_data[country_name] = total_deaths_per_million*1 + total_cases_per_million*0
+
+        self.common_countries = set(self.population_data.keys()) & set(self.covid_data.keys())
 
     def run(self):
         self.remove_nan_values()

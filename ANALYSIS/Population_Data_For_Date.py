@@ -1,9 +1,3 @@
-"""
-NOT YET FULLY IMPLEMENTED
-    ISSUES : Country names in the population data and COVID data are not matching.
-           : Population data has other data like population of ASIA, EUROPE, etc.
-           : ratawal hoyaganna. age data wala duplicates ain karanna 
-"""
 import pandas as pd
 import os
 import sys
@@ -12,17 +6,20 @@ main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 sys.path.append(main_dir)
 
-from ANALYSIS.COUNTRIES import COUNTRIES
+from ANALYSIS.COUNTRIES import mapping_name
 
 age_data = pd.read_csv('Data\\population_data_with_age\\age_data.csv', low_memory = False)
-saving_dir = os.path.join(main_dir, "Data\\population_data")
+saving_dir = os.path.join(main_dir, "Data\\population_data_by_country")
 
-AGE_BRACKETS = 21
 
 def POPULATION_DATA_FOR_DATE(date):
     data = age_data[age_data['Time'] == int(date)]
-    for country in COUNTRIES:
-        data_new = data[data['Location'].str.lower() == country]
+    for country in data['Location'].unique():
+        pre_name = country
+        country = mapping_name(country)
+        if country is None:
+            continue
+        data_new = data[data['Location'] == pre_name]
         
         data_new = data_new.drop(columns = ['LocID'])
         data_new = data_new.drop_duplicates()
@@ -30,7 +27,7 @@ def POPULATION_DATA_FOR_DATE(date):
         data_new = data_new[['PopMale', 'PopFemale', 'PopTotal']]
         data_new.rename(columns = {'PopMale':'male', 'PopFemale':'female', 'PopTotal':'total'}, inplace = True)
 
-        data_new.to_csv(os.path.join(saving_dir, f'{country}_population_data.csv'), index = False)
+        data_new.to_csv(os.path.join(saving_dir, f'{country}_population.csv'), index = False)
         print(f"{country} data saved successfully for {date}")
         
 

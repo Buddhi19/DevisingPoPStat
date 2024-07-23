@@ -6,17 +6,14 @@ import numpy as np
 from scipy import stats
 
 main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-
 sys.path.append(main_dir)
-
-from ANALYSIS.COUNTRIES import COUNTRIES
 
 COVID_DATA_DIR = os.path.join(main_dir, 'Data\\covid_data_by_country')
 SAVE_DIR = os.path.join(main_dir, 'RESULTS\\POPSTATCOVID\\OTHER_METRICS')
 
 class PLOT_OTHER_METRICS:
-    def __init__(self):
-        self.countries = COUNTRIES
+    def __init__(self, countries):
+        self.countries = countries
         self.Y_CASES = []
         self.Y_DEATHS = []
         for country in self.countries:

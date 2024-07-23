@@ -1,3 +1,5 @@
 *.csv
+!country_names_map.csv
 __pycache__/
 .vscode/
+*.png

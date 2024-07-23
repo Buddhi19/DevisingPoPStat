@@ -19,20 +19,21 @@ install_pre_requisites() {
 
 # Function to make directories in the current directory
 make_directories() {
-    global current_dir=$(pwd)
+    local current_dir=$(pwd)
     cd "$current_dir"
-    mkdir -p "DATA/countries" "DATA/covid_data_by_country" "DATA/owid_covid_data" "DATA/population_data_by_country" "DATA/population_data_with_age"
+    mkdir -p "DATA/covid_data_by_country" "DATA/owid_covid_data" "DATA/population_data_by_country" "DATA/population_data_with_age"
 }
 
 # Function to load data
 load_data() {
-    cd "$current_dir/DATA/owid_covid_data"
-    wget -O owid-covid-data.csv https://github.com/owid/covid-19-data/raw/master/public/data/owid-covid-data.csv
-    cd "$current_dir/DATA/population_data_with_age"
-    wget -O age_data.csv "https://population.un.org/wpp2019/Download/Files/1_Indicators%20(Standard)/CSV_FILES/WPP2019_PopulationByAgeSex_Medium.csv"
+    local current_dir=$(pwd)
+    cd "$current_dir"
+    wget -O /DATA/owid_covid_data/owid-covid-data.csv https://github.com/owid/covid-19-data/raw/master/public/data/owid-covid-data.csv
+    wget -O /DATA/population_data_with_age/age_data.csv https://population.un.org/wpp2019/Download/Files/1_Indicators%20(Standard)/CSV_FILES/WPP2019_PopulationByAgeSex_Medium.csv
 }
 
 make_directory_for_POPSTAT(){
+    local current_dir=$(pwd)
     cd "$current_dir/RESULTS"
     mkdir -p "POPSTAT_COUNTRY_DATA"
 }

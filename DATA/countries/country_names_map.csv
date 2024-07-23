@@ -1,0 +1,183 @@
+Country_ID,Country,location,death_data
+C001,afghanistan,afghanistan,islamic republic of afghanistan
+C002,albania,albania,republic of albania
+C003,algeria,algeria,people's democratic republic of algeria
+C004,angola,angola,republic of angola
+C005,antigua and barbuda,antigua and barbuda,antigua and barbuda
+C006,argentina,argentina,argentine republic
+C007,armenia,armenia,republic of armenia
+C008,australia,australia,australia
+C009,austria,austria,republic of austria
+C010,azerbaijan,azerbaijan,republic of azerbaijan
+C011,bahamas,bahamas,commonwealth of the bahamas
+C012,bahrain,bahrain,kingdom of bahrain
+C013,bangladesh,bangladesh,people's republic of bangladesh
+C014,barbados,barbados,barbados
+C015,belarus,belarus,republic of belarus
+C016,belgium,belgium,kingdom of belgium
+C017,belize,belize,belize
+C018,benin,benin,republic of benin
+C019,bhutan,bhutan,kingdom of bhutan
+C020,bolivia,bolivia (plurinational state of),
+C021,bosnia and herzegovina,bosnia and herzegovina,bosnia and herzegovina
+C022,botswana,botswana,republic of botswana
+C023,brazil,brazil,federative republic of brazil
+C024,brunei,brunei darussalam,
+C025,bulgaria,bulgaria,republic of bulgaria
+C026,burkina faso,burkina faso,burkina faso
+C027,burundi,burundi,republic of burundi
+C028,cambodia,cambodia,kingdom of cambodia
+C029,cameroon,cameroon,republic of cameroon
+C030,canada,canada,canada
+C031,cape verde,cabo verde,
+C032,central african republic,central african republic,central african republic
+C033,chad,chad,republic of chad
+C034,chile,chile,republic of chile
+C035,china,china,people's republic of china
+C036,colombia,colombia,republic of colombia
+C037,comoros,comoros,union of the comoros
+C038,congo,democratic republic of congo,democratic republic of the congo
+C039,costa rica,costa rica,republic of costa rica
+C040,cote d'ivoire,côte d'ivoire,
+C041,croatia,croatia,republic of croatia
+C042,cuba,cuba,republic of cuba
+C043,cyprus,cyprus,republic of cyprus
+C044,czechia,czechia,czech republic
+C045,denmark,denmark,kingdom of denmark
+C046,djibouti,djibouti,republic of djibouti
+C047,dominica,dominican republic,dominican republic
+C048,ecuador,ecuador,republic of ecuador
+C049,egypt,egypt,arab republic of egypt
+C050,el salvador,el salvador,republic of el salvador
+C051,equatorial guinea,equatorial guinea,republic of equatorial guinea
+C052,eritrea,eritrea,state of eritrea
+C053,estonia,estonia,republic of estonia
+C054,eswatini,eswatini,kingdom of eswatini
+C055,ethiopia,ethiopia,federal democratic republic of ethiopia
+C056,fiji,fiji,republic of fiji
+C057,finland,finland,republic of finland
+C058,france,france,french republic
+C059,gabon,gabon,gabonese republic
+C060,gambia,gambia,republic of the gambia
+C061,georgia,georgia,georgia
+C062,germany,germany,federal republic of germany
+C063,ghana,ghana,republic of ghana
+C064,greece,greece,hellenic republic
+C065,grenada,grenada,grenada
+C066,guam,guam,guam
+C067,guatemala,guatemala,republic of guatemala
+C068,guinea,guinea,republic of guinea
+C069,guinea-bissau,guinea-bissau,republic of guinea-bissau
+C070,guyana,guyana,republic of guyana
+C071,haiti,haiti,republic of haiti
+C072,honduras,honduras,republic of honduras
+C073,hungary,hungary,hungary
+C074,iceland,iceland,republic of iceland
+C075,india,india,republic of india
+C076,indonesia,indonesia,republic of indonesia
+C077,iran,iran (islamic republic of),
+C078,iraq,iraq,republic of iraq
+C079,ireland,ireland,ireland
+C080,israel,israel,state of israel
+C081,italy,italy,republic of italy
+C082,jamaica,jamaica,jamaica
+C083,japan,japan,japan
+C084,jordan,jordan,hashemite kingdom of jordan
+C085,kazakhstan,kazakhstan,republic of kazakhstan
+C086,kenya,kenya,republic of kenya
+C087,kiribati,kiribati,republic of kiribati
+C088,kuwait,kuwait,state of kuwait
+C089,kyrgyzstan,kyrgyzstan,kyrgyz republic
+C090,latvia,latvia,republic of latvia
+C091,lebanon,lebanon,lebanese republic
+C092,lesotho,lesotho,kingdom of lesotho
+C093,liberia,liberia,republic of liberia
+C094,libya,libya,state of libya
+C095,lithuania,lithuania,republic of lithuania
+C096,luxembourg,luxembourg,grand duchy of luxembourg
+C097,madagascar,madagascar,republic of madagascar
+C098,malawi,malawi,republic of malawi
+C099,malaysia,malaysia,malaysia
+C100,maldives,maldives,republic of maldives
+C101,mali,mali,republic of mali
+C102,malta,malta,republic of malta
+C103,mauritania,mauritania,islamic republic of mauritania
+C104,mauritius,mauritius,republic of mauritius
+C105,mexico,mexico,united mexican states
+C106,mongolia,mongolia,mongolia
+C107,montenegro,montenegro,montenegro
+C108,morocco,morocco,kingdom of morocco
+C109,mozambique,mozambique,republic of mozambique
+C110,myanmar,myanmar,republic of the union of myanmar
+C111,namibia,namibia,republic of namibia
+C112,nepal,nepal,federal democratic republic of nepal
+C113,netherlands,netherlands,kingdom of the netherlands
+C114,new zealand,new zealand,new zealand
+C115,nicaragua,nicaragua,republic of nicaragua
+C116,niger,niger,republic of the niger
+C117,nigeria,nigeria,federal republic of nigeria
+C118,north korea,dem. people's republic of korea,
+C119,north macedonia,north macedonia,north macedonia
+C120,norway,norway,kingdom of norway
+C121,moldova,republic of moldova,
+C122,oman,oman,sultanate of oman
+C123,pakistan,pakistan,islamic republic of pakistan
+C124,panama,panama,republic of panama
+C125,papua new guinea,papua new guinea,independent state of papua new guinea
+C126,paraguay,paraguay,republic of paraguay
+C127,peru,peru,republic of peru
+C128,philippines,philippines,republic of the philippines
+C129,poland,poland,republic of poland
+C130,portugal,portugal,portuguese republic
+C131,puerto rico,puerto rico,puerto rico
+C132,qatar,qatar,state of qatar
+C133,russia,russian federation,
+C134,romania,romania,romania
+C135,rwanda,rwanda,republic of rwanda
+C136,saint lucia,saint lucia,saint lucia
+C137,saint vincent and the grenadines,saint vincent and the grenadines,saint vincent and the grenadines
+C138,samoa,samoa,independent state of samoa
+C139,sao tome and principe,sao tome and principe,democratic republic of sao tome and principe
+C140,saudi arabia,saudi arabia,kingdom of saudi arabia
+C141,senegal,senegal,republic of senegal
+C142,serbia,serbia,republic of serbia
+C143,seychelles,seychelles,republic of seychelles
+C144,sierra leone,sierra leone,republic of sierra leone
+C145,singapore,singapore,republic of singapore
+C146,slovakia,slovakia,slovak republic
+C147,slovenia,slovenia,republic of slovenia
+C148,solomon islands,solomon islands,solomon islands
+C149,somalia,somalia,federal republic of somalia
+C150,south africa,south africa,republic of south africa
+C151,south sudan,south sudan,republic of south sudan
+C152,spain,spain,kingdom of spain
+C153,sri lanka,sri lanka,democratic socialist republic of sri lanka
+C154,sudan,sudan,republic of sudan
+C155,suriname,suriname,republic of suriname
+C156,syria,syrian arab republic,
+C157,sweden,sweden,kingdom of sweden
+C158,switzerland,switzerland,swiss confederation
+C159,tajikistan,tajikistan,republic of tajikistan
+C160,tanzania,united republic of tanzania,
+C161,thailand,thailand,kingdom of thailand
+C162,taiwan,"china, taiwan province of china",
+C163,timor-leste (timor),timor,
+C164,togo,togo,togolese republic
+C165,tonga,tonga,kingdom of tonga
+C166,trinidad and tobago,trinidad and tobago,republic of trinidad and tobago
+C167,tunisia,tunisia,republic of tunisia
+C168,turkey,turkey,republic of turkey
+C169,turkmenistan,turkmenistan,turkmenistan
+C170,uganda,uganda,republic of uganda
+C171,ukraine,ukraine,ukraine
+C172,united arab emirates,united arab emirates,united arab emirates
+C173,united kingdom,england,united kingdom of great britain and northern ireland
+C174,united states,united states virgin islands,united states virgin islands
+C175,uruguay,uruguay,eastern republic of uruguay
+C176,uzbekistan,uzbekistan,republic of uzbekistan
+C177,vanuatu,vanuatu,republic of vanuatu
+C178,venezuela,venezuela (bolivarian republic of),
+C179,vietnam,viet nam,
+C180,yemen,yemen,republic of yemen
+C181,zambia,zambia,republic of zambia
+C182,zimbabwe,zimbabwe,republic of zimbabwe

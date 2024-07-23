@@ -1,1 +1,17 @@
-COUNTRIES = ['africa', 'albania', 'algeria', 'angola', 'antigua and barbuda', 'argentina', 'armenia', 'aruba', 'asia', 'australia', 'austria', 'azerbaijan', 'bahamas', 'bahrain', 'bangladesh', 'barbados', 'belarus', 'belgium', 'belize', 'benin', 'bhutan', 'bosnia and herzegovina', 'botswana', 'brazil', 'bulgaria', 'burkina faso', 'burundi', 'cambodia', 'cameroon', 'canada', 'central african republic', 'chad', 'chile', 'china', 'colombia', 'comoros', 'congo', 'costa rica', 'croatia', 'cuba', 'cyprus', 'czechia', 'denmark', 'djibouti', 'dominican republic', 'ecuador', 'egypt', 'el salvador', 'equatorial guinea', 'eritrea', 'estonia', 'eswatini', 'ethiopia', 'europe', 'fiji', 'finland', 'france', 'french guiana', 'french polynesia', 'gabon', 'gambia', 'georgia', 'germany', 'ghana', 'greece', 'grenada', 'guadeloupe', 'guam', 'guatemala', 'guinea', 'guinea-bissau', 'guyana', 'haiti', 'honduras', 'hungary', 'iceland', 'india', 'indonesia', 'iraq', 'ireland', 'israel', 'italy', 'jamaica', 'japan', 'jordan', 'kazakhstan', 'kenya', 'kiribati', 'kuwait', 'kyrgyzstan', 'latvia', 'lebanon', 'lesotho', 'liberia', 'libya', 'lithuania', 'luxembourg', 'madagascar', 'malawi', 'malaysia', 'maldives', 'mali', 'malta', 'martinique', 'mauritania', 'mauritius', 'mayotte', 'mexico', 'mongolia', 'montenegro', 'morocco', 'mozambique', 'myanmar', 'namibia', 'nepal', 'netherlands', 'new caledonia', 'new zealand', 'nicaragua', 'niger', 'nigeria', 'north macedonia', 'norway', 'oceania', 'oman', 'pakistan', 'panama', 'papua new guinea', 'paraguay', 'peru', 'philippines', 'poland', 'portugal', 'puerto rico', 'qatar', 'romania', 'rwanda', 'saint lucia', 'saint vincent and the grenadines', 'samoa', 'sao tome and principe', 'saudi arabia', 'senegal', 'serbia', 'seychelles', 'sierra leone', 'singapore', 'slovakia', 'slovenia', 'solomon islands', 'somalia', 'south africa', 'south america', 'south sudan', 'spain', 'sri lanka', 'sudan', 'suriname', 'sweden', 'switzerland', 'tajikistan', 'thailand', 'togo', 'tonga', 'trinidad and tobago', 'tunisia', 'turkey', 'turkmenistan', 'uganda', 'ukraine', 'united arab emirates', 'united kingdom', 'united states virgin islands', 'uruguay', 'uzbekistan', 'vanuatu', 'world', 'yemen', 'zambia', 'zimbabwe']
+import pandas as pd
+import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
+
+COUNTRY_DATA = pd.read_csv("DATA/countries/country_names_map.csv")
+
+def mapping_name(name:str):
+    name = name.lower()
+    if name in COUNTRY_DATA['death_data'].values:
+        name = COUNTRY_DATA[COUNTRY_DATA['death_data'] == name]['Country'].values[0]
+    elif name in COUNTRY_DATA["location"].values:
+        name = COUNTRY_DATA[COUNTRY_DATA['location'] == name]['Country'].values[0]
+    elif name not in COUNTRY_DATA['Country'].values:
+        return None
+    return name

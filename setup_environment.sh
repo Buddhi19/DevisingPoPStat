@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Function to execute commands with confirmation
 execute_with_confirmation() {
     local command=$1

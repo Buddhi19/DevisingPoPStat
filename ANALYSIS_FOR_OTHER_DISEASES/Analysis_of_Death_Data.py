@@ -151,6 +151,39 @@ class MORTALITY_DATA:
         self.CORR_COEFFICIENT = pd.DataFrame(self.CORR_COEFFICIENT)
         self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, "Correlation_Coefficient.csv"))
 
+    def ANALYZER_FOR_SELECTED_DISEASES(self):
+        diseases = [
+            "Cardiovascular diseases",
+            "Acute hepatitis",
+            "Meningitis",
+            "Maternal disorders",
+            "Nutritional deficiencies",
+            "Tuberculosis",
+            "Neonatal disorders",
+            "Parkinson's disease",
+            "Alzheimer's disease and other dementias",
+            "HIV/AIDS",
+            "Malaria",
+            "Diarrheal diseases",
+            "Neoplasms",
+            "Protein-energy malnutrition",
+            "Chronic kidney disease",
+            "Chronic respiratory diseases",
+            "Cirrhosis and other chronic liver diseases",
+            "Diabetes mellitus",
+            "Digestive diseases",
+            "Lower respiratory infections",
+            "Conflict and terrorism",
+            "Drowning",
+            "Drug use disorders",
+            "Environmental heat and cold exposure",
+            "Exposure to forces of nature"
+        ]
+        for disease in diseases:
+            self.create_dataframe_for_diseases(disease)
+        self.CORR_COEFFICIENT = pd.DataFrame(self.CORR_COEFFICIENT)
+        self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, "Correlation_Coefficient.csv"))
+
 
 if __name__ == "__main__":
     data = MORTALITY_DATA.ADD_RANGE(2018, 2020)

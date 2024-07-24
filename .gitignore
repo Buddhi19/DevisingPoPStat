@@ -1,5 +1,22 @@
 *.csv
 !country_names_map.csv
+!Correlation_Coefficient.csv
 __pycache__/
 .vscode/
 *.png
+!japan_population.png
+!niger_population.png
+!india_population.png
+!senegal_population.png
+!gautemala_population.png
+!united kingdom_population.png
+
+!Meningitis_deaths.png
+!Acute hepatitis_deaths.png
+!Tuberculosis_deaths.png
+!Neonatal disorders_deaths.png
+!Maternal disorders_deaths.png
+!Nutritional deficiencies_deaths.png
+!Parkinson disease_deaths.png
+!Alzheimer disease_deaths.png
+!Cardiovascular diseases_deaths.png

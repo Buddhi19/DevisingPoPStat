@@ -70,5 +70,12 @@ Pop_Pyramid
     └── PYRAMID
 ```
 
-## 2. Implementation Description
+## 2. Running the ANALYSIS for COVID Data
+1. On the Current Directory
+    ```sh
+    python -m --py <population year(YYYY)> --cd <covid data (YYYY-MM-DD)> 
+    ```
+    ### Population Year as per the paper : 2020
+    ### Covid Date as per the paper : 2022-04-08
 
+2. Or just simply run the main.py file

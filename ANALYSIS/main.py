@@ -5,12 +5,12 @@ import sys
 main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(main_dir)
 
-from Covid_Data_For_Date import COVID_DATA_FOR_DATE
-from Plot_Population_Data import PLOT_POPULATION_DATA
-from Pop_Stat_Calculation import POP_STAT_CALCULATION
-from Plot_Pop_Stat import PLOT_POP_STAT
-from Plot_other_Metrics import PLOT_OTHER_METRICS
-from Population_Data_For_Date import POPULATION_DATA_FOR_DATE
+from ANALYSIS.Covid_Data_For_Date import COVID_DATA_FOR_DATE
+from ANALYSIS.Plot_Population_Data import PLOT_POPULATION_DATA
+from ANALYSIS.Pop_Stat_Calculation import POP_STAT_CALCULATION
+from ANALYSIS.Plot_Pop_Stat import PLOT_POP_STAT
+from ANALYSIS.Plot_other_Metrics import PLOT_OTHER_METRICS
+from ANALYSIS.Population_Data_For_Date import POPULATION_DATA_FOR_DATE
 
 class ANALYSIS:
     def __init__(self):
@@ -55,6 +55,14 @@ class ANALYSIS:
     def run(self):
         self.create_country_population_data()
         self.create_country_covid_data()
+        self.plot_population_data()
+        self.calculate_pop_stat()
+        self.plot_pop_stat()
+        self.plot_other_metrics()
+
+    def parser_run(self, pop_year, covid_date):
+        POPULATION_DATA_FOR_DATE(pop_year)
+        COVID_DATA_FOR_DATE(covid_date)
         self.plot_population_data()
         self.calculate_pop_stat()
         self.plot_pop_stat()

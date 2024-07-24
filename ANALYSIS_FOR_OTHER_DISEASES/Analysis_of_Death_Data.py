@@ -16,6 +16,8 @@ POPSTAT_COVID_DATA = pd.read_csv("RESULTS/POPSTAT_COUNTRY_DATA/japan_POPSTAT_COV
 SAVING_PATH_PNG = "RESULTS/CORRELATION_WITH_OTHER_DISEASES"
 SAVING_PATH_CSV = "RESULTS/CORRELATION_DATA_FOR_OTHER_DISEASES"
 
+COVID_DATA_DIR = "DATA/covid_data_by_country"
+
 class MORTALITY_DATA:
     def __init__(self, year):
         if isinstance(year, int):
@@ -25,7 +27,10 @@ class MORTALITY_DATA:
 
         self.COUNTRY_DATA = {
             "Country": [],
-            "Average Population": []
+            "Average Population": [],
+            "Median Age": [],
+            "GDP per Capita": [],
+            "Population Density": []
         }
         self.create_population_data()
         self.CORR_COEFFICIENT = {
@@ -77,7 +82,7 @@ class MORTALITY_DATA:
             'Average Population': [],
             'Average Deaths': [],
             'Deaths per million': [],
-            'POPSTAT Data': []
+            'POPSTAT Data': [],
         }
         data = DEATH_DATA[DEATH_DATA['cause_name'] == disease]
         for country in data['location_name'].unique():

@@ -104,7 +104,7 @@ class MORTALITY_DATA:
         self.PLOT_WITH_POPSTAT(DATAFRAME['POPSTAT Data'], DATAFRAME['Deaths per million'], disease)
         print(f"Data for {disease} has been plotted")
 
-    def PLOT_WITH_POPSTAT(self, X, Y, title):
+    def PLOT_WITH_POPSTAT(self, X, Y, title, saving_path=SAVING_PATH_PNG):
         X = np.array(X)
         Y = np.array(Y)
         mask = (Y > 0)
@@ -147,7 +147,7 @@ class MORTALITY_DATA:
         plt.text(0.05, 0.95, f'R² = {r_squared:.3f}',
                         transform=plt.gca().transAxes, verticalalignment='top')
         title = title.replace("/", "")
-        plt.savefig(os.path.join(SAVING_PATH_PNG, f'{title}_deaths.png'))
+        plt.savefig(os.path.join(saving_path, f'{title}_deaths.png'))
         plt.close()
 
     def ANALYZER(self):

@@ -3,6 +3,7 @@
 !Correlation_Coefficient.csv
 __pycache__/
 .vscode/
+ANALYSIS_FOR_OTHER_DISEASES_II/
 *.png
 !japan_population.png
 !niger_population.png

@@ -22,7 +22,7 @@ install_pre_requisites() {
 make_directories() {
     local current_dir=$(pwd)
     cd "$current_dir"
-    mkdir -p "DATA/covid_data_by_country" "DATA/owid_covid_data" "DATA/population_data_by_country" "DATA/population_data_with_age"
+    mkdir -p "DATA/death_data" "DATA/covid_data_by_country" "DATA/owid_covid_data" "DATA/population_data_by_country" "DATA/population_data_with_age"
 }
 
 # Function to load data
@@ -35,8 +35,8 @@ load_data() {
 
 make_directory_for_POPSTAT(){
     local current_dir=$(pwd)
-    cd "$current_dir/RESULTS"
-    mkdir -p "POPSTAT_COUNTRY_DATA"
+    cd "$current_dir"
+    mkdir -p "RESULTS/POPSTAT_COUNTRY_DATA" "RESULTS/CORRELATION_WITH_OTHER_DISEASES" "RESULTS/CORRELATION_DATA_FOR_OTHER_DISEASES"
 }
 
 install_pre_requisites

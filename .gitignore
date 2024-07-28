@@ -20,3 +20,8 @@ __pycache__/
 !Parkinson's disease_deaths.png
 !Alzheimer's disease and other dementias_deaths.png
 !Cardiovascular diseases_deaths.png
+
+!RESULTS/POPSTATCOVID/OTHER_METRICS
+
+!Total_cases_per_million_with_reference_japan.png
+!Total_deaths_per_million_with_reference_japan.png

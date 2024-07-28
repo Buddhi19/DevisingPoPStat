@@ -64,7 +64,8 @@ class POP_STAT_CALCULATION:
             self.population_data = {country: dist for country, dist in self.population_data.items() if country not in NAN_COUNTRIES}
             self.covid_data = {country: value for country, value in self.covid_data.items() if country not in NAN_COUNTRIES}
 
-    def KL_DIVERGENCE(self,p, q):
+    @staticmethod
+    def KL_DIVERGENCE(p, q):
         p = np.asarray(p)
         q = np.asarray(q)
         
@@ -88,7 +89,8 @@ class POP_STAT_CALCULATION:
         reference_dist = self.population_data[reference_country]
         distances = {}
         for country, dist in self.population_data.items():
-            distances[country] = self.KL_DIVERGENCE(dist, reference_dist)
+            if country in self.common_countries:
+                distances[country] = self.KL_DIVERGENCE(dist, reference_dist)
         return distances
 
     def find_optimal_reference(self):

@@ -65,6 +65,7 @@ class PLOT_POPULATION_DATA:
         plt.tight_layout()
         file_name = file_name.split('.')[0]+'.png'
         plt.savefig(os.path.join(self.pyramids_results_dir, file_name))
+        plt.close()
         print("Done plotting POPULATION PYRAMID for {}".format(file_name))
 
     def make_percentage_plot(self,file_name):
@@ -78,6 +79,7 @@ class PLOT_POPULATION_DATA:
         ax.grid(False)
         plt.tight_layout()
         plt.savefig(os.path.join(self.percentage_results_dir, file_name.split('.')[0]+'.png'))
+        plt.close()
         print("Done plotting COMBINED DISTRIBUTIONS for {}".format(file_name))
 
     

@@ -45,12 +45,17 @@ class ANALYSIS:
 
     def calculate_pop_stat(self):
         calculator = POP_STAT_CALCULATION()
-        self.REFERENCE_COUNTRY = calculator.run()
+        self.progressive_reference_countries, self.regressive_reference_countries = calculator.run()
         self.common_countries = calculator.common_countries
 
     def plot_pop_stat(self):
-        plotter = PLOT_POP_STAT(self.REFERENCE_COUNTRY)
-        plotter.run()
+        for country, _ in self.progressive_reference_countries:
+            plotter = PLOT_POP_STAT(country, True)
+            plotter.run()
+
+        for country, _ in self.regressive_reference_countries:
+            plotter = PLOT_POP_STAT(country, False)
+            plotter.run()
 
     def run(self):
         self.create_country_population_data()

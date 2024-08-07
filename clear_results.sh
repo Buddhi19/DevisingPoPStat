@@ -27,7 +27,15 @@ delete_all_generated_png_files_in_RESULTS() {
     rm -f "$current_dir"/RESULTS/PYRAMIDS/*.png
     rm -f "$current_dir"/RESULTS/COMBINED_DISTRIBUTIONS/*.png
     rm -f "$current_dir"/RESULTS/CORRELATION_WITH_OTHER_DISEASES/*.png
+    rm -f "$current_dir"/RESULTS/POPSTATCOVID/PLOTS/PROGRESSIVE/*.png
+    rm -f "$current_dir"/RESULTS/POPSTATCOVID/PLOTS/REGRESSIVE/*.png
+}
+
+delete_all_generated_csv_files_in_RESULTS() {
+    local current_dir=$(pwd)
+    rm -f "$current_dir"/RESULTS/POPSTAT_COUNTRY_DATA/*.csv
 }
 
 execute_with_confirmation "delete_all_generated_csv_files_in_DATA"
 execute_with_confirmation "delete_all_generated_png_files_in_RESULTS"
+execute_with_confirmation "delete_all_generated_csv_files_in_RESULTS"

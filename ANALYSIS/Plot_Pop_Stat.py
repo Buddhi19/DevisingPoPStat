@@ -11,11 +11,13 @@ sys.path.append(main_dir)
 
 COVID_DIR = os.path.join(main_dir, 'Data\\covid_data_by_country')
 POP_STAT_DIR = os.path.join(main_dir, 'RESULTS\\POPSTAT_COUNTRY_DATA')
-SAVE_DIR = os.path.join(main_dir, 'RESULTS\\POPSTATCOVID\\PLOTS')
+SAVE_DIR_PROGRESSIVE = os.path.join(main_dir, 'RESULTS\\POPSTATCOVID\\PLOTS\\PROGRESSIVE')
+SAVE_DIR_REGRESSIVE = os.path.join(main_dir, 'RESULTS\\POPSTATCOVID\\PLOTS\\REGRESSIVE')
 
 
 class PLOT_POP_STAT:
-    def __init__(self,country):
+    def __init__(self,country,progressive:bool):
+        self.SAVE_DIR = SAVE_DIR_PROGRESSIVE if progressive else SAVE_DIR_REGRESSIVE
         self.country = country
         self.POP_STAT_DATA = pd.read_csv(os.path.join(POP_STAT_DIR, f'{self.country}_POPSTAT_COVID19.csv'))
 
@@ -58,17 +60,12 @@ class PLOT_POP_STAT:
         plt.text(0.05, 0.95, f'R² = {r_squared:.3f}',
                      transform=plt.gca().transAxes, verticalalignment='top')
         plt.title(f"Reference Country: {self.country}")
-        plt.savefig(os.path.join(SAVE_DIR, f'Total_{title}_per_million_with_reference_{self.country}.png'))
+        plt.savefig(os.path.join(self.SAVE_DIR, f'{title}/Total_{title}_per_million_with_reference_{self.country}.png'))
+        plt.close()
 
     def run(self):
         self.POP_STAT_PLOT("cases")
         self.POP_STAT_PLOT("deaths")
         print("Plots saved successfully")
-
-if __name__ == "__main__":
-    countries = ['japan']
-    for country in countries:
-        P = PLOT_POP_STAT(country)
-        P.run()
 
 

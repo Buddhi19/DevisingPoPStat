@@ -31,7 +31,7 @@ class POP_STAT_CALCULATION:
             data = pd.read_csv(os.path.join(COVID_DIR, file_name))
             total_deaths_per_million = data['total_deaths_per_million'].tolist()[0]
             total_cases_per_million = data['total_cases_per_million'].tolist()[0]
-            self.covid_data[country_name] = total_deaths_per_million*0 + total_cases_per_million*1
+            self.covid_data[country_name] = total_deaths_per_million*1 + total_cases_per_million*0
 
         self.common_countries = set(self.population_data.keys()) & set(self.covid_data.keys())
 

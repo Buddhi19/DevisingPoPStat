@@ -11,33 +11,6 @@ Download all dependencies and setup workspace
   ```
   bash ./setup_environment.sh
   ```
-## If you are encountering errors due to Windows-style line endings (CRLF),try followings.
-
-**VS Code**
-1. Open the file in VS Code.
-2. In the bottom-right corner, click on the text that says `CRLF`.
-3. Select `LF` from the menu.
-4. Save the file.
-
-**Notepad++**
-1. Open the file in Notepad++.
-2. Go to `Edit` > `EOL Conversion` > `Unix (LF)`.
-3. Save the file.
-
-**If you are using LINUX**
-1. Install dos2unix
-    ```sh
-    sudo apt-get install dos2unix
-2. Run the command
-   ```sh
-   dos2unix ./setup_environment.sh
-   ```
-
-**If you are using WSL**
-1. Run the command
-    ```sh
-    sed -i 's/\r$//' ./setup_environment.sh
-    ```
 
 ## If data not properly downloaded manually download from here
 
@@ -72,10 +45,15 @@ Pop_Pyramid
 
 ## 2. Running the ANALYSIS for COVID Data
 1. On the Current Directory
-    ```sh
-    python -m ANALYSIS --py <population year(YYYY)> --cd <covid data (YYYY-MM-DD)> 
+    
+    ```python 
+    python -m ANALYSIS --py <population year(YYYY)> --cd "<covid data (YYYY-MM-DD)>"
     ```
     ### Population Year as per the paper : 2020
     ### Covid Date as per the paper : 2022-04-08
+
+    ```python
+    python -m ANALYSIS --py 2020 --cd "2022-04-08"
+    ```
 
 2. Or just simply run the main.py file

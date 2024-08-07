@@ -13,6 +13,7 @@ RESULTS_DIR = os.path.join(main_dir, 'RESULTS\\POPSTAT_COUNTRY_DATA')
 
 class POP_STAT_CALCULATION:
     def __init__(self):
+        self.CONSIDERING_COUNTRIES = 20
         self.population_data = {}
         for file_name in os.listdir(POPULATION_DIR):
             if not file_name.endswith('.csv'):
@@ -30,15 +31,20 @@ class POP_STAT_CALCULATION:
             data = pd.read_csv(os.path.join(COVID_DIR, file_name))
             total_deaths_per_million = data['total_deaths_per_million'].tolist()[0]
             total_cases_per_million = data['total_cases_per_million'].tolist()[0]
-            self.covid_data[country_name] = total_deaths_per_million*1 + total_cases_per_million*0
+            self.covid_data[country_name] = total_deaths_per_million*0 + total_cases_per_million*1
 
         self.common_countries = set(self.population_data.keys()) & set(self.covid_data.keys())
 
     def run(self):
         self.remove_nan_values()
-        self.optimal_reference, self.max_correlation = self.find_optimal_reference()
-        self.create_POPSTAT_COVID19_data(self.optimal_reference)
-        return self.optimal_reference
+        self.progressive_reference_countries, self.regressive_reference_countries = self.find_optimal_reference()
+        self.progressive_reference_countries = self.progressive_reference_countries[:self.CONSIDERING_COUNTRIES]
+        self.regressive_reference_countries = self.regressive_reference_countries[:self.CONSIDERING_COUNTRIES]
+        for country, correlation in self.progressive_reference_countries:
+            self.create_POPSTAT_COVID19_data(country)
+        for country, correlation in self.regressive_reference_countries:
+            self.create_POPSTAT_COVID19_data(country)
+        return self.progressive_reference_countries, self.regressive_reference_countries
 
 
     def create_POPSTAT_COVID19_data(self, reference_country):
@@ -94,8 +100,7 @@ class POP_STAT_CALCULATION:
         return distances
 
     def find_optimal_reference(self):
-        max_correlation = -np.inf
-        optimal_reference = None
+        country_correlations = {}
 
         common_countries = set(self.population_data.keys()) & set(self.covid_data.keys())
 
@@ -106,14 +111,26 @@ class POP_STAT_CALCULATION:
             common_covid_data = [self.covid_data[country] for country in common_countries]
 
             correlation = np.corrcoef(common_distances, common_covid_data)[0, 1]
-            if abs(correlation) > max_correlation:
-                max_correlation = abs(correlation)
-                optimal_reference = reference_country
-        
-        print(f"Optimal reference country: {optimal_reference} with correlation {max_correlation}")
-        return optimal_reference, max_correlation
+            country_correlations[reference_country] = correlation
+
+        country_correlations = sorted(country_correlations.items(), key = lambda x: abs(x[1]), reverse = True)
+        country_correlations_progressive = sorted(country_correlations, key = lambda x: x[1], reverse = True)
+        country_correlations_regressive = sorted(country_correlations, key = lambda x: x[1], reverse = False)
+
+        print(f"Top {self.CONSIDERING_COUNTRIES} countries with highest correlation with progressive population distribution")
+        for country, correlation in country_correlations_progressive[:self.CONSIDERING_COUNTRIES]:
+            print(f"{country}: {correlation}")
+
+        print()
+
+        print(f"Top {self.CONSIDERING_COUNTRIES} countries with highest correlation with regressive population distribution")
+        for country, correlation in country_correlations_regressive[:self.CONSIDERING_COUNTRIES]:
+            print(f"{country}: {correlation}")
+
+        return country_correlations_progressive, country_correlations_regressive
 
 
 if __name__ == "__main__":
     pop_stat_calculator = POP_STAT_CALCULATION()
-    pop_stat_calculator.run()
+    pop_stat_calculator.remove_nan_values()
+    pop_stat_calculator.find_optimal_reference()

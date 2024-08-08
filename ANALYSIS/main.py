@@ -14,14 +14,14 @@ from ANALYSIS.Population_Data_For_Date import POPULATION_DATA_FOR_DATE
 
 class ANALYSIS:
     def __init__(self):
-        self.REFERENCE_COUNTRY = 'japan'
         self.common_countries = []
+        self.year = '2020'
 
-    @staticmethod
-    def create_country_population_data():
+    def create_country_population_data(self):
         date = input("Date in YYYY or Press Enter to set year as 2020 : ")
         if date == "":
             date = '2020'
+        self.year = date
         POPULATION_DATA_FOR_DATE(date)
 
     @staticmethod
@@ -38,7 +38,7 @@ class ANALYSIS:
         plotter.run()
 
     def plot_other_metrics(self):
-        plotter = PLOT_OTHER_METRICS(self.common_countries)
+        plotter = PLOT_OTHER_METRICS(self.common_countries, self.year)
         plotter.MEDIAN_AGE()
         plotter.GDP_PER_CAPITA()
         plotter.POPULATION_DENSITY()

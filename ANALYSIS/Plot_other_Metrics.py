@@ -10,9 +10,15 @@ sys.path.append(main_dir)
 
 COVID_DATA_DIR = os.path.join(main_dir, 'Data\\covid_data_by_country')
 SAVE_DIR = os.path.join(main_dir, 'RESULTS\\POPSTATCOVID\\OTHER_METRICS')
+MEDIAN_AGE_DATA = os.path.join(main_dir, 'Data\\owid_data\\median-age.csv')
+GDP_PER_CAPITA_DATA = os.path.join(main_dir, 'Data\\owid_data\\gdp-per-capita.csv')
+POPULATION_DENSITY_DATA = os.path.join(main_dir, 'Data\\owid_data\\population-density.csv')
+HUMAN_DEVELOPMENT_INDEX_DATA = os.path.join(main_dir, 'Data\\owid_data\\human-development-index.csv')
+LIFE_EXPECTANCY_DATA = os.path.join(main_dir, 'Data\\owid_data\\life-expectancy.csv')
 
 class PLOT_OTHER_METRICS:
-    def __init__(self, countries):
+    def __init__(self, countries, year):
+        self.year = year
         self.countries = countries
         self.Y_CASES = []
         self.Y_DEATHS = []
@@ -20,59 +26,100 @@ class PLOT_OTHER_METRICS:
             data = pd.read_csv(os.path.join(COVID_DATA_DIR, f'{country}_covid_data.csv'))
             self.Y_DEATHS.append(np.log(data['total_deaths_per_million'].values[0]))
             self.Y_CASES.append(np.log(data['total_cases_per_million'].values[0]))
+
+        self.Median_age_data = pd.read_csv(MEDIAN_AGE_DATA)
+        self.Median_age_data = self.Median_age_data[self.Median_age_data['Year'] == int(self.year)]
+        self.Median_age_data.columns = ['Entity', 'Code', 'Year', 'Median age', '']
+
+        self.GDP_per_capita_data = pd.read_csv(GDP_PER_CAPITA_DATA)
+        self.GDP_per_capita_data = self.GDP_per_capita_data[self.GDP_per_capita_data['Year'] == int(self.year)]
+        self.GDP_per_capita_data.columns = ['Entity', 'Code', 'Year', 'GDP per capita','']
+
+        self.Population_density_data = pd.read_csv(POPULATION_DENSITY_DATA)
+        self.Population_density_data = self.Population_density_data[self.Population_density_data['Year'] == int(self.year)]
+
+        self.Human_development_index_data = pd.read_csv(HUMAN_DEVELOPMENT_INDEX_DATA)
+        self.Human_development_index_data = self.Human_development_index_data[self.Human_development_index_data['Year'] == int(self.year)]
+
+        self.Life_expectancy_data = pd.read_csv(LIFE_EXPECTANCY_DATA)
+        self.Life_expectancy_data = self.Life_expectancy_data[self.Life_expectancy_data['Year'] == int(self.year)]
+        self.Life_expectancy_data.columns = ['Entity', 'Code', 'Year', 'Life expectancy']
+
         
     def MEDIAN_AGE(self):
         X = []
         for country in self.countries:
-            data = pd.read_csv(os.path.join(COVID_DATA_DIR, f'{country}_covid_data.csv'))
-            X.append(data['median_age'].values[0])
+            data = self.Median_age_data[self.Median_age_data['Entity'].str.lower() == country]
+            X.append(data['Median age'].values[0])
 
         self.plotter(X,self.Y_CASES,"Cases","Median Age (years)")
         self.plotter(X,self.Y_DEATHS,"Deaths","Median Age (years)")
 
     def GDP_PER_CAPITA(self):
         X = []
+        Y_CASES_filtered = []
+        Y_DEATHS_filtered = []
+        i = 0
         for country in self.countries:
-            data = pd.read_csv(os.path.join(COVID_DATA_DIR, f'{country}_covid_data.csv'))
-            X.append(data['gdp_per_capita'].values[0])
+            data = self.GDP_per_capita_data[self.GDP_per_capita_data['Entity'].str.lower() == country]
+            if data.empty:
+                i += 1
+                continue
+            X.append(data['GDP per capita'].values[0])
+            Y_CASES_filtered.append(self.Y_CASES[i])
+            Y_DEATHS_filtered.append(self.Y_DEATHS[i])
+            i += 1
 
-        self.plotter(X,self.Y_CASES,"Cases","GDP per Capita (USD)")
-        self.plotter(X,self.Y_DEATHS,"Deaths","GDP per Capita (USD)")
+        self.plotter(X,Y_CASES_filtered,"Cases","GDP per Capita (USD)")
+        self.plotter(X,Y_DEATHS_filtered,"Deaths","GDP per Capita (USD)")
 
     def POPULATION_DENSITY(self):
         X = []
         for country in self.countries:
-            data = pd.read_csv(os.path.join(COVID_DATA_DIR, f'{country}_covid_data.csv'))
-            X.append(data['population_density'].values[0])
+            data = self.Population_density_data[self.Population_density_data['Entity'].str.lower() == country]
+            X.append(data['Population density'].values[0])
 
         self.plotter(X,self.Y_CASES,"Cases","Population Density (per km²)")
         self.plotter(X,self.Y_DEATHS,"Deaths","Population Density (per km²)")
 
     def HUMAN_DEVELOPMENT_INDEX(self):
         X = []
+        Y_CASES_filtered = []
+        Y_DEATHS_filtered = []
+        i = 0
         for country in self.countries:
-            data = pd.read_csv(os.path.join(COVID_DATA_DIR, f'{country}_covid_data.csv'))
-            X.append(data['human_development_index'].values[0])
+            data = self.Human_development_index_data[self.Human_development_index_data['Entity'].str.lower() == country]
+            if data.empty:
+                i += 1
+                continue
+            X.append(data['Human Development Index'].values[0])
+            Y_CASES_filtered.append(self.Y_CASES[i])
+            Y_DEATHS_filtered.append(self.Y_DEATHS[i])
+            i += 1
 
-        self.plotter(X,self.Y_CASES,"Cases","Human Development Index")
-        self.plotter(X,self.Y_DEATHS,"Deaths","Human Development Index")
+        self.plotter(X,Y_CASES_filtered,"Cases","Human Development Index")
+        self.plotter(X,Y_DEATHS_filtered,"Deaths","Human Development Index")
 
     def LIFE_EXPECTANCY(self):
         X = []
+        Y_CASES_filtered = []
+        Y_DEATHS_filtered = []
+        i = 0
         for country in self.countries:
-            data = pd.read_csv(os.path.join(COVID_DATA_DIR, f'{country}_covid_data.csv'))
-            X.append(data['life_expectancy'].values[0])
+            data = self.Life_expectancy_data[self.Life_expectancy_data['Entity'].str.lower() == country]
+            if data.empty:
+                i += 1
+                continue
+            X.append(data['Life expectancy'].values[0])
+            Y_CASES_filtered.append(self.Y_CASES[i])
+            Y_DEATHS_filtered.append(self.Y_DEATHS[i])
+            i += 1
 
-        self.plotter(X,self.Y_CASES,"Cases","Life Expectancy")
-        self.plotter(X,self.Y_DEATHS,"Deaths","Life Expectancy")
+        self.plotter(X,Y_CASES_filtered,"Cases","Life Expectancy")
+        self.plotter(X,Y_DEATHS_filtered,"Deaths","Life Expectancy")
 
     def plotter(self,X,Y,title,metric):
         plt.figure(figsize=(10, 6))
-        Y = None
-        if title == "Cases":
-            Y = self.Y_CASES
-        elif title == "Deaths":
-            Y = self.Y_DEATHS
         plt.scatter(X, Y)
         plt.xlabel(metric)
         plt.ylabel(f"COVID19 {title} per million (log)")

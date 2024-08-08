@@ -7,9 +7,9 @@ import sys
 main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(main_dir)
 
-POPULATION_DIR = os.path.join(main_dir, 'Data\\population_data_by_country')
-COVID_DIR = os.path.join(main_dir, 'Data\\covid_data_by_country')
-RESULTS_DIR = os.path.join(main_dir, 'RESULTS\\POPSTAT_COUNTRY_DATA')
+POPULATION_DIR = os.path.join(main_dir, 'Data/population_data_by_country')
+COVID_DIR = os.path.join(main_dir, 'Data/covid_data_by_country')
+RESULTS_DIR = os.path.join(main_dir, 'RESULTS/POPSTAT_COUNTRY_DATA')
 
 class POP_STAT_CALCULATION:
     def __init__(self):

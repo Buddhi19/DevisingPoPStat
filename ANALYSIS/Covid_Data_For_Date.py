@@ -7,8 +7,8 @@ sys.path.append(main_dir)
 
 from ANALYSIS.COUNTRIES import mapping_name
 
-owid_covid_data = pd.read_csv('Data\\owid_covid_data\\owid-covid-data.csv', low_memory = False)
-saving_dir = os.path.join(main_dir, "Data\\covid_data_by_country")
+owid_covid_data = pd.read_csv('Data/owid_covid_data/owid-covid-data.csv', low_memory = False)
+saving_dir = os.path.join(main_dir, "Data/covid_data_by_country")
 
 
 def COVID_DATA_FOR_DATE(date):

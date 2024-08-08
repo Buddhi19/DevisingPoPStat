@@ -8,13 +8,13 @@ from scipy import stats
 main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(main_dir)
 
-COVID_DATA_DIR = os.path.join(main_dir, 'Data\\covid_data_by_country')
-SAVE_DIR = os.path.join(main_dir, 'RESULTS\\POPSTATCOVID\\OTHER_METRICS')
-MEDIAN_AGE_DATA = os.path.join(main_dir, 'Data\\owid_data\\median-age.csv')
-GDP_PER_CAPITA_DATA = os.path.join(main_dir, 'Data\\owid_data\\gdp-per-capita.csv')
-POPULATION_DENSITY_DATA = os.path.join(main_dir, 'Data\\owid_data\\population-density.csv')
-HUMAN_DEVELOPMENT_INDEX_DATA = os.path.join(main_dir, 'Data\\owid_data\\human-development-index.csv')
-LIFE_EXPECTANCY_DATA = os.path.join(main_dir, 'Data\\owid_data\\life-expectancy.csv')
+COVID_DATA_DIR = os.path.join(main_dir, 'Data/covid_data_by_country')
+SAVE_DIR = os.path.join(main_dir, 'RESULTS/POPSTATCOVID/OTHER_METRICS')
+MEDIAN_AGE_DATA = os.path.join(main_dir, 'Data/owid_data/median-age.csv')
+GDP_PER_CAPITA_DATA = os.path.join(main_dir, 'Data/owid_data/gdp-per-capita.csv')
+POPULATION_DENSITY_DATA = os.path.join(main_dir, 'Data/owid_data/population-density.csv')
+HUMAN_DEVELOPMENT_INDEX_DATA = os.path.join(main_dir, 'Data/owid_data/human-development-index.csv')
+LIFE_EXPECTANCY_DATA = os.path.join(main_dir, 'Data/owid_data/life-expectancy.csv')
 
 class PLOT_OTHER_METRICS:
     def __init__(self, countries, year):

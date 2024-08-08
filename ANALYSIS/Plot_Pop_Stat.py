@@ -8,10 +8,10 @@ import sys
 main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(main_dir)
 
-COVID_DIR = os.path.join(main_dir, 'Data\\covid_data_by_country')
-POP_STAT_DIR = os.path.join(main_dir, 'RESULTS\\POPSTAT_COUNTRY_DATA')
-SAVE_DIR_PROGRESSIVE = os.path.join(main_dir, 'RESULTS\\POPSTATCOVID\\PLOTS\\PROGRESSIVE')
-SAVE_DIR_REGRESSIVE = os.path.join(main_dir, 'RESULTS\\POPSTATCOVID\\PLOTS\\REGRESSIVE')
+COVID_DIR = os.path.join(main_dir, 'Data/covid_data_by_country')
+POP_STAT_DIR = os.path.join(main_dir, 'RESULTS/POPSTAT_COUNTRY_DATA')
+SAVE_DIR_PROGRESSIVE = os.path.join(main_dir, 'RESULTS/POPSTATCOVID/PLOTS/PROGRESSIVE')
+SAVE_DIR_REGRESSIVE = os.path.join(main_dir, 'RESULTS/POPSTATCOVID/PLOTS/REGRESSIVE')
 
 
 class PLOT_POP_STAT:

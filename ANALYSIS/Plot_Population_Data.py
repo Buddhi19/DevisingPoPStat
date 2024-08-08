@@ -8,10 +8,10 @@ sys.path.append(main_dir)
 
 class PLOT_POPULATION_DATA:
     def __init__(self):
-        self.files_with_population_data = [x for x in os.listdir('Data\\population_data_by_country') if x.endswith('.csv')]
-        self.parent_dir = os.path.join(main_dir, 'Data\\population_data_by_country')
-        self.pyramids_results_dir = os.path.join(main_dir, 'Results\\PYRAMIDS')
-        self.percentage_results_dir = os.path.join(main_dir, 'Results\\COMBINED_DISTRIBUTIONS')
+        self.files_with_population_data = [x for x in os.listdir('Data/population_data_by_country') if x.endswith('.csv')]
+        self.parent_dir = os.path.join(main_dir, 'Data/population_data_by_country')
+        self.pyramids_results_dir = os.path.join(main_dir, 'Results/PYRAMIDS')
+        self.percentage_results_dir = os.path.join(main_dir, 'Results/COMBINED_DISTRIBUTIONS')
 
         self.AGES = [
             '0-4', '5-9', '10-14', '15-19', '20-24', '25-29',

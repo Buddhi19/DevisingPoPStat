@@ -11,7 +11,7 @@ from ANALYSIS.COUNTRIES import mapping_name
 
 DEATH_DATA = pd.read_csv("DATA/death_data/death_data.csv", low_memory=False)
 POPULATION_DATA = pd.read_csv("DATA/population_data_with_age/age_data.csv", low_memory=False)
-POPSTAT_COVID_DATA = pd.read_csv("RESULTS/POPSTAT_COUNTRY_DATA/japan_POPSTAT_COVID19.csv")
+POPSTAT_COVID_DATA = pd.read_csv("RESULTS/POPSTAT_COUNTRY_DATA/malta_POPSTAT_COVID19.csv")
 
 SAVING_PATH_PNG = "RESULTS/CORRELATION_WITH_OTHER_DISEASES"
 SAVING_PATH_CSV = "RESULTS/CORRELATION_DATA_FOR_OTHER_DISEASES"

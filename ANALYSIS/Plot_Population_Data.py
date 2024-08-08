@@ -4,7 +4,6 @@ import os
 import sys
 
 main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-
 sys.path.append(main_dir)
 
 class PLOT_POPULATION_DATA:

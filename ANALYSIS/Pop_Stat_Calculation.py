@@ -3,8 +3,8 @@ import pandas as pd
 from scipy.stats import pearsonr, entropy
 import os
 import sys
-main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
+main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(main_dir)
 
 POPULATION_DIR = os.path.join(main_dir, 'Data\\population_data_by_country')

@@ -42,6 +42,8 @@ class ANALYSIS:
         plotter.MEDIAN_AGE()
         plotter.GDP_PER_CAPITA()
         plotter.POPULATION_DENSITY()
+        plotter.HUMAN_DEVELOPMENT_INDEX()
+        plotter.LIFE_EXPECTANCY()
 
     def calculate_pop_stat(self):
         calculator = POP_STAT_CALCULATION()

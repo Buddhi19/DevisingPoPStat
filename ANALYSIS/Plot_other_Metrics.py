@@ -48,6 +48,24 @@ class PLOT_OTHER_METRICS:
         self.plotter(X,self.Y_CASES,"Cases","Population Density (per km²)")
         self.plotter(X,self.Y_DEATHS,"Deaths","Population Density (per km²)")
 
+    def HUMAN_DEVELOPMENT_INDEX(self):
+        X = []
+        for country in self.countries:
+            data = pd.read_csv(os.path.join(COVID_DATA_DIR, f'{country}_covid_data.csv'))
+            X.append(data['human_development_index'].values[0])
+
+        self.plotter(X,self.Y_CASES,"Cases","Human Development Index")
+        self.plotter(X,self.Y_DEATHS,"Deaths","Human Development Index")
+
+    def LIFE_EXPECTANCY(self):
+        X = []
+        for country in self.countries:
+            data = pd.read_csv(os.path.join(COVID_DATA_DIR, f'{country}_covid_data.csv'))
+            X.append(data['life_expectancy'].values[0])
+
+        self.plotter(X,self.Y_CASES,"Cases","Life Expectancy")
+        self.plotter(X,self.Y_DEATHS,"Deaths","Life Expectancy")
+
     def plotter(self,X,Y,title,metric):
         plt.figure(figsize=(10, 6))
         Y = None
@@ -87,11 +105,4 @@ class PLOT_OTHER_METRICS:
                      transform=plt.gca().transAxes, verticalalignment='top')
 
         plt.savefig(os.path.join(SAVE_DIR, f'Total_{title}_per_million_for_{metric}.png'))
-
-
-if __name__ == "__main__":
-    P = PLOT_OTHER_METRICS()
-    P.MEDIAN_AGE()
-    P.GDP_PER_CAPITA()
-    P.POPULATION_DENSITY()
-    print("Plots saved successfully")
+        plt.close()

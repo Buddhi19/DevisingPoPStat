@@ -6,7 +6,6 @@ import os
 import sys
 
 main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-
 sys.path.append(main_dir)
 
 COVID_DIR = os.path.join(main_dir, 'Data\\covid_data_by_country')

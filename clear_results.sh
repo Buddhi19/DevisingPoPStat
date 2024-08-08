@@ -27,8 +27,10 @@ delete_all_generated_png_files_in_RESULTS() {
     rm -f "$current_dir"/RESULTS/PYRAMIDS/*.png
     rm -f "$current_dir"/RESULTS/COMBINED_DISTRIBUTIONS/*.png
     rm -f "$current_dir"/RESULTS/CORRELATION_WITH_OTHER_DISEASES/*.png
-    rm -f "$current_dir"/RESULTS/POPSTATCOVID/PLOTS/PROGRESSIVE/*.png
-    rm -f "$current_dir"/RESULTS/POPSTATCOVID/PLOTS/REGRESSIVE/*.png
+    rm -f "$current_dir"/RESULTS/POPSTATCOVID/PLOTS/PROGRESSIVE/cases/*.png
+    rm -f "$current_dir"/RESULTS/POPSTATCOVID/PLOTS/PROGRESSIVE/deaths/*.png
+    rm -f "$current_dir"/RESULTS/POPSTATCOVID/PLOTS/REGRESSIVE/cases/*.png
+    rm -f "$current_dir"/RESULTS/POPSTATCOVID/PLOTS/REGRESSIVE/deaths/*.png
 }
 
 delete_all_generated_csv_files_in_RESULTS() {

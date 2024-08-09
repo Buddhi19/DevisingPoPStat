@@ -118,7 +118,7 @@ class PLOT_OTHER_METRICS:
         self.plotter(X,Y_CASES_filtered,"Cases","Life Expectancy")
         self.plotter(X,Y_DEATHS_filtered,"Deaths","Life Expectancy")
 
-    def plotter(self,X,Y,title,metric):
+    def plotter(self,X,Y,title,metric,save_dir=SAVE_DIR):
         plt.figure(figsize=(10, 6))
         plt.scatter(X, Y)
         plt.xlabel(metric)
@@ -151,5 +151,5 @@ class PLOT_OTHER_METRICS:
         plt.text(0.05, 0.95, f'R² = {r_squared:.5f}',
                      transform=plt.gca().transAxes, verticalalignment='top')
 
-        plt.savefig(os.path.join(SAVE_DIR, f'Total_{title}_per_million_for_{metric}.png'))
+        plt.savefig(os.path.join(save_dir, f'Total_{title}_per_million_for_{metric}.png'))
         plt.close()

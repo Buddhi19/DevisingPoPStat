@@ -9,28 +9,29 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from ANALYSIS.COUNTRIES import mapping_name
 
-DEATH_DATA = pd.read_csv("DATA/death_data/death_data.csv", low_memory=False)
+DEATH_DATA = pd.read_csv("DATA/death_data/deaths_by_cause.csv", low_memory=False)
 POPULATION_DATA = pd.read_csv("DATA/population_data_with_age/age_data.csv", low_memory=False)
-POPSTAT_COVID_DATA = pd.read_csv("RESULTS/POPSTAT_COUNTRY_DATA/malta_POPSTAT_COVID19.csv")
+HDI_DATA = pd.read_csv("DATA/owid_data/human-development-index.csv", low_memory=False)
+MEDIAN_AGE_DATA = pd.read_csv("DATA/owid_data/median-age.csv", low_memory=False)
 
-SAVING_PATH_PNG = "RESULTS/CORRELATION_WITH_OTHER_DISEASES"
+SAVING_PATH_PNG = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/POPSTAT"
+SAVING_PATH_PNG_HDI = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/OTHER_METRICS/HDI"
+SAVING_PATH_PNG_MEDIAN_AGE = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/OTHER_METRICS/MEDIAN_AGE"
+SAVING_PATH_PNG_GDP_PER_CAPITA = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/OTHER_METRICS/GDP_PER_CAPITA"
+SAVING_PATH_PNG_POPULATION_DENSITY = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/OTHER_METRICS/POPULATION_DENSITY"
 SAVING_PATH_CSV = "RESULTS/CORRELATION_DATA_FOR_OTHER_DISEASES"
 
 COVID_DATA_DIR = "DATA/covid_data_by_country"
+POPSTAT_COVID_DATA_DIR = "RESULTS/POPSTAT_COUNTRY_DATA"
 
 class MORTALITY_DATA:
-    def __init__(self, year):
-        if isinstance(year, int):
-            self.years = [year]
-        elif isinstance(year, list):
-            self.years =year
+    def __init__(self, year, country):
+        self.POPSTAT_COVID_DATA = pd.read_csv(os.path.join(POPSTAT_COVID_DATA_DIR, f"{country}_POPSTAT_COVID19.csv"))
+        self.year = year
 
         self.COUNTRY_DATA = {
             "Country": [],
-            "Average Population": [],
-            "Median Age": [],
-            "GDP per Capita": [],
-            "Population Density": []
+            "Population": []
         }
         self.create_population_data()
         self.CORR_COEFFICIENT = {
@@ -39,72 +40,98 @@ class MORTALITY_DATA:
             "CI": [],
             "p-value": []
         }
+        self.HDI_DATA = HDI_DATA[HDI_DATA['Year'] == int(self.year)]
 
-    @classmethod
-    def ADD_RANGE(cls, start, end):
-        years = list(range(start, end + 1))
-        return cls(years)
-    
+        self.MEDIAN_AGE_DATA = MEDIAN_AGE_DATA[MEDIAN_AGE_DATA['Year'] == int(self.year)]
+        self.MEDIAN_AGE_DATA.columns = ["Entity", "Code", "Year", "Median Age", ""]
+
     def create_population_data(self):
         for country in POPULATION_DATA['Location'].unique():
             pop_data = POPULATION_DATA[POPULATION_DATA['Location'] == country]
             pop_data = pop_data.drop(columns=['LocID'])
             pop_data = pop_data.drop_duplicates()
-            total_population = 0
-            for year in self.years:
-                pop_data = pop_data[pop_data['Time'] == int(year)]
-                total_population += pop_data['PopTotal'].sum()
-
-            self.average_population = total_population / len(self.years)
+            pop_data = pop_data[pop_data['Time'] == int(self.year)]
+            total_population = pop_data['PopTotal'].sum()
             pre_name = country
             country = mapping_name(country)
             if country == None:
                 continue
             self.COUNTRY_DATA['Country'].append(country)
-            self.COUNTRY_DATA['Average Population'].append(self.average_population)
+            self.COUNTRY_DATA['Population'].append(total_population)
 
     def create_death_data_per_disease(self, disease, country):
-        filtered_data = DEATH_DATA[DEATH_DATA['cause_name'] == disease]
-        filtered_data = filtered_data[filtered_data['location_name'] == country]
-        total_deaths = 0
-        for year in self.years:
-            year_data = filtered_data[(filtered_data['year'] == year) & 
-                          (filtered_data['age_name'] == 'All ages') & 
-                          (filtered_data['sex_name'] == 'Both')]
-            total_deaths += year_data['val'].sum()
-
-        self.average_deaths = total_deaths / len(self.years)
-        return self.average_deaths
+        filtered_data = DEATH_DATA[DEATH_DATA['Causes name'] == disease]
+        filtered_data = filtered_data[filtered_data['Entity'] == country]
+        year_data = filtered_data[(filtered_data['Year'] == self.year)]
+        total_deaths = year_data['Death Numbers'].values[0]
+        return total_deaths
     
     def create_dataframe_for_diseases(self, disease):
-        DATAFRAME = {
-            'Country': [],
-            'Average Population': [],
-            'Average Deaths': [],
-            'Deaths per million': [],
-            'POPSTAT Data': [],
-        }
-        data = DEATH_DATA[DEATH_DATA['cause_name'] == disease]
-        for country in data['location_name'].unique():
+        X = []
+        Y = []
+        data = DEATH_DATA[DEATH_DATA['Causes name'] == disease]
+        for country in data['Entity'].unique():
             pre_name = country
             country = mapping_name(country)
             if country == None:
                 continue
-            if country not in POPSTAT_COVID_DATA["Country"].values:
+            if country not in self.POPSTAT_COVID_DATA["Country"].values:
                 continue
-            popstat_val = POPSTAT_COVID_DATA[POPSTAT_COVID_DATA["Country"] == country]["POPSTAT_COVID19"].values[0]
-            DATAFRAME['POPSTAT Data'].append(popstat_val)
-            average_deaths = self.create_death_data_per_disease(disease, pre_name)
-            DATAFRAME['Average Deaths'].append(average_deaths)
-            DATAFRAME['Country'].append(country)
-            average_population = self.COUNTRY_DATA['Average Population'][self.COUNTRY_DATA['Country'].index(country)]
-            DATAFRAME['Average Population'].append(average_population)
-            DATAFRAME['Deaths per million'].append(average_deaths / average_population)
+            popstat_val = self.POPSTAT_COVID_DATA[self.POPSTAT_COVID_DATA["Country"] == country]["POPSTAT_COVID19"].values[0]
+            X.append(popstat_val)
+            total_deaths = self.create_death_data_per_disease(disease, pre_name)
+            population = self.COUNTRY_DATA['Population'][self.COUNTRY_DATA['Country'].index(country)]
+            Y.append(total_deaths/population)
 
-        self.PLOT_WITH_POPSTAT(DATAFRAME['POPSTAT Data'], DATAFRAME['Deaths per million'], disease)
+        self.PLOT(X,Y, disease)
         print(f"Data for {disease} has been plotted")
 
-    def PLOT_WITH_POPSTAT(self, X, Y, title, saving_path=SAVING_PATH_PNG):
+    def create_dataframe_for_diseases_HDI(self, disease):
+        X = []
+        Y = []
+        data = DEATH_DATA[DEATH_DATA['Causes name'] == disease]
+        for country in data['Entity'].unique():
+            pre_name = country
+            country = mapping_name(country)
+            if country == None:
+                continue
+            if country not in self.HDI_DATA['Entity'].str.lower().values:
+                continue
+            HDI = self.HDI_DATA[self.HDI_DATA['Entity'].str.lower() == country]['Human Development Index'].values[0]
+            X.append(HDI)
+            total_deaths = self.create_death_data_per_disease(disease, pre_name)
+            population = self.COUNTRY_DATA['Population'][self.COUNTRY_DATA['Country'].index(country)]
+            Y.append(total_deaths/population)
+
+        self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_HDI, variable = "HDI")
+        print(f"Data for {disease} has been plotted with HDI")
+
+    def create_dataframe_for_diseases_MEDIAN_AGE(self, disease):
+        X = []
+        Y = []
+        data = DEATH_DATA[DEATH_DATA['Causes name'] == disease]
+        for country in data['Entity'].unique():
+            pre_name = country
+            country = mapping_name(country)
+            if country == None:
+                continue
+            if country not in self.MEDIAN_AGE_DATA['Entity'].str.lower().values:
+                continue
+            median_age = self.MEDIAN_AGE_DATA[self.MEDIAN_AGE_DATA['Entity'].str.lower() == country]['Median Age'].values[0]
+            X.append(median_age)
+            total_deaths = self.create_death_data_per_disease(disease, pre_name)
+            population = self.COUNTRY_DATA['Population'][self.COUNTRY_DATA['Country'].index(country)]
+            Y.append(total_deaths/population)
+
+        self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_MEDIAN_AGE, variable = "Median Age")
+        print(f"Data for {disease} has been plotted with Median Age")
+
+    
+    def create_dataframe_for_diseases_GDP_PER_CAPITA(self, disease):
+        pass
+            
+
+    def PLOT(self, X, Y, title, saving_path=SAVING_PATH_PNG,variable = "POPSTAT_COVID19"):
         X = np.array(X)
         Y = np.array(Y)
         mask = (Y > 0)
@@ -117,7 +144,7 @@ class MORTALITY_DATA:
         if len(X) < 2 or len(Y) < 2:
             return
         plt.scatter(X, Y)
-        plt.xlabel("POPSTAT_COVID19")
+        plt.xlabel(f"{variable}")
         plt.ylabel(f"{title} Deaths/Log")
 
         correalation_coefficient, p_value = stats.pearsonr(X, Y)
@@ -186,10 +213,12 @@ class MORTALITY_DATA:
         ]
         for disease in diseases:
             self.create_dataframe_for_diseases(disease)
+            self.create_dataframe_for_diseases_HDI(disease)
+            self.create_dataframe_for_diseases_MEDIAN_AGE(disease)
         self.CORR_COEFFICIENT = pd.DataFrame(self.CORR_COEFFICIENT)
         self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, "Correlation_Coefficient.csv"))
 
 
 if __name__ == "__main__":
-    data = MORTALITY_DATA.ADD_RANGE(2018, 2020)
-    data.ANALYZER()
+    data = MORTALITY_DATA(2018, "japan")
+    data.ANALYZER_FOR_SELECTED_DISEASES()

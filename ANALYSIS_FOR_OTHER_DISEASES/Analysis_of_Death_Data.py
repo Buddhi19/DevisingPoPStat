@@ -13,6 +13,8 @@ DEATH_DATA = pd.read_csv("DATA/death_data/deaths_by_cause.csv", low_memory=False
 POPULATION_DATA = pd.read_csv("DATA/population_data_with_age/age_data.csv", low_memory=False)
 HDI_DATA = pd.read_csv("DATA/owid_data/human-development-index.csv", low_memory=False)
 MEDIAN_AGE_DATA = pd.read_csv("DATA/owid_data/median-age.csv", low_memory=False)
+GDP_PER_CAPITA_DATA = pd.read_csv("DATA/owid_data/gdp-per-capita.csv", low_memory=False)
+POPULATION_DENSITY = pd.read_csv("DATA/owid_data/population-density.csv", low_memory=False)
 
 SAVING_PATH_PNG = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/POPSTAT"
 SAVING_PATH_PNG_HDI = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/OTHER_METRICS/HDI"
@@ -35,6 +37,7 @@ class MORTALITY_DATA:
         }
         self.create_population_data()
         self.CORR_COEFFICIENT = {
+            "Parameter": [],
             "Cause of Death": [],
             "Correlation Coefficient": [],
             "CI": [],
@@ -44,6 +47,9 @@ class MORTALITY_DATA:
 
         self.MEDIAN_AGE_DATA = MEDIAN_AGE_DATA[MEDIAN_AGE_DATA['Year'] == int(self.year)]
         self.MEDIAN_AGE_DATA.columns = ["Entity", "Code", "Year", "Median Age", ""]
+
+        self.GDP_per_capita_data = GDP_PER_CAPITA_DATA[GDP_PER_CAPITA_DATA['Year'] == int(self.year)]
+        self.Pop_Density = POPULATION_DENSITY[POPULATION_DENSITY['Year'] == int(self.year)]
 
     def create_population_data(self):
         for country in POPULATION_DATA['Location'].unique():
@@ -125,11 +131,46 @@ class MORTALITY_DATA:
 
         self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_MEDIAN_AGE, variable = "Median Age")
         print(f"Data for {disease} has been plotted with Median Age")
-
     
     def create_dataframe_for_diseases_GDP_PER_CAPITA(self, disease):
-        pass
-            
+        X = []
+        Y = []
+        data = DEATH_DATA[DEATH_DATA['Causes name'] == disease]
+        for country in data['Entity'].unique():
+            pre_name = country
+            country = mapping_name(country)
+            if country == None:
+                continue
+            if country not in self.GDP_per_capita_data['Entity'].str.lower().values:
+                continue
+            GDP_per_capita = self.GDP_per_capita_data[self.GDP_per_capita_data['Entity'].str.lower() == country]['GDP per capita'].values[0]
+            X.append(GDP_per_capita)
+            total_deaths = self.create_death_data_per_disease(disease, pre_name)
+            population = self.COUNTRY_DATA['Population'][self.COUNTRY_DATA['Country'].index(country)]
+            Y.append(total_deaths/population)
+
+        self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_GDP_PER_CAPITA, variable = "GDP per capita")
+        print(f"Data for {disease} has been plotted with GDP per capita")
+
+    def create_dataframe_for_diseases_POPULATION_DENSITY(self, disease):
+        X = []
+        Y = []
+        data = DEATH_DATA[DEATH_DATA['Causes name'] == disease]
+        for country in data['Entity'].unique():
+            pre_name = country
+            country = mapping_name(country)
+            if country == None:
+                continue
+            if country not in self.Pop_Density['Entity'].str.lower().values:
+                continue
+            Pop_Density = self.Pop_Density[self.Pop_Density['Entity'].str.lower() == country]['Population density'].values[0]
+            X.append(Pop_Density)
+            total_deaths = self.create_death_data_per_disease(disease, pre_name)
+            population = self.COUNTRY_DATA['Population'][self.COUNTRY_DATA['Country'].index(country)]
+            Y.append(total_deaths/population)
+
+        self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_POPULATION_DENSITY, variable = "Population Density")
+        print(f"Data for {disease} has been plotted with Population Density")
 
     def PLOT(self, X, Y, title, saving_path=SAVING_PATH_PNG,variable = "POPSTAT_COVID19"):
         X = np.array(X)
@@ -162,6 +203,7 @@ class MORTALITY_DATA:
         print(f"95% confidence interval: {lo:.3f} to {hi:.3f} for {title} deaths")
         print(f"p-value = {p_value:.6f} for {title} deaths")
 
+        self.CORR_COEFFICIENT['Parameter'].append(variable)
         self.CORR_COEFFICIENT['Cause of Death'].append(title)
         self.CORR_COEFFICIENT['Correlation Coefficient'].append(correalation_coefficient)
         self.CORR_COEFFICIENT['CI'].append((lo, hi))
@@ -215,10 +257,12 @@ class MORTALITY_DATA:
             self.create_dataframe_for_diseases(disease)
             self.create_dataframe_for_diseases_HDI(disease)
             self.create_dataframe_for_diseases_MEDIAN_AGE(disease)
+            self.create_dataframe_for_diseases_GDP_PER_CAPITA(disease)
+            self.create_dataframe_for_diseases_POPULATION_DENSITY(disease)
         self.CORR_COEFFICIENT = pd.DataFrame(self.CORR_COEFFICIENT)
         self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, "Correlation_Coefficient.csv"))
 
 
 if __name__ == "__main__":
-    data = MORTALITY_DATA(2018, "japan")
+    data = MORTALITY_DATA(2018, "malta")
     data.ANALYZER_FOR_SELECTED_DISEASES()

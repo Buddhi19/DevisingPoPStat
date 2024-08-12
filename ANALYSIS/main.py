@@ -68,12 +68,13 @@ class ANALYSIS:
         self.plot_pop_stat()
         self.plot_other_metrics()
 
-    def parser_run(self, pop_year, covid_date):
+    def parser_run(self, pop_year=2020, covid_date='2023-05-05', plot=True):
         POPULATION_DATA_FOR_DATE(pop_year)
         COVID_DATA_FOR_DATE(covid_date)
         self.plot_population_data()
         self.calculate_pop_stat()
-        self.plot_pop_stat()
+        if plot:
+            self.plot_pop_stat()
         self.plot_other_metrics()
 
 if __name__ == "__main__":

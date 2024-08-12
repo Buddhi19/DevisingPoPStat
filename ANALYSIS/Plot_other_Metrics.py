@@ -19,7 +19,7 @@ SDI_DATA = os.path.join(main_dir, 'Data/IHME_data/sdi_data.csv')
 
 class PLOT_OTHER_METRICS:
     def __init__(self, countries, year):
-        self.year = year
+        self.year = int(year)
         self.countries = countries
         self.Y_CASES = []
         self.Y_DEATHS = []
@@ -29,27 +29,27 @@ class PLOT_OTHER_METRICS:
             self.Y_CASES.append(np.log(data['total_cases_per_million'].values[0]))
 
         self.Median_age_data = pd.read_csv(MEDIAN_AGE_DATA)
-        self.Median_age_data = self.Median_age_data[self.Median_age_data['Year'] == int(self.year)]
+        self.Median_age_data = self.Median_age_data[self.Median_age_data['Year'] == self.year]
         self.Median_age_data.columns = ['Entity', 'Code', 'Year', 'Median age', '']
 
         self.GDP_per_capita_data = pd.read_csv(GDP_PER_CAPITA_DATA)
-        self.GDP_per_capita_data = self.GDP_per_capita_data[self.GDP_per_capita_data['Year'] == int(self.year)]
+        self.GDP_per_capita_data = self.GDP_per_capita_data[self.GDP_per_capita_data['Year'] == self.year]
         self.GDP_per_capita_data.columns = ['Entity', 'Code', 'Year', 'GDP per capita','']
 
         self.Population_density_data = pd.read_csv(POPULATION_DENSITY_DATA)
-        self.Population_density_data = self.Population_density_data[self.Population_density_data['Year'] == int(self.year)]
+        self.Population_density_data = self.Population_density_data[self.Population_density_data['Year'] == self.year]
 
         self.Human_development_index_data = pd.read_csv(HUMAN_DEVELOPMENT_INDEX_DATA)
-        self.Human_development_index_data = self.Human_development_index_data[self.Human_development_index_data['Year'] == int(self.year)]
+        self.Human_development_index_data = self.Human_development_index_data[self.Human_development_index_data['Year'] == self.year]
 
         self.Life_expectancy_data = pd.read_csv(LIFE_EXPECTANCY_DATA)
-        self.Life_expectancy_data = self.Life_expectancy_data[self.Life_expectancy_data['Year'] == int(self.year)]
+        self.Life_expectancy_data = self.Life_expectancy_data[self.Life_expectancy_data['Year'] == self.year]
         self.Life_expectancy_data.columns = ['Entity', 'Code', 'Year', 'Life expectancy']
 
         if self.year <= 2019:
             self.SDI_data = pd.read_csv(SDI_DATA, encoding="ISO-8859-1")
             #keep columns with only year 2019 and country names
-            self.SDI_data = self.SDI_data[["Location", self.year]]
+            self.SDI_data = self.SDI_data[["Location", str(self.year)]]
 
     def MEDIAN_AGE(self):
         X = []
@@ -118,7 +118,7 @@ class PLOT_OTHER_METRICS:
             if data.empty:
                 i += 1
                 continue
-            X.append(data[self.year].values[0])
+            X.append(data[str(self.year)].values[0])
             Y_CASES_filtered.append(self.Y_CASES[i])
             Y_DEATHS_filtered.append(self.Y_DEATHS[i])
             i += 1
@@ -140,7 +140,9 @@ class PLOT_OTHER_METRICS:
             Y_CASES_filtered.append(self.Y_CASES[i])
             Y_DEATHS_filtered.append(self.Y_DEATHS[i])
             i += 1
-
+        if not X:
+            print("No data found for Life Expectancy")
+            return
         self.plotter(X,Y_CASES_filtered,"Cases","Life Expectancy")
         self.plotter(X,Y_DEATHS_filtered,"Deaths","Life Expectancy")
 

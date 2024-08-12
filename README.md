@@ -47,13 +47,16 @@ Pop_Pyramid
 1. On the Current Directory
     
     ```python 
-    python -m ANALYSIS --py <population year(YYYY)> --cd "<covid data (YYYY-MM-DD)>"
+    python -m ANALYSIS --py <population year(YYYY)> 
+                        --cd "<covid data (YYYY-MM-DD)>"
+                         --plot "<y/n>"
     ```
     ### Population Year as per the paper : 2020
     ### Covid Date as per the paper : 2022-04-08
+    ### Plot population pyramids : y
 
     ```python
-    python -m ANALYSIS --py 2020 --cd "2022-04-08"
+    python -m ANALYSIS --py 2020 --cd "2022-04-08" --plot "y"
     ```
 
 2. Or just simply run the main.py file

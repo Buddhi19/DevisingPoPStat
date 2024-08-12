@@ -119,7 +119,7 @@ class POP_STAT_CALCULATION:
         for country, dist in self.population_data.items():
             if country in self.common_countries:
                 HDI_country = self.HDI_data[country]
-                distances[country] = self.KL_DIVERGENCE(dist, reference_dist)
+                distances[country] = self.JENSEN_SHANNON_DIVERGENCE(dist, reference_dist)/HDI_country
         return distances
 
     def find_optimal_reference(self):

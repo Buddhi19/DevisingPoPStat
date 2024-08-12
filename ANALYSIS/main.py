@@ -44,6 +44,7 @@ class ANALYSIS:
         plotter.POPULATION_DENSITY()
         plotter.HUMAN_DEVELOPMENT_INDEX()
         plotter.LIFE_EXPECTANCY()
+        plotter.SDI()
 
     def calculate_pop_stat(self):
         calculator = POP_STAT_CALCULATION()

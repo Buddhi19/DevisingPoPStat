@@ -15,6 +15,7 @@ GDP_PER_CAPITA_DATA = os.path.join(main_dir, 'Data/owid_data/gdp-per-capita.csv'
 POPULATION_DENSITY_DATA = os.path.join(main_dir, 'Data/owid_data/population-density.csv')
 HUMAN_DEVELOPMENT_INDEX_DATA = os.path.join(main_dir, 'Data/owid_data/human-development-index.csv')
 LIFE_EXPECTANCY_DATA = os.path.join(main_dir, 'Data/owid_data/life-expectancy.csv')
+SDI_DATA = os.path.join(main_dir, 'Data/IHME_data/sdi_data.csv')
 
 class PLOT_OTHER_METRICS:
     def __init__(self, countries, year):
@@ -45,7 +46,11 @@ class PLOT_OTHER_METRICS:
         self.Life_expectancy_data = self.Life_expectancy_data[self.Life_expectancy_data['Year'] == int(self.year)]
         self.Life_expectancy_data.columns = ['Entity', 'Code', 'Year', 'Life expectancy']
 
-        
+        if self.year <= 2019:
+            self.SDI_data = pd.read_csv(SDI_DATA, encoding="ISO-8859-1")
+            #keep columns with only year 2019 and country names
+            self.SDI_data = self.SDI_data[["Location", self.year]]
+
     def MEDIAN_AGE(self):
         X = []
         for country in self.countries:
@@ -99,6 +104,27 @@ class PLOT_OTHER_METRICS:
 
         self.plotter(X,Y_CASES_filtered,"Cases","Human Development Index")
         self.plotter(X,Y_DEATHS_filtered,"Deaths","Human Development Index")
+
+    def SDI(self):
+        if self.year > 2019:
+            print("No SDI data available for year 2020 and beyond")
+            return
+        X = []
+        Y_CASES_filtered = []
+        Y_DEATHS_filtered = []
+        i = 0
+        for country in self.countries:
+            data = self.SDI_data[self.SDI_data['Location'].str.lower() == country]
+            if data.empty:
+                i += 1
+                continue
+            X.append(data[self.year].values[0])
+            Y_CASES_filtered.append(self.Y_CASES[i])
+            Y_DEATHS_filtered.append(self.Y_DEATHS[i])
+            i += 1
+        
+        self.plotter(X,Y_CASES_filtered,"Cases","Social Development Index")
+        self.plotter(X,Y_DEATHS_filtered,"Deaths","Social Development Index")
 
     def LIFE_EXPECTANCY(self):
         X = []

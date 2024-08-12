@@ -15,6 +15,7 @@ HDI_DATA = pd.read_csv("DATA/owid_data/human-development-index.csv", low_memory=
 MEDIAN_AGE_DATA = pd.read_csv("DATA/owid_data/median-age.csv", low_memory=False)
 GDP_PER_CAPITA_DATA = pd.read_csv("DATA/owid_data/gdp-per-capita.csv", low_memory=False)
 POPULATION_DENSITY = pd.read_csv("DATA/owid_data/population-density.csv", low_memory=False)
+SDI_DATA = pd.read_csv("DATA/IHME_data/sdi_data.csv",encoding = "ISO-8859-1",low_memory=False)
 
 SAVING_PATH_PNG = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/POPSTAT"
 SAVING_PATH_PNG_HDI = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/OTHER_METRICS/HDI"
@@ -22,6 +23,7 @@ SAVING_PATH_PNG_MEDIAN_AGE = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/OTHER_METR
 SAVING_PATH_PNG_GDP_PER_CAPITA = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/OTHER_METRICS/GDP_PER_CAPITA"
 SAVING_PATH_PNG_POPULATION_DENSITY = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/OTHER_METRICS/POPULATION_DENSITY"
 SAVING_PATH_CSV = "RESULTS/CORRELATION_DATA_FOR_OTHER_DISEASES"
+SAVING_PATH_PNG_SDI = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/OTHER_METRICS/SDI"
 
 COVID_DATA_DIR = "DATA/covid_data_by_country"
 POPSTAT_COVID_DATA_DIR = "RESULTS/POPSTAT_COUNTRY_DATA"
@@ -50,6 +52,9 @@ class MORTALITY_DATA:
 
         self.GDP_per_capita_data = GDP_PER_CAPITA_DATA[GDP_PER_CAPITA_DATA['Year'] == int(self.year)]
         self.Pop_Density = POPULATION_DENSITY[POPULATION_DENSITY['Year'] == int(self.year)]
+
+        if self.year <= 2019:
+            self.SDI_data = SDI_DATA[["Location", str(self.year)]]
 
     def create_population_data(self):
         for country in POPULATION_DATA['Location'].unique():
@@ -111,6 +116,28 @@ class MORTALITY_DATA:
 
         self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_HDI, variable = "HDI")
         print(f"Data for {disease} has been plotted with HDI")
+
+    def create_dataframe_for_diseases_SDI(self, disease):
+        if self.year > 2019:
+            return
+        X = []
+        Y = []
+        data = DEATH_DATA[DEATH_DATA['Causes name'] == disease]
+        for country in data['Entity'].unique():
+            pre_name = country
+            country = mapping_name(country)
+            if country == None:
+                continue
+            if country not in SDI_DATA['Location'].str.lower().values:
+                continue
+            SDI = SDI_DATA[SDI_DATA['Location'].str.lower() == country][str(self.year)].values[0]
+            X.append(SDI)
+            total_deaths = self.create_death_data_per_disease(disease, pre_name)
+            population = self.COUNTRY_DATA['Population'][self.COUNTRY_DATA['Country'].index(country)]
+            Y.append(total_deaths/population)
+
+        self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_SDI, variable = "SDI")
+        print(f"Data for {disease} has been plotted with SDI")
 
     def create_dataframe_for_diseases_MEDIAN_AGE(self, disease):
         X = []
@@ -259,10 +286,11 @@ class MORTALITY_DATA:
             self.create_dataframe_for_diseases_MEDIAN_AGE(disease)
             self.create_dataframe_for_diseases_GDP_PER_CAPITA(disease)
             self.create_dataframe_for_diseases_POPULATION_DENSITY(disease)
+            self.create_dataframe_for_diseases_SDI(disease)
         self.CORR_COEFFICIENT = pd.DataFrame(self.CORR_COEFFICIENT)
-        self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, "Correlation_Coefficient.csv"))
+        self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, "Correlation_Coefficient2.csv"))
 
 
 if __name__ == "__main__":
-    data = MORTALITY_DATA(2018, "malta")
+    data = MORTALITY_DATA(2018, "japan")
     data.ANALYZER_FOR_SELECTED_DISEASES()

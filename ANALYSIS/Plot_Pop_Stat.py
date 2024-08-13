@@ -8,7 +8,7 @@ import sys
 main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(main_dir)
 
-COVID_DIR = os.path.join(main_dir, 'Data/covid_data_by_country')
+COVID_DIR = os.path.join(main_dir, 'DATA/covid_data_by_country')
 POP_STAT_DIR = os.path.join(main_dir, 'RESULTS/POPSTAT_COUNTRY_DATA')
 SAVE_DIR_PROGRESSIVE = os.path.join(main_dir, 'RESULTS/POPSTATCOVID/PLOTS/PROGRESSIVE')
 SAVE_DIR_REGRESSIVE = os.path.join(main_dir, 'RESULTS/POPSTATCOVID/PLOTS/REGRESSIVE')
@@ -43,8 +43,8 @@ class PLOT_POP_STAT:
         print(f"Correlation coefficient = {correlation_coefficient:.3f} for {title}")
         print(f"95% confidence interval: {lo:.3f} to {hi:.3f} for {title}")
         print(f"p-value = {p_value:.6f} for {title}")
-
         self.plotter(X,Y,r_squared,title)
+        return r_squared, f"{lo:.3f} to {hi:.3f}", p_value
     
     def plotter(self,X,Y,r_squared,title):
         plt.figure(figsize=(10, 6))
@@ -63,8 +63,13 @@ class PLOT_POP_STAT:
         plt.close()
 
     def run(self):
-        self.POP_STAT_PLOT("cases")
-        self.POP_STAT_PLOT("deaths")
-        print("Plots saved successfully")
+        Stats = {}
+        r_squared, range, p_value = self.POP_STAT_PLOT("cases")
+        Stats["cases"] = (r_squared, range, p_value)
+        r_squared, range, p_value = self.POP_STAT_PLOT("deaths")
+        Stats["deaths"] = (r_squared, range, p_value)
+        print(f"Plots saved successfully for {self.country}")
+        print()
+        return Stats
 
 

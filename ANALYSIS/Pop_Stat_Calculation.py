@@ -7,8 +7,8 @@ import sys
 main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(main_dir)
 
-POPULATION_DIR = os.path.join(main_dir, 'Data/population_data_by_country')
-COVID_DIR = os.path.join(main_dir, 'Data/covid_data_by_country')
+POPULATION_DIR = os.path.join(main_dir, 'DATA/population_data_by_country')
+COVID_DIR = os.path.join(main_dir, 'DATA/covid_data_by_country')
 RESULTS_DIR = os.path.join(main_dir, 'RESULTS/POPSTAT_COUNTRY_DATA')
 
 class POP_STAT_CALCULATION:
@@ -33,6 +33,7 @@ class POP_STAT_CALCULATION:
             total_cases_per_million = data['total_cases_per_million'].tolist()[0]
             self.covid_data[country_name] = total_deaths_per_million*1 + total_cases_per_million*0
 
+        """
         self.HDI_data = {}
         for file_name in os.listdir(COVID_DIR):
             if not file_name.endswith('.csv'):
@@ -41,8 +42,9 @@ class POP_STAT_CALCULATION:
             data = pd.read_csv(os.path.join(COVID_DIR, file_name))
             HDI = data['human_development_index'].tolist()[0]
             self.HDI_data[country_name] = HDI
+        """
 
-        self.common_countries = set(self.population_data.keys()) & set(self.covid_data.keys()) & set(self.HDI_data.keys())
+        self.common_countries = set(self.population_data.keys()) & set(self.covid_data.keys())
 
     def run(self):
         self.remove_nan_values()
@@ -75,15 +77,15 @@ class POP_STAT_CALCULATION:
                 NAN_COUNTRIES.append(country)
                 print(f"Warning: Non-finite value found in COVID data for {country}")
 
-        for country, value in self.HDI_data.items():
-            if not np.isfinite(value):
-                NAN_COUNTRIES.append(country)
-                print(f"Warning: Non-finite value found in HDI data for {country}")
+        # for country, value in self.HDI_data.items():
+        #     if not np.isfinite(value):
+        #         NAN_COUNTRIES.append(country)
+        #         print(f"Warning: Non-finite value found in HDI data for {country}")
 
         if NAN_COUNTRIES:
             self.population_data = {country: dist for country, dist in self.population_data.items() if country not in NAN_COUNTRIES}
             self.covid_data = {country: value for country, value in self.covid_data.items() if country not in NAN_COUNTRIES}
-            self.HDI_data = {country: value for country, value in self.HDI_data.items() if country not in NAN_COUNTRIES}
+            # self.HDI_data = {country: value for country, value in self.HDI_data.items() if country not in NAN_COUNTRIES}
 
     @staticmethod
     def KL_DIVERGENCE(p, q):
@@ -114,12 +116,13 @@ class POP_STAT_CALCULATION:
     def POPSTAT_COVID19(self,reference_country):
         print(f"Calculating POPSTAT_COVID19 for {reference_country}")
         reference_dist = self.population_data[reference_country]
-        HDI_reference = self.HDI_data[reference_country]
+        # HDI_reference = self.HDI_data[reference_country]
         distances = {}
         for country, dist in self.population_data.items():
             if country in self.common_countries:
-                HDI_country = self.HDI_data[country]
-                distances[country] = self.JENSEN_SHANNON_DIVERGENCE(dist, reference_dist)/HDI_country
+                # HDI_country = self.HDI_data[country]
+                distances[country] = self.JENSEN_SHANNON_DIVERGENCE(dist, reference_dist)
+                # distances[country] = self.EUCLIDEAN_DISTANCE(dist, reference_dist)
                 # distances[country] = self.KL_DIVERGENCE(dist, reference_dist)
         return distances
 

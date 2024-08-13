@@ -7,8 +7,8 @@ sys.path.append(main_dir)
 
 from ANALYSIS.COUNTRIES import mapping_name
 
-age_data = pd.read_csv('Data/population_data_with_age/age_data.csv', low_memory = False)
-saving_dir = os.path.join(main_dir, "Data/population_data_by_country")
+age_data = pd.read_csv(os.path.join(main_dir,'DATA/population_data_with_age/age_data.csv'), low_memory = False)
+saving_dir = os.path.join(main_dir, "DATA/population_data_by_country")
 
 
 def POPULATION_DATA_FOR_DATE(date):

@@ -8,14 +8,14 @@ from scipy import stats
 main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(main_dir)
 
-COVID_DATA_DIR = os.path.join(main_dir, 'Data/covid_data_by_country')
+COVID_DATA_DIR = os.path.join(main_dir, 'DATA/covid_data_by_country')
 SAVE_DIR = os.path.join(main_dir, 'RESULTS/POPSTATCOVID/OTHER_METRICS')
-MEDIAN_AGE_DATA = os.path.join(main_dir, 'Data/owid_data/median-age.csv')
-GDP_PER_CAPITA_DATA = os.path.join(main_dir, 'Data/owid_data/gdp-per-capita.csv')
-POPULATION_DENSITY_DATA = os.path.join(main_dir, 'Data/owid_data/population-density.csv')
-HUMAN_DEVELOPMENT_INDEX_DATA = os.path.join(main_dir, 'Data/owid_data/human-development-index.csv')
-LIFE_EXPECTANCY_DATA = os.path.join(main_dir, 'Data/owid_data/life-expectancy.csv')
-SDI_DATA = os.path.join(main_dir, 'Data/IHME_data/sdi_data.csv')
+MEDIAN_AGE_DATA = os.path.join(main_dir, 'DATA/owid_data/median-age.csv')
+GDP_PER_CAPITA_DATA = os.path.join(main_dir, 'DATA/owid_data/gdp-per-capita.csv')
+POPULATION_DENSITY_DATA = os.path.join(main_dir, 'DATA/owid_data/population-density.csv')
+HUMAN_DEVELOPMENT_INDEX_DATA = os.path.join(main_dir, 'DATA/owid_data/human-development-index.csv')
+LIFE_EXPECTANCY_DATA = os.path.join(main_dir, 'DATA/owid_data/life-expectancy.csv')
+SDI_DATA = os.path.join(main_dir, 'DATA/IHME_data/sdi_data.csv')
 
 class PLOT_OTHER_METRICS:
     def __init__(self, countries, year):
@@ -57,8 +57,10 @@ class PLOT_OTHER_METRICS:
             data = self.Median_age_data[self.Median_age_data['Entity'].str.lower() == country]
             X.append(data['Median age'].values[0])
 
-        self.plotter(X,self.Y_CASES,"Cases","Median Age (years)")
-        self.plotter(X,self.Y_DEATHS,"Deaths","Median Age (years)")
+        Stats = {}
+        Stats['cases'] = self.plotter(X,self.Y_CASES,"Cases","Median Age (years)")
+        Stats['deaths'] = self.plotter(X,self.Y_DEATHS,"Deaths","Median Age (years)")
+        return Stats
 
     def GDP_PER_CAPITA(self):
         X = []
@@ -75,8 +77,10 @@ class PLOT_OTHER_METRICS:
             Y_DEATHS_filtered.append(self.Y_DEATHS[i])
             i += 1
 
-        self.plotter(X,Y_CASES_filtered,"Cases","GDP per Capita (USD)")
-        self.plotter(X,Y_DEATHS_filtered,"Deaths","GDP per Capita (USD)")
+        Stats = {}
+        Stats['cases'] = self.plotter(X,Y_CASES_filtered,"Cases","GDP per capita (current US$)")
+        Stats['deaths'] = self.plotter(X,Y_DEATHS_filtered,"Deaths","GDP per capita (current US$)")
+        return Stats
 
     def POPULATION_DENSITY(self):
         X = []
@@ -84,8 +88,10 @@ class PLOT_OTHER_METRICS:
             data = self.Population_density_data[self.Population_density_data['Entity'].str.lower() == country]
             X.append(data['Population density'].values[0])
 
-        self.plotter(X,self.Y_CASES,"Cases","Population Density (per km²)")
-        self.plotter(X,self.Y_DEATHS,"Deaths","Population Density (per km²)")
+        Stats = {}
+        Stats['cases'] = self.plotter(X,self.Y_CASES,"Cases","Population Density (per km²)")
+        Stats['deaths'] = self.plotter(X,self.Y_DEATHS,"Deaths","Population Density (per km²)")
+        return Stats
 
     def HUMAN_DEVELOPMENT_INDEX(self):
         X = []
@@ -104,6 +110,10 @@ class PLOT_OTHER_METRICS:
 
         self.plotter(X,Y_CASES_filtered,"Cases","Human Development Index")
         self.plotter(X,Y_DEATHS_filtered,"Deaths","Human Development Index")
+        Stats = {}
+        Stats['cases'] = self.plotter(X,Y_CASES_filtered,"Cases","Human Development Index")
+        Stats['deaths'] = self.plotter(X,Y_DEATHS_filtered,"Deaths","Human Development Index")
+        return Stats
 
     def SDI(self):
         if self.year > 2019:
@@ -123,8 +133,10 @@ class PLOT_OTHER_METRICS:
             Y_DEATHS_filtered.append(self.Y_DEATHS[i])
             i += 1
         
-        self.plotter(X,Y_CASES_filtered,"Cases","Social Development Index")
-        self.plotter(X,Y_DEATHS_filtered,"Deaths","Social Development Index")
+        Stats = {}
+        Stats['cases'] = self.plotter(X,Y_CASES_filtered,"Cases","Social Development Index")
+        Stats['deaths'] = self.plotter(X,Y_DEATHS_filtered,"Deaths","Social Development Index") 
+        return Stats
 
     def LIFE_EXPECTANCY(self):
         X = []
@@ -143,8 +155,10 @@ class PLOT_OTHER_METRICS:
         if not X:
             print("No data found for Life Expectancy")
             return
-        self.plotter(X,Y_CASES_filtered,"Cases","Life Expectancy")
-        self.plotter(X,Y_DEATHS_filtered,"Deaths","Life Expectancy")
+        Stats = {}
+        Stats['cases'] = self.plotter(X,Y_CASES_filtered,"Cases","Life Expectancy")
+        Stats['deaths'] = self.plotter(X,Y_DEATHS_filtered,"Deaths","Life Expectancy")
+        return Stats
 
     def plotter(self,X,Y,title,metric,save_dir=SAVE_DIR):
         plt.figure(figsize=(10, 6))
@@ -163,21 +177,24 @@ class PLOT_OTHER_METRICS:
         p = np.poly1d(z)
         # plt.plot(X, p(X), "r",)
         # calculate the R² and confidence interval
-        correlation_coefficient = np.corrcoef(X,Y)[0,1]
+        correlation_coefficient, p_value = stats.pearsonr(X, Y)
         r_squared = correlation_coefficient ** 2
+
         n = len(X)
         r_z = np.arctanh(correlation_coefficient)
         se = 1/np.sqrt(n-3)
         z = stats.norm.ppf((1+0.95)/2)
         lo_z, hi_z = r_z-z*se, r_z+z*se
         lo, hi = np.tanh((lo_z, hi_z))
+
         print(f"R² = {r_squared:.3f} for {title}")
         print(f"95% confidence interval: {lo:.3f} to {hi:.3f} for {title}")
+        print(f"p-value = {p_value:.6f} for {title}")
 
         plt.plot(X, p(X), "r-",label = f"R² = {r_squared:.5f}")
-
         plt.text(0.05, 0.95, f'R² = {r_squared:.5f}',
                      transform=plt.gca().transAxes, verticalalignment='top')
 
         plt.savefig(os.path.join(save_dir, f'Total_{title}_per_million_for_{metric}.png'))
         plt.close()
+        return r_squared, f"{lo:.3f} to {hi:.3f}" , p_value

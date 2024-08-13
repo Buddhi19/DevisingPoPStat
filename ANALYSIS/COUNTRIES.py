@@ -2,9 +2,10 @@ import pandas as pd
 import os
 import sys
 
-sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
+main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+sys.path.append(main_dir)
 
-COUNTRY_DATA = pd.read_csv("DATA/countries/country_names_map.csv")
+COUNTRY_DATA = pd.read_csv(os.path.join(main_dir,"DATA/countries/country_names_map.csv"))
 
 def mapping_name(name:str):
     name = name.lower()

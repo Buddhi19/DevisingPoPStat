@@ -68,7 +68,7 @@ Choose your analysis parameters:
 
 1. Population Year: ____ (e.g., 2020)
 2. Covid Data Date: ____ (format: YYYY-MM-DD, e.g., 2022-04-08)
-3. Plot population pyramids? (y/n): ____
+3. Plot population pyramids? (y/n): 
 
 Now, run the analysis with your chosen parameters:
 

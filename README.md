@@ -1,16 +1,18 @@
 # The application of population pyramid information for COVID-19 cases and deaths mortality POPULATION PYRAMID
 
-## 1. Setup the Environment
 
-Clone the Repository
-  ```
+## Setup the Environment
+
+### Clone the Repository
+```bash
 git clone https://github.com/Buddhi19/Pop_Pyramid.git
-  ```
-Download all dependencies and setup workspace
+cd Pop_Pyramid
+```
 
-  ```
-  bash ./setup_environment.sh
-  ```   
+### Download Dependencies and Setup Workspace
+```bash
+bash ./setup_environment.sh
+```
 
 ## 📥 Download Data from Here
 
@@ -23,12 +25,14 @@ Download all dependencies and setup workspace
 - 🌡️ [**Life Expectancy**](https://ourworldindata.org/grapher/life-expectancy?tab=table)
 - 🏙️ [**Population Density**](https://ourworldindata.org/grapher/population-density?tab=table)
 
+After downloading, place the files in the appropriate directories as shown in the folder structure below.
 
+## Folder Structure
 
-## The Folder Structure should look like
+Ensure your folder structure looks like this:
 
 ```
-# 📊 Pop_Pyramid
+📊 Pop_Pyramid
 │
 ├── 📈 ANALYSIS
 ├── 🔬 ANALYSIS_FOR_OTHER_DISEASES
@@ -38,23 +42,19 @@ Download all dependencies and setup workspace
 │   ├── ⚰️ deaths_by_cause
 │   ├── ⚰️ deaths_by_cause_per_country
 │   ├── 🗂️ owid_covid_data
-│   │   └── 📄 owid-covid-data.csv (downloaded file)
-│   │
+│   │   └── 📄 owid-covid-data.csv
 │   ├── 🗂️ owid_data
-│   │   └── 📄 median-age.csv (downloaded file)
-│   │   └── 📄 population-density.csv (downloaded file)
-│   │   └── 📄 life-expectancy.csv (downloaded file)
-│   │   └── 📄 gdp-per-capita.csv (downloaded file)
-│   │   └── 📄 human-development-index.csv (downloaded file)
-│   │   └── 📄 sdi_data.csv (downloaded file)
-│   │
+│   │   ├── 📄 median-age.csv
+│   │   ├── 📄 population-density.csv
+│   │   ├── 📄 life-expectancy.csv
+│   │   ├── 📄 gdp-per-capita.csv
+│   │   ├── 📄 human-development-index.csv
+│   │   └── 📄 sdi_data.csv
 │   ├── 🗂️ death_data
-│   │   └── 📄 deaths_by_cause.csv (downloaded file)
-│   │
+│   │   └── 📄 deaths_by_cause.csv
 │   ├── 👥 population_data_by_country
 │   └── 👶👴 population_data_with_age
-│       └── 📄 age_data.csv (downloaded file)
-│
+│       └── 📄 age_data.csv
 └── 📊 RESULTS
     ├── 📊 COMBINED_DISTRIBUTIONS
     ├── 🧮 POPSTATCOVID
@@ -62,20 +62,31 @@ Download all dependencies and setup workspace
     └── 🏛️ PYRAMID
 ```
 
-## 2. Running the ANALYSIS for COVID Data
-1. On the Current Directory
-    
-    ```python 
-    python -m ANALYSIS --py <population year(YYYY)> 
-                        --cd "<covid data (YYYY-MM-DD)>"
-                         --plot "<y/n>"
-    ```
-    ### Population Year as per the paper : 2020
-    ### Covid Date as per the paper : 2022-04-08
-    ### Plot population pyramids : y
+## Running the Analysis for COVID Data
 
-    ```python
-    python -m ANALYSIS --py 2020 --cd "2022-04-08" --plot "y"
-    ```
+Choose your analysis parameters:
 
-2. Or just simply run the main.py file
+1. Population Year: ____ (e.g., 2020)
+2. Covid Data Date: ____ (format: YYYY-MM-DD, e.g., 2022-04-08)
+3. Plot population pyramids? (y/n): ____
+
+Now, run the analysis with your chosen parameters:
+
+```python
+python -m ANALYSIS --py <population year> --cd "<covid data date>" --plot "<y/n>"
+```
+
+For example:
+```python
+python -m ANALYSIS --py 2020 --cd "2022-04-08" --plot "y"
+```
+
+## View Results
+
+After running the analysis, check the `RESULTS` folder for your output files and visualizations.
+
+## Need Help?
+
+If you encounter any issues or have questions, please open an issue on the GitHub repository
+
+### Happy analyzing! 🚀📊

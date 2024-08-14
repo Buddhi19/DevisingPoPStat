@@ -74,6 +74,9 @@ class ANALYSIS:
         Stats = plotter.UNIVERSAL_HEALTH_COVERAGE()
         self.update_POPSTAT_DATAFRAME(Stats, "Universal Health Coverage")
 
+        Stats = plotter.GNI_INDEX()
+        self.update_POPSTAT_DATAFRAME(Stats, "GNI Index")
+
     def calculate_pop_stat(self):
         calculator = POP_STAT_CALCULATION()
         self.progressive_reference_countries, self.regressive_reference_countries = calculator.run()

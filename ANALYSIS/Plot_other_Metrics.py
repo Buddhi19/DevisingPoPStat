@@ -18,6 +18,7 @@ LIFE_EXPECTANCY_DATA = os.path.join(main_dir, 'DATA/owid_data/life-expectancy.cs
 SDI_DATA = os.path.join(main_dir, 'DATA/owid_data/sdi_data.csv')
 GNI_DATA = os.path.join(main_dir, 'DATA/owid_data/gross-national-income-per-capita.csv')
 UNIVERSAL_HEALTH_COVERAGE_DATA = os.path.join(main_dir, 'DATA/owid_data/universal-health-coverage-index.csv')
+GNI_INDEX_DATA = os.path.join(main_dir, 'DATA/owid_data/economic-inequality-gni-index.csv')
 
 class PLOT_OTHER_METRICS:
     def __init__(self, countries, year):
@@ -58,6 +59,9 @@ class PLOT_OTHER_METRICS:
         else:
             self.Universal_health_coverage_data = self.Universal_health_coverage_data[self.Universal_health_coverage_data['Year'] == self.year - 1]
         self.Universal_health_coverage_data.columns = ['Entity', 'Code', 'Year', 'Universal health coverage']
+
+        self.GNI_index_data = pd.read_csv(GNI_INDEX_DATA)
+        self.GNI_index_data = self.GNI_index_data[self.GNI_index_data['Year'] == self.year]
 
         if self.year <= 2019:
             self.SDI_data = pd.read_csv(SDI_DATA, encoding="ISO-8859-1")
@@ -212,6 +216,26 @@ class PLOT_OTHER_METRICS:
         Stats = {}
         Stats['cases'] = self.plotter(X,Y_CASES_filtered,"Cases","Universal health coverage")
         Stats['deaths'] = self.plotter(X,Y_DEATHS_filtered,"Deaths","Universal health coverage")
+        return Stats
+    
+    def GNI_INDEX(self):
+        X = []
+        Y_CASES_filtered = []
+        Y_DEATHS_filtered = []
+        i = 0
+        for country in self.countries:
+            data = self.GNI_index_data[self.GNI_index_data['Entity'].str.lower() == country]
+            if data.empty:
+                i += 1
+                continue
+            X.append(data['GNI index'].values[0])
+            Y_CASES_filtered.append(self.Y_CASES[i])
+            Y_DEATHS_filtered.append(self.Y_DEATHS[i])
+            i += 1
+
+        Stats = {}
+        Stats['cases'] = self.plotter(X,Y_CASES_filtered,"Cases","GNI index")
+        Stats['deaths'] = self.plotter(X,Y_DEATHS_filtered,"Deaths","GNI index")
         return Stats
 
     def plotter(self,X,Y,title,metric,save_dir=SAVE_DIR):

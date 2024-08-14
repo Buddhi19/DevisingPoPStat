@@ -116,10 +116,10 @@ class ANALYSIS:
 
         pd.DataFrame(self.POPSTAT_DATAFRAME).to_csv(os.path.join(SAVING_DIR, f'POPSTAT_COVID19_KL_DIVERGENCE.csv'), index = False)
 
-    def parser_run(self, pop_year=2020, covid_date='2023-05-05', plot=True):
+    def parser_run(self, pop_year=2020, covid_date='2023-05-05', plotter=True):
         POPULATION_DATA_FOR_DATE(pop_year)
         COVID_DATA_FOR_DATE(covid_date)
-        if plot:
+        if plotter:
             self.plot_population_data()
         self.calculate_pop_stat()
         self.plot_pop_stat()

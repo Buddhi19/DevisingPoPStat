@@ -18,7 +18,14 @@ def main():
     plot = True if args.plot == 'y' or args.plot == "Y" else False
 
     analysis = ANALYSIS()
-    analysis.parser_run(args.py, args.cd, plot)
+    if args.py and args.cd:
+        analysis.parser_run(args.py, args.cd, plot)
+    elif args.py and not args.cd:
+        analysis.parser_run(pop_year=args.py, plotter=plot)
+    elif args.cd and not args.py:
+        analysis.parser_run(covid_year=args.cd, plotter=plot)
+    else:
+        analysis.parser_run(plotter = plot)
 
 if __name__ == "__main__":
     main()

@@ -18,7 +18,7 @@ LIFE_EXPECTANCY_DATA = os.path.join(main_dir, 'DATA/owid_data/life-expectancy.cs
 SDI_DATA = os.path.join(main_dir, 'DATA/owid_data/sdi_data.csv')
 GNI_DATA = os.path.join(main_dir, 'DATA/owid_data/gross-national-income-per-capita.csv')
 UNIVERSAL_HEALTH_COVERAGE_DATA = os.path.join(main_dir, 'DATA/owid_data/universal-health-coverage-index.csv')
-GNI_INDEX_DATA = os.path.join(main_dir, 'DATA/owid_data/economic-inequality-gni-index.csv')
+GNI_INDEX_DATA = os.path.join(main_dir, 'DATA/owid_data/economic-inequality-gini-index.csv')
 
 class PLOT_OTHER_METRICS:
     def __init__(self, countries, year):
@@ -228,7 +228,7 @@ class PLOT_OTHER_METRICS:
             if data.empty:
                 i += 1
                 continue
-            X.append(data['GNI index'].values[0])
+            X.append(data['Gini coefficient'].values[0])
             Y_CASES_filtered.append(self.Y_CASES[i])
             Y_DEATHS_filtered.append(self.Y_DEATHS[i])
             i += 1

@@ -15,7 +15,7 @@ HDI_DATA = pd.read_csv("DATA/owid_data/human-development-index.csv", low_memory=
 MEDIAN_AGE_DATA = pd.read_csv("DATA/owid_data/median-age.csv", low_memory=False)
 GDP_PER_CAPITA_DATA = pd.read_csv("DATA/owid_data/gdp-per-capita.csv", low_memory=False)
 POPULATION_DENSITY = pd.read_csv("DATA/owid_data/population-density.csv", low_memory=False)
-SDI_DATA = pd.read_csv("DATA/IHME_data/sdi_data.csv",encoding = "ISO-8859-1",low_memory=False)
+SDI_DATA = pd.read_csv("DATA/owid_data/sdi_data.csv",encoding = "ISO-8859-1",low_memory=False)
 
 SAVING_PATH_PNG = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/POPSTAT"
 SAVING_PATH_PNG_HDI = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/OTHER_METRICS/HDI"

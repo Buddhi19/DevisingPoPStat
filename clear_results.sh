@@ -11,6 +11,7 @@ execute_with_confirmation() {
     else
         echo "Command not executed"
     fi
+    echo ""
 }
 
 # Function to clear all csv files in the DATA/
@@ -27,10 +28,18 @@ delete_all_generated_png_files_in_RESULTS() {
     rm -f "$current_dir"/RESULTS/PYRAMIDS/*.png
     rm -f "$current_dir"/RESULTS/COMBINED_DISTRIBUTIONS/*.png
     rm -f "$current_dir"/RESULTS/CORRELATION_WITH_OTHER_DISEASES/*.png
-    rm -f "$current_dir"/RESULTS/POPSTATCOVID/PLOTS/PROGRESSIVE/cases/*.png
-    rm -f "$current_dir"/RESULTS/POPSTATCOVID/PLOTS/PROGRESSIVE/deaths/*.png
-    rm -f "$current_dir"/RESULTS/POPSTATCOVID/PLOTS/REGRESSIVE/cases/*.png
-    rm -f "$current_dir"/RESULTS/POPSTATCOVID/PLOTS/REGRESSIVE/deaths/*.png
+}
+
+delete_all_POPSTATCOVID_png_files_in_RESULTS() {
+    local current_dir=$(pwd)
+    rm -f "$current_dir"/RESULTS/POPSTATCOVID/PLOTS/*/*/*.png
+    rm -f "$current_dir"/RESULTS/POPSTATCOVID/OTHER_METRICS/*.png
+}
+
+delete_all_POPSTATCOVID_relations_with_other_diseases_png_files_in_RESULTS() {
+    local current_dir=$(pwd)
+    rm -f "$current_dir"/RESULTS/CORRELATION_WITH_OTHER_DISEASES/POPSTAT/*.png
+    rm -f "$current_dir"/RESULTS/CORRELATION_WITH_OTHER_DISEASES/OTHER_METRICS/*/*.png
 }
 
 delete_all_generated_csv_files_in_RESULTS() {
@@ -38,6 +47,14 @@ delete_all_generated_csv_files_in_RESULTS() {
     rm -f "$current_dir"/RESULTS/POPSTAT_COUNTRY_DATA/*.csv
 }
 
+delete_POPSTAT_Calculated_with_different_methods() {
+    local current_dir=$(pwd)
+    rm -f "$current_dir"/RESULTS/POPSTATCOVID/*.csv
+}
+
 execute_with_confirmation "delete_all_generated_csv_files_in_DATA"
 execute_with_confirmation "delete_all_generated_png_files_in_RESULTS"
+execute_with_confirmation "delete_all_POPSTATCOVID_png_files_in_RESULTS"
 execute_with_confirmation "delete_all_generated_csv_files_in_RESULTS"
+execute_with_confirmation "delete_all_POPSTATCOVID_relations_with_other_diseases_png_files_in_RESULTS"
+execute_with_confirmation "delete_POPSTAT_Calculated_with_different_methods"

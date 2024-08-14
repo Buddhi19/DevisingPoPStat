@@ -15,7 +15,7 @@ GDP_PER_CAPITA_DATA = os.path.join(main_dir, 'DATA/owid_data/gdp-per-capita.csv'
 POPULATION_DENSITY_DATA = os.path.join(main_dir, 'DATA/owid_data/population-density.csv')
 HUMAN_DEVELOPMENT_INDEX_DATA = os.path.join(main_dir, 'DATA/owid_data/human-development-index.csv')
 LIFE_EXPECTANCY_DATA = os.path.join(main_dir, 'DATA/owid_data/life-expectancy.csv')
-SDI_DATA = os.path.join(main_dir, 'DATA/IHME_data/sdi_data.csv')
+SDI_DATA = os.path.join(main_dir, 'DATA/owid_data/sdi_data.csv')
 
 class PLOT_OTHER_METRICS:
     def __init__(self, countries, year):

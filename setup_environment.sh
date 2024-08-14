@@ -13,16 +13,18 @@ execute_with_confirmation() {
     fi
 }
 
-# Function to install prerequisites
-install_pre_requisites() {
-    execute_with_confirmation "pip install -r requirements.txt"
-}
 
 # Function to make directories in the current directory
 make_directories() {
     local current_dir=$(pwd)
     cd "$current_dir"
-    mkdir -p "DATA/death_data" "DATA/covid_data_by_country" "DATA/owid_covid_data" "DATA/population_data_by_country" "DATA/population_data_with_age"
+    mkdir -p "DATA/death_data" 
+    mkdir -p "DATA/covid_data_by_country" 
+    mkdir -p "DATA/owid_covid_data"
+    mkdir -p "DATA/population_data_by_country"
+    mkdir -p "DATA/population_data_with_age"
+    mkdir -p "DATA/death_data"
+    mkdir -p "DATA/owid_data"
 }
 
 # Function to load data
@@ -30,17 +32,22 @@ load_data() {
     local current_dir=$(pwd)
     cd "$current_dir"
     wget -O DATA/owid_covid_data/owid-covid-data.csv "https://github.com/owid/covid-19-data/raw/master/public/data/owid-covid-data.csv"
-    wget -O DATA/population_data_with_age/age_data.csv "https://population.un.org/wpp2019/Download/Files/1_Indicators%20(Standard)/CSV_FILES/WPP2019_PopulationByAgeSex_Medium.csv"
 }
 
 make_directory_for_POPSTAT(){
     local current_dir=$(pwd)
     cd "$current_dir"
-    mkdir -p "RESULTS/POPSTAT_COUNTRY_DATA" "RESULTS/CORRELATION_WITH_OTHER_DISEASES" "RESULTS/CORRELATION_DATA_FOR_OTHER_DISEASES"
-    mkdir -p "RESULTS/POPSTATCOVID/PLOTS/PROGRESSIVE" "RESULTS/POPSTATCOVID/PLOTS/REGRESSIVE"
+    mkdir -p "RESULTS/POPSTAT_COUNTRY_DATA" 
+    mkdir -p "RESULTS/CORRELATION_WITH_OTHER_DISEASES"
+    mkdir -p "RESULTS/CORRELATION_DATA_FOR_OTHER_DISEASES"
+    mkdir -p "RESULTS/POPSTATCOVID/PLOTS/PROGRESSIVE/cases"
+    mkdir -p "RESULTS/POPSTATCOVID/PLOTS/PROGRESSIVE/deaths"
+    mkdir -p "RESULTS/POPSTATCOVID/PLOTS/REGRESSIVE/cases"
+    mkdir -p "RESULTS/POPSTATCOVID/PLOTS/REGRESSIVE/deaths"
+    mkdir -p "RESULTS/POPSTATCOVID/OTHER_METRICS"
 }
 
-install_pre_requisites
-make_directories
+execute_with_confirmation "pip install -r requirements.txt"
+execute_with_confirmation "make_directories"
 execute_with_confirmation "load_data"
-make_directory_for_POPSTAT
+execute_with_confirmation "make_directory_for_POPSTAT"

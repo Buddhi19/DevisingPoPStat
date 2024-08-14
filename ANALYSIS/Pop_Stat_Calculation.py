@@ -31,7 +31,7 @@ class POP_STAT_CALCULATION:
             data = pd.read_csv(os.path.join(COVID_DIR, file_name))
             total_deaths_per_million = data['total_deaths_per_million'].tolist()[0]
             total_cases_per_million = data['total_cases_per_million'].tolist()[0]
-            self.covid_data[country_name] = total_deaths_per_million*1 + total_cases_per_million*0
+            self.covid_data[country_name] = total_deaths_per_million*1 
 
         """
         self.HDI_data = {}
@@ -107,7 +107,8 @@ class POP_STAT_CALCULATION:
         m = (p + q) / 2
         return (self.KL_DIVERGENCE(p, m) + self.KL_DIVERGENCE(q, m)) / 2
     
-    def EUCLIDEAN_DISTANCE(self,p, q):
+    @staticmethod
+    def EUCLIDEAN_DISTANCE(p, q):
         p = np.asarray(p)
         q = np.asarray(q)
 
@@ -121,7 +122,7 @@ class POP_STAT_CALCULATION:
         for country, dist in self.population_data.items():
             if country in self.common_countries:
                 # HDI_country = self.HDI_data[country]
-                distances[country] = self.JENSEN_SHANNON_DIVERGENCE(dist, reference_dist)
+                distances[country] = self.KL_DIVERGENCE(dist, reference_dist)
                 # distances[country] = self.EUCLIDEAN_DISTANCE(dist, reference_dist)
                 # distances[country] = self.KL_DIVERGENCE(dist, reference_dist)
         return distances

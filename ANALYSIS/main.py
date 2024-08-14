@@ -68,6 +68,12 @@ class ANALYSIS:
         Stats = plotter.SDI()
         self.update_POPSTAT_DATAFRAME(Stats, "SDI") if Stats is not None else None
 
+        Stats = plotter.GNI()
+        self.update_POPSTAT_DATAFRAME(Stats, "GNI")
+
+        Stats = plotter.UNIVERSAL_HEALTH_COVERAGE()
+        self.update_POPSTAT_DATAFRAME(Stats, "Universal Health Coverage")
+
     def calculate_pop_stat(self):
         calculator = POP_STAT_CALCULATION()
         self.progressive_reference_countries, self.regressive_reference_countries = calculator.run()
@@ -105,16 +111,18 @@ class ANALYSIS:
         self.plot_pop_stat()
         self.plot_other_metrics()
 
-        pd.DataFrame(self.POPSTAT_DATAFRAME).to_csv(os.path.join(SAVING_DIR, f'POPSTAT_COVID19_JS_DIVERGENCE.csv'), index = False)
+        pd.DataFrame(self.POPSTAT_DATAFRAME).to_csv(os.path.join(SAVING_DIR, f'POPSTAT_COVID19_KL_DIVERGENCE.csv'), index = False)
 
     def parser_run(self, pop_year=2020, covid_date='2023-05-05', plot=True):
         POPULATION_DATA_FOR_DATE(pop_year)
         COVID_DATA_FOR_DATE(covid_date)
-        self.plot_population_data()
-        self.calculate_pop_stat()
         if plot:
-            self.plot_pop_stat()
+            self.plot_population_data()
+        self.calculate_pop_stat()
+        self.plot_pop_stat()
         self.plot_other_metrics()
+
+        pd.DataFrame(self.POPSTAT_DATAFRAME).to_csv(os.path.join(SAVING_DIR, f'POPSTAT_COVID19_KL_DIVERGENCE.csv'), index = False)
 
 if __name__ == "__main__":
         ANALYSIS().run()

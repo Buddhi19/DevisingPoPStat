@@ -16,6 +16,8 @@ POPULATION_DENSITY_DATA = os.path.join(main_dir, 'DATA/owid_data/population-dens
 HUMAN_DEVELOPMENT_INDEX_DATA = os.path.join(main_dir, 'DATA/owid_data/human-development-index.csv')
 LIFE_EXPECTANCY_DATA = os.path.join(main_dir, 'DATA/owid_data/life-expectancy.csv')
 SDI_DATA = os.path.join(main_dir, 'DATA/owid_data/sdi_data.csv')
+GNI_DATA = os.path.join(main_dir, 'DATA/owid_data/gross-national-income-per-capita.csv')
+UNIVERSAL_HEALTH_COVERAGE_DATA = os.path.join(main_dir, 'DATA/owid_data/universal-health-coverage-index.csv')
 
 class PLOT_OTHER_METRICS:
     def __init__(self, countries, year):
@@ -46,10 +48,22 @@ class PLOT_OTHER_METRICS:
         self.Life_expectancy_data = self.Life_expectancy_data[self.Life_expectancy_data['Year'] == self.year]
         self.Life_expectancy_data.columns = ['Entity', 'Code', 'Year', 'Life expectancy']
 
+        self.GNI_data = pd.read_csv(GNI_DATA)
+        self.GNI_data = self.GNI_data[self.GNI_data['Year'] == self.year]
+        self.GNI_data.columns = ['Entity', 'Code', 'Year', 'GNI per capita']
+
+        self.Universal_health_coverage_data = pd.read_csv(UNIVERSAL_HEALTH_COVERAGE_DATA)
+        if self.year % 2 == 1:
+            self.Universal_health_coverage_data = self.Universal_health_coverage_data[self.Universal_health_coverage_data['Year'] == self.year]
+        else:
+            self.Universal_health_coverage_data = self.Universal_health_coverage_data[self.Universal_health_coverage_data['Year'] == self.year - 1]
+        self.Universal_health_coverage_data.columns = ['Entity', 'Code', 'Year', 'Universal health coverage']
+
         if self.year <= 2019:
             self.SDI_data = pd.read_csv(SDI_DATA, encoding="ISO-8859-1")
             #keep columns with only year 2019 and country names
             self.SDI_data = self.SDI_data[["Location", str(self.year)]]
+
 
     def MEDIAN_AGE(self):
         X = []
@@ -158,6 +172,46 @@ class PLOT_OTHER_METRICS:
         Stats = {}
         Stats['cases'] = self.plotter(X,Y_CASES_filtered,"Cases","Life Expectancy")
         Stats['deaths'] = self.plotter(X,Y_DEATHS_filtered,"Deaths","Life Expectancy")
+        return Stats
+    
+    def GNI(self):
+        X = []
+        Y_CASES_filtered = []
+        Y_DEATHS_filtered = []
+        i = 0
+        for country in self.countries:
+            data = self.GNI_data[self.GNI_data['Entity'].str.lower() == country]
+            if data.empty:
+                i += 1
+                continue
+            X.append(data['GNI per capita'].values[0])
+            Y_CASES_filtered.append(self.Y_CASES[i])
+            Y_DEATHS_filtered.append(self.Y_DEATHS[i])
+            i += 1
+
+        Stats = {}
+        Stats['cases'] = self.plotter(X,Y_CASES_filtered,"Cases","GNI per capita (current US$)")
+        Stats['deaths'] = self.plotter(X,Y_DEATHS_filtered,"Deaths","GNI per capita (current US$)")
+        return Stats
+    
+    def UNIVERSAL_HEALTH_COVERAGE(self):
+        X = []
+        Y_CASES_filtered = []
+        Y_DEATHS_filtered = []
+        i = 0
+        for country in self.countries:
+            data = self.Universal_health_coverage_data[self.Universal_health_coverage_data['Entity'].str.lower() == country]
+            if data.empty:
+                i += 1
+                continue
+            X.append(data['Universal health coverage'].values[0])
+            Y_CASES_filtered.append(self.Y_CASES[i])
+            Y_DEATHS_filtered.append(self.Y_DEATHS[i])
+            i += 1
+
+        Stats = {}
+        Stats['cases'] = self.plotter(X,Y_CASES_filtered,"Cases","Universal health coverage")
+        Stats['deaths'] = self.plotter(X,Y_DEATHS_filtered,"Deaths","Universal health coverage")
         return Stats
 
     def plotter(self,X,Y,title,metric,save_dir=SAVE_DIR):

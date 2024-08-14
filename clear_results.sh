@@ -45,6 +45,7 @@ delete_all_POPSTATCOVID_relations_with_other_diseases_png_files_in_RESULTS() {
 delete_all_generated_csv_files_in_RESULTS() {
     local current_dir=$(pwd)
     rm -f "$current_dir"/RESULTS/POPSTAT_COUNTRY_DATA/*.csv
+    rm -f "$current_dir"/RESULTS/POPSTAT_OTHER_DISEASES/*.csv
 }
 
 delete_POPSTAT_Calculated_with_different_methods() {

@@ -175,8 +175,7 @@ class PLOT_OTHER_METRICS:
 
         z = np.polyfit(X, Y, 1)
         p = np.poly1d(z)
-        # plt.plot(X, p(X), "r",)
-        # calculate the R² and confidence interval
+        
         correlation_coefficient, p_value = stats.pearsonr(X, Y)
         r_squared = correlation_coefficient ** 2
 

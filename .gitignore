@@ -3,7 +3,6 @@
 !Correlation_Coefficient.csv
 __pycache__/
 .vscode/
-ANALYSIS_FOR_OTHER_DISEASES_II/
 *.png
 !japan_population.png
 !niger_population.png
@@ -21,9 +20,5 @@ ANALYSIS_FOR_OTHER_DISEASES_II/
 !Parkinson's disease_deaths.png
 !Alzheimer's disease and other dementias_deaths.png
 !Cardiovascular diseases_deaths.png
-!Total_Cases_per_million_for_Human_Development_Index.png
-!Total_Deaths_per_million_for_Human_Development_Index.png
-!Total_Cases_per_million_for_Life_Expectancy.png
-!Total_Deaths_per_million_for_Life_Expectancy.png
 
 ._presentations/

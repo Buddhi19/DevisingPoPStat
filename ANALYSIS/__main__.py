@@ -1,5 +1,11 @@
 import argparse
-from .main import ANALYSIS
+import os
+import sys
+
+main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+sys.path.append(main_dir)
+
+from ANALYSIS.main import ANALYSIS
 
 def main():
     parser = argparse.ArgumentParser(description="COVID-19 Analysis with POPSTAT COVID19")

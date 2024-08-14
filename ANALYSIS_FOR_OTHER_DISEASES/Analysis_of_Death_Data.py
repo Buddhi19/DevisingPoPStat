@@ -249,6 +249,11 @@ class MORTALITY_DATA:
     def ANALYZER(self):
         for disease in DEATH_DATA['cause_name'].unique():
             self.create_dataframe_for_diseases(disease)
+            self.create_dataframe_for_diseases_HDI(disease)
+            self.create_dataframe_for_diseases_MEDIAN_AGE(disease)
+            self.create_dataframe_for_diseases_GDP_PER_CAPITA(disease)
+            self.create_dataframe_for_diseases_POPULATION_DENSITY(disease)
+            self.create_dataframe_for_diseases_SDI(disease)
         self.CORR_COEFFICIENT = pd.DataFrame(self.CORR_COEFFICIENT)
         self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, "Correlation_Coefficient.csv"))
 

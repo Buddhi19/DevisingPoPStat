@@ -27,16 +27,18 @@ SAVING_PATH_PNG_SDI = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/OTHER_METRICS/SDI
 
 COVID_DATA_DIR = "DATA/covid_data_by_country"
 POPSTAT_COVID_DATA_DIR = "RESULTS/POPSTAT_COUNTRY_DATA"
+POPSTAT_DISEASE_DATA_DIR = "RESULTS/POPSTAT_DISEASE_DATA"
 
 class MORTALITY_DATA:
     def __init__(self, year, country):
+        self.REFERENCE_COUNTRY = country
         self.POPSTAT_COVID_DATA = pd.read_csv(os.path.join(POPSTAT_COVID_DATA_DIR, f"{country}_POPSTAT_COVID19.csv"))
         self.year = year
 
         self.CORR_COEFFICIENT = {
             "Parameter": [],
             "Cause of Death": [],
-            "Correlation Coefficient": [],
+            "r squared value": [],
             "CI": [],
             "p-value": []
         }
@@ -222,7 +224,7 @@ class MORTALITY_DATA:
 
         self.CORR_COEFFICIENT['Parameter'].append(variable)
         self.CORR_COEFFICIENT['Cause of Death'].append(title)
-        self.CORR_COEFFICIENT['Correlation Coefficient'].append(correalation_coefficient)
+        self.CORR_COEFFICIENT['r squared value'].append(r_squared)
         self.CORR_COEFFICIENT['CI'].append((lo, hi))
         self.CORR_COEFFICIENT['p-value'].append(p_value)
 
@@ -247,7 +249,7 @@ class MORTALITY_DATA:
             self.create_dataframe_for_diseases_POPULATION_DENSITY(disease)
             self.create_dataframe_for_diseases_SDI(disease)
         self.CORR_COEFFICIENT = pd.DataFrame(self.CORR_COEFFICIENT)
-        self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, "Correlation_Coefficient.csv"))
+        self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, f"Correlation_Coefficient_{self.REFERENCE_COUNTRY}.csv"))
 
     def ANALYZER_FOR_SELECTED_DISEASES(self):
         diseases = [
@@ -286,9 +288,9 @@ class MORTALITY_DATA:
             self.create_dataframe_for_diseases_SDI(disease)
 
         self.CORR_COEFFICIENT = pd.DataFrame(self.CORR_COEFFICIENT)
-        self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, "Correlation_Coefficient2.csv"))
+        self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, f"Correlation_Coefficient_{self.REFERENCE_COUNTRY}.csv"))
 
 
 if __name__ == "__main__":
     data = MORTALITY_DATA(2021, "japan")
-    data.ANALYZER_FOR_SELECTED_DISEASES()
+    data.ANALYZER()

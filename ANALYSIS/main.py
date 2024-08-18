@@ -28,9 +28,6 @@ class ANALYSIS:
             "CI_deaths": [],
             "p_value_deaths": []
         }
-        self.MODES = ["KL",
-                      "JS",
-                      "ECD"]
 
     def create_country_population_data(self):
         date = input("Date in YYYY or Press Enter to set year as 2020 : ")

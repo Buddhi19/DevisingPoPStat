@@ -123,8 +123,6 @@ class POP_STAT_CALCULATION:
             if country in self.common_countries:
                 # HDI_country = self.HDI_data[country]
                 distances[country] = self.KL_DIVERGENCE(dist, reference_dist)
-                # distances[country] = self.EUCLIDEAN_DISTANCE(dist, reference_dist)
-                # distances[country] = self.KL_DIVERGENCE(dist, reference_dist)
         return distances
 
     def find_optimal_reference(self):

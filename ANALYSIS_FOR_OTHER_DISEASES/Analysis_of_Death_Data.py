@@ -11,10 +11,10 @@ from ANALYSIS.COUNTRIES import mapping_name
 
 DEATH_DATA = pd.read_csv("DATA/death_data/DEATH_DATA.csv", low_memory=False)
 POPULATION_DATA = pd.read_csv("DATA/population_data_with_age/age_data.csv", low_memory=False)
-HDI_DATA = pd.read_csv("DATA/owid_data/human-development-index.csv", low_memory=False)
-MEDIAN_AGE_DATA = pd.read_csv("DATA/owid_data/median-age.csv", low_memory=False)
-GDP_PER_CAPITA_DATA = pd.read_csv("DATA/owid_data/gdp-per-capita.csv", low_memory=False)
-POPULATION_DENSITY = pd.read_csv("DATA/owid_data/population-density.csv", low_memory=False)
+HDI_DATA = pd.read_csv("DATA/owid_data_filtered/human-development-index.csv", low_memory=False)
+MEDIAN_AGE_DATA = pd.read_csv("DATA/owid_data_filtered/median-age.csv", low_memory=False)
+GDP_PER_CAPITA_DATA = pd.read_csv("DATA/owid_data_filtered/gdp-per-capita.csv", low_memory=False)
+POPULATION_DENSITY = pd.read_csv("DATA/owid_data_filtered/population-density.csv", low_memory=False)
 SDI_DATA = pd.read_csv("DATA/owid_data/sdi_data.csv",encoding = "ISO-8859-1",low_memory=False)
 
 SAVING_PATH_PNG = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/POPSTAT"
@@ -288,9 +288,9 @@ class MORTALITY_DATA:
             self.create_dataframe_for_diseases_SDI(disease)
 
         self.CORR_COEFFICIENT = pd.DataFrame(self.CORR_COEFFICIENT)
-        self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, f"Correlation_Coefficient_{self.REFERENCE_COUNTRY}.csv"))
+        self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, f"Correlation_Coefficient_{self.REFERENCE_COUNTRY}_JS.csv"))
 
 
 if __name__ == "__main__":
     data = MORTALITY_DATA(2021, "japan")
-    data.ANALYZER()
+    data.ANALYZER_FOR_SELECTED_DISEASES()

@@ -9,6 +9,7 @@ from ANALYSIS.Covid_Data_For_Date import COVID_DATA_FOR_DATE
 from ANALYSIS.Plot_Population_Data import PLOT_POPULATION_DATA
 from ANALYSIS.Pop_Stat_Calculation import POP_STAT_CALCULATION
 from ANALYSIS.Plot_Pop_Stat import PLOT_POP_STAT
+from ANALYSIS.Process_Owid_Data import process_country_names
 from ANALYSIS.Plot_other_Metrics import PLOT_OTHER_METRICS
 from ANALYSIS.Population_Data_For_Date import POPULATION_DATA_FOR_DATE
 
@@ -27,6 +28,9 @@ class ANALYSIS:
             "CI_deaths": [],
             "p_value_deaths": []
         }
+        self.MODES = ["KL",
+                      "JS",
+                      "ECD"]
 
     def create_country_population_data(self):
         date = input("Date in YYYY or Press Enter to set year as 2020 : ")
@@ -47,6 +51,10 @@ class ANALYSIS:
     def plot_population_data():
         plotter = PLOT_POPULATION_DATA()
         plotter.run()
+
+    @staticmethod
+    def prepare_data():
+        process_country_names()
 
     def plot_other_metrics(self):
         plotter = PLOT_OTHER_METRICS(self.common_countries, self.year)
@@ -112,6 +120,7 @@ class ANALYSIS:
         self.plot_population_data()
         self.calculate_pop_stat()
         self.plot_pop_stat()
+        self.prepare_data()
         self.plot_other_metrics()
 
         pd.DataFrame(self.POPSTAT_DATAFRAME).to_csv(os.path.join(SAVING_DIR, f'POPSTAT_COVID19_KL_DIVERGENCE.csv'), index = False)
@@ -123,6 +132,7 @@ class ANALYSIS:
             self.plot_population_data()
         self.calculate_pop_stat()
         self.plot_pop_stat()
+        self.prepare_data()
         self.plot_other_metrics()
 
         pd.DataFrame(self.POPSTAT_DATAFRAME).to_csv(os.path.join(SAVING_DIR, f'POPSTAT_COVID19_KL_DIVERGENCE.csv'), index = False)

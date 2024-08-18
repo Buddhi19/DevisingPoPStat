@@ -10,15 +10,15 @@ sys.path.append(main_dir)
 
 COVID_DATA_DIR = os.path.join(main_dir, 'DATA/covid_data_by_country')
 SAVE_DIR = os.path.join(main_dir, 'RESULTS/POPSTATCOVID/OTHER_METRICS')
-MEDIAN_AGE_DATA = os.path.join(main_dir, 'DATA/owid_data/median-age.csv')
-GDP_PER_CAPITA_DATA = os.path.join(main_dir, 'DATA/owid_data/gdp-per-capita.csv')
-POPULATION_DENSITY_DATA = os.path.join(main_dir, 'DATA/owid_data/population-density.csv')
-HUMAN_DEVELOPMENT_INDEX_DATA = os.path.join(main_dir, 'DATA/owid_data/human-development-index.csv')
-LIFE_EXPECTANCY_DATA = os.path.join(main_dir, 'DATA/owid_data/life-expectancy.csv')
+MEDIAN_AGE_DATA = os.path.join(main_dir, 'DATA/owid_data_filtered/median-age.csv')
+GDP_PER_CAPITA_DATA = os.path.join(main_dir, 'DATA/owid_data_filtered/gdp-per-capita.csv')
+POPULATION_DENSITY_DATA = os.path.join(main_dir, 'DATA/owid_data_filtered/population-density.csv')
+HUMAN_DEVELOPMENT_INDEX_DATA = os.path.join(main_dir, 'DATA/owid_data_filtered/human-development-index.csv')
+LIFE_EXPECTANCY_DATA = os.path.join(main_dir, 'DATA/owid_data_filtered/life-expectancy.csv')
 SDI_DATA = os.path.join(main_dir, 'DATA/owid_data/sdi_data.csv')
-GNI_DATA = os.path.join(main_dir, 'DATA/owid_data/gross-national-income-per-capita.csv')
-UNIVERSAL_HEALTH_COVERAGE_DATA = os.path.join(main_dir, 'DATA/owid_data/universal-health-coverage-index.csv')
-GNI_INDEX_DATA = os.path.join(main_dir, 'DATA/owid_data/economic-inequality-gini-index.csv')
+GNI_DATA = os.path.join(main_dir, 'DATA/owid_data_filtered/gross-national-income-per-capita.csv')
+UNIVERSAL_HEALTH_COVERAGE_DATA = os.path.join(main_dir, 'DATA/owid_data_filtered/universal-health-coverage-index.csv')
+GNI_INDEX_DATA = os.path.join(main_dir, 'DATA/owid_data_filtered/economic-inequality-gini-index.csv')
 
 class PLOT_OTHER_METRICS:
     def __init__(self, countries, year):

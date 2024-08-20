@@ -5,34 +5,43 @@ from scipy import stats
 import os
 import sys
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+main_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(main_dir)
 
 from ANALYSIS.COUNTRIES import mapping_name
 
-DEATH_DATA = pd.read_csv("DATA/death_data/DEATH_DATA.csv", low_memory=False)
-POPULATION_DATA = pd.read_csv("DATA/population_data_with_age/age_data.csv", low_memory=False)
-HDI_DATA = pd.read_csv("DATA/owid_data_filtered/human-development-index.csv", low_memory=False)
-MEDIAN_AGE_DATA = pd.read_csv("DATA/owid_data_filtered/median-age.csv", low_memory=False)
-GDP_PER_CAPITA_DATA = pd.read_csv("DATA/owid_data_filtered/gdp-per-capita.csv", low_memory=False)
-POPULATION_DENSITY = pd.read_csv("DATA/owid_data_filtered/population-density.csv", low_memory=False)
-SDI_DATA = pd.read_csv("DATA/owid_data/sdi_data.csv",encoding = "ISO-8859-1",low_memory=False)
+death_data_path = os.path.join(main_dir, "DATA", "death_data", "DEATH_DATA.csv")
+population_data_path = os.path.join(main_dir, "DATA", "population_data_with_age", "age_data.csv")
+hdi_data_path = os.path.join(main_dir, "DATA", "owid_data_filtered", "human-development-index.csv")
+median_age_data_path = os.path.join(main_dir, "DATA", "owid_data_filtered", "median-age.csv")
+gdp_per_capita_data_path = os.path.join(main_dir, "DATA", "owid_data_filtered", "gdp-per-capita.csv")
+population_density_path = os.path.join(main_dir, "DATA", "owid_data_filtered", "population-density.csv")
+sdi_data_path = os.path.join(main_dir, "DATA", "owid_data", "sdi_data.csv")
 
-SAVING_PATH_PNG = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/POPSTAT"
-SAVING_PATH_PNG_HDI = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/OTHER_METRICS/HDI"
-SAVING_PATH_PNG_MEDIAN_AGE = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/OTHER_METRICS/MEDIAN_AGE"
-SAVING_PATH_PNG_GDP_PER_CAPITA = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/OTHER_METRICS/GDP_PER_CAPITA"
-SAVING_PATH_PNG_POPULATION_DENSITY = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/OTHER_METRICS/POPULATION_DENSITY"
-SAVING_PATH_CSV = "RESULTS/CORRELATION_DATA_FOR_OTHER_DISEASES"
-SAVING_PATH_PNG_SDI = "RESULTS/CORRELATION_WITH_OTHER_DISEASES/OTHER_METRICS/SDI"
+DEATH_DATA = pd.read_csv(death_data_path, low_memory=False)
+POPULATION_DATA = pd.read_csv(population_data_path, low_memory=False)
+HDI_DATA = pd.read_csv(hdi_data_path, low_memory=False)
+MEDIAN_AGE_DATA = pd.read_csv(median_age_data_path, low_memory=False)
+GDP_PER_CAPITA_DATA = pd.read_csv(gdp_per_capita_data_path, low_memory=False)
+POPULATION_DENSITY = pd.read_csv(population_density_path, low_memory=False)
+SDI_DATA = pd.read_csv(sdi_data_path, encoding="ISO-8859-1", low_memory=False)
 
-COVID_DATA_DIR = "DATA/covid_data_by_country"
-POPSTAT_COVID_DATA_DIR = "RESULTS/POPSTAT_COUNTRY_DATA"
-POPSTAT_DISEASE_DATA_DIR = "RESULTS/POPSTAT_DISEASE_DATA"
+SAVING_PATH_PNG = os.path.join(main_dir, "RESULTS", "CORRELATION_WITH_OTHER_DISEASES", "POPSTAT")
+SAVING_PATH_PNG_HDI = os.path.join(main_dir, "RESULTS", "CORRELATION_WITH_OTHER_DISEASES", "OTHER_METRICS", "HDI")
+SAVING_PATH_PNG_MEDIAN_AGE = os.path.join(main_dir, "RESULTS", "CORRELATION_WITH_OTHER_DISEASES", "OTHER_METRICS", "MEDIAN_AGE")
+SAVING_PATH_PNG_GDP_PER_CAPITA = os.path.join(main_dir, "RESULTS", "CORRELATION_WITH_OTHER_DISEASES", "OTHER_METRICS", "GDP_PER_CAPITA")
+SAVING_PATH_PNG_POPULATION_DENSITY = os.path.join(main_dir, "RESULTS", "CORRELATION_WITH_OTHER_DISEASES", "OTHER_METRICS", "POPULATION_DENSITY")
+SAVING_PATH_CSV = os.path.join(main_dir, "RESULTS", "CORRELATION_DATA_FOR_OTHER_DISEASES")
+SAVING_PATH_PNG_SDI = os.path.join(main_dir, "RESULTS", "CORRELATION_WITH_OTHER_DISEASES", "OTHER_METRICS", "SDI")
+
+COVID_DATA_DIR = os.path.join(main_dir, "DATA", "covid_data_by_country")
+POPSTAT_COVID_DATA_DIR = os.path.join(main_dir, "RESULTS", "POPSTAT_COUNTRY_DATA")
+POPSTAT_DISEASE_DATA_DIR = os.path.join(main_dir, "RESULTS", "POPSTAT_OTHER_DISEASES", "Meningitis")
 
 class MORTALITY_DATA:
     def __init__(self, year, country):
         self.REFERENCE_COUNTRY = country
-        self.POPSTAT_COVID_DATA = pd.read_csv(os.path.join(POPSTAT_COVID_DATA_DIR, f"{country}_POPSTAT_COVID19.csv"))
+        self.POPSTAT_COVID_DATA = pd.read_csv(os.path.join(POPSTAT_DISEASE_DATA_DIR, f"{country}_POPSTAT_COVID19.csv"))
         self.year = year
 
         self.CORR_COEFFICIENT = {
@@ -82,7 +91,6 @@ class MORTALITY_DATA:
             Y.append(total_deaths_per_million)
 
         self.PLOT(X,Y, disease)
-        print(f"Data for {disease} has been plotted")
 
     def create_dataframe_for_diseases_HDI(self, disease):
         X = []
@@ -103,7 +111,6 @@ class MORTALITY_DATA:
             Y.append(total_deaths_per_million)
 
         self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_HDI, variable = "HDI")
-        print(f"Data for {disease} has been plotted with HDI")
 
     def create_dataframe_for_diseases_SDI(self, disease):
         if self.year > 2019:
@@ -126,7 +133,6 @@ class MORTALITY_DATA:
             Y.append(total_deaths_per_million)
 
         self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_SDI, variable = "SDI")
-        print(f"Data for {disease} has been plotted with SDI")
 
     def create_dataframe_for_diseases_MEDIAN_AGE(self, disease):
         X = []
@@ -147,7 +153,6 @@ class MORTALITY_DATA:
             Y.append(total_deaths_per_million)
 
         self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_MEDIAN_AGE, variable = "Median Age")
-        print(f"Data for {disease} has been plotted with Median Age")
     
     def create_dataframe_for_diseases_GDP_PER_CAPITA(self, disease):
         X = []
@@ -168,7 +173,6 @@ class MORTALITY_DATA:
             Y.append(total_deaths_per_million)
 
         self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_GDP_PER_CAPITA, variable = "GDP per capita")
-        print(f"Data for {disease} has been plotted with GDP per capita")
 
     def create_dataframe_for_diseases_POPULATION_DENSITY(self, disease):
         X = []
@@ -189,7 +193,6 @@ class MORTALITY_DATA:
             Y.append(total_deaths_per_million)
 
         self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_POPULATION_DENSITY, variable = "Population Density")
-        print(f"Data for {disease} has been plotted with Population Density")
 
     def PLOT(self, X, Y, title, saving_path=SAVING_PATH_PNG,variable = "POPSTAT_COVID19"):
         X = np.array(X)
@@ -238,7 +241,8 @@ class MORTALITY_DATA:
         plt.savefig(os.path.join(saving_path, f'{title}_deaths.png'))
         plt.close()
 
-        print(f"Data for {title} has been plotted with {len(X)} countries")
+        print(f"Data for {title} has been plotted with {len(X)} countries for {variable}")
+        print()
 
     def ANALYZER(self):
         for disease in DEATH_DATA['cause_name'].unique():
@@ -292,5 +296,5 @@ class MORTALITY_DATA:
 
 
 if __name__ == "__main__":
-    data = MORTALITY_DATA(2021, "japan")
+    data = MORTALITY_DATA(2021, "moldova")
     data.ANALYZER_FOR_SELECTED_DISEASES()

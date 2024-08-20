@@ -8,35 +8,33 @@ sys.path.append(main_dir)
 
 from ANALYSIS.COUNTRIES import mapping_name
 from ANALYSIS.Pop_Stat_Calculation import POP_STAT_CALCULATION
-from ANALYSIS.Population_Data_For_Date import POPULATION_DATA_FOR_DATE
+from ANALYSIS_FOR_OTHER_DISEASES.Death_data_Processor import DEATH_DATA_PROCESSOR
 
 
-DEATH_DATA = pd.read_csv(os.path.join(main_dir,"DATA/death_data/deaths_by_cause.csv"), low_memory=False)
+DEATH_DATA_PATH = os.path.join(main_dir,"DATA/death_data/DEATH_DATA.csv")
 
 POPULATION_DIR = os.path.join(main_dir, 'DATA/population_data_by_country')
 RESULTS_DIR = os.path.join(main_dir, 'RESULTS/POPSTAT_OTHER_DISEASES')
 
 class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
     def __init__(self, disease, year):
-        POPULATION_DATA_FOR_DATE(year)
         super().__init__()
-        self.CONSIDERING_COUNTRIES = 4
+        self.CONSIDERING_COUNTRIES = 2
         self.disease = disease
         self.disease_data = {}
-        self.DEATH_DATA = DEATH_DATA[DEATH_DATA['Causes name'] == disease]
-        self.DEATH_DATA = self.DEATH_DATA[self.DEATH_DATA['Year'] == year]
+        DEATH_DATA_PROCESSOR(year)
+        DEATH_DATA = pd.read_csv(DEATH_DATA_PATH)
+        self.DEATH_DATA = DEATH_DATA[DEATH_DATA['cause_name'] == disease]
+        self.DEATH_DATA = self.DEATH_DATA[self.DEATH_DATA['year'] == year]
 
-        for country in self.DEATH_DATA['Entity'].unique():
+        for country in self.DEATH_DATA['location_name'].unique():
             pre_name = country
             country = mapping_name(country)
             if country is None:
                 continue
-            death_data_per_country = self.DEATH_DATA[self.DEATH_DATA['Entity'] == pre_name]
-            total_deaths = death_data_per_country["Death Numbers"].values[0]
-            pop_data = pd.read_csv(os.path.join(POPULATION_DIR, f'{country}_population.csv'))
-            total_population = pop_data['total'].sum()
-            total_deaths_per_million = total_deaths/total_population
-            print(total_deaths_per_million)
+            death_data_per_country = self.DEATH_DATA[self.DEATH_DATA['location_name'] == pre_name]
+            death_data_per_country = death_data_per_country[death_data_per_country["metric_name"] == "Rate"]
+            total_deaths_per_million = death_data_per_country["val"].values[0]
             self.disease_data[country] = total_deaths_per_million
 
         self.common_countries = set(self.population_data.keys() & self.disease_data.keys())
@@ -70,12 +68,12 @@ class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
 
     def create_POPSTAT_DISEASE_data(self, reference_country):
         data = self.POPSTAT_DISEASE(reference_country)
-        data = pd.DataFrame(data.items(), columns = ['Country', f'POPSTAT_{self.disease}'])
+        data = pd.DataFrame(data.items(), columns = ['Country', f'POPSTAT_COVID19'])
         try:
-            data.to_csv(os.path.join(RESULTS_DIR, f'{self.disease}/{reference_country}_POPSTAT_{self.disease}.csv'), index = False)
+            data.to_csv(os.path.join(RESULTS_DIR, f'{self.disease}/{reference_country}_POPSTAT_COVID19.csv'), index = False)
         except:
             os.mkdir(os.path.join(RESULTS_DIR, self.disease))
-            data.to_csv(os.path.join(RESULTS_DIR, f'{self.disease}/{reference_country}_POPSTAT_{self.disease}.csv'), index = False)
+            data.to_csv(os.path.join(RESULTS_DIR, f'{self.disease}/{reference_country}_POPSTAT_COVID19.csv'), index = False)
         
         print(f"POPSTAT_{self.disease} data saved successfully for {reference_country}")
 
@@ -115,5 +113,5 @@ class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
 
 if __name__ == "__main__":
     disease = 'Meningitis'
-    year = 2017
+    year = 2019
     POP_STAT_CALCULATION_FOR_OTHER_DISEASES(disease, year).run()

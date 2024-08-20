@@ -10,6 +10,7 @@ sys.path.append(main_dir)
 
 COVID_DATA_DIR = os.path.join(main_dir, 'DATA/covid_data_by_country')
 SAVE_DIR = os.path.join(main_dir, 'RESULTS/POPSTATCOVID/OTHER_METRICS')
+
 MEDIAN_AGE_DATA = os.path.join(main_dir, 'DATA/owid_data_filtered/median-age.csv')
 GDP_PER_CAPITA_DATA = os.path.join(main_dir, 'DATA/owid_data_filtered/gdp-per-capita.csv')
 POPULATION_DENSITY_DATA = os.path.join(main_dir, 'DATA/owid_data_filtered/population-density.csv')
@@ -65,7 +66,6 @@ class PLOT_OTHER_METRICS:
 
         if self.year <= 2019:
             self.SDI_data = pd.read_csv(SDI_DATA, encoding="ISO-8859-1")
-            #keep columns with only year 2019 and country names
             self.SDI_data = self.SDI_data[["Location", str(self.year)]]
 
 

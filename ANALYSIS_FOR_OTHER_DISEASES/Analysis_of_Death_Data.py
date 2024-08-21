@@ -41,7 +41,7 @@ POPSTAT_DISEASE_DATA_DIR = os.path.join(main_dir, "RESULTS", "POPSTAT_OTHER_DISE
 class MORTALITY_DATA:
     def __init__(self, year, country):
         self.REFERENCE_COUNTRY = country
-        self.POPSTAT_COVID_DATA = pd.read_csv(os.path.join(POPSTAT_DISEASE_DATA_DIR, f"{country}_POPSTAT_COVID19.csv"))
+        self.POPSTAT_COVID_DATA = pd.read_csv(os.path.join(POPSTAT_COVID_DATA_DIR, f"{country}_POPSTAT_COVID19.csv"))
         self.year = year
 
         self.CORR_COEFFICIENT = {

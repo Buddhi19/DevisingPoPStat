@@ -15,7 +15,7 @@ class ANALYSIS_FOR_OTHER_DISEASES:
         reference_country = input('Enter reference country: ')
         DEATH_DATA_PROCESSOR(death_year)
         data = MORTALITY_DATA(death_year, reference_country)
-        data.ANALYZER_FOR_SELECTED_DISEASES()
+        data.ANALYZER()
 
     def parser_run(self, death_year, reference_country, selected: bool):
         DEATH_DATA_PROCESSOR(death_year)

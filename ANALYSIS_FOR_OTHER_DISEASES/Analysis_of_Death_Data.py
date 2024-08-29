@@ -68,6 +68,10 @@ class MORTALITY_DATA:
         self.GDP_per_capita_data = GDP_PER_CAPITA_DATA[GDP_PER_CAPITA_DATA['Year'] == int(self.year)]
         self.Pop_Density = POPULATION_DENSITY[POPULATION_DENSITY['Year'] == int(self.year)]
 
+        self.GINI_DATA = GINI_DATA[GINI_DATA['Year'] == int(self.year)]
+        self.UHCI_DATA = UHCI_DATA[UHCI_DATA['Year'] == int(self.year)]
+        self.LIFE_EXPECTANCY_DATA = LIFE_EXPECTANCY_DATA[LIFE_EXPECTANCY_DATA['Year'] == int(self.year)]
+
         if self.year <= 2019:
             self.SDI_data = SDI_DATA[["Location", str(self.year)]]
 
@@ -76,7 +80,7 @@ class MORTALITY_DATA:
     def filter_death_data(self, disease):
         self.data = DEATH_DATA[DEATH_DATA['cause_name'] == disease]
 
-    def create_death_data_per_disease(self, disease, country):
+    def create_death_data_per_disease(self, country):
         filtered_data = self.data
         filtered_data = filtered_data[filtered_data['location_name'] == country]
         year_data = filtered_data[(filtered_data['year'] == self.year)]
@@ -98,7 +102,7 @@ class MORTALITY_DATA:
             if country not in self.POPSTAT_COVID_DATA["Country"].values:
                 continue
             popstat_val = self.POPSTAT_COVID_DATA[self.POPSTAT_COVID_DATA["Country"] == country]["POPSTAT_COVID19"].values[0]
-            total_deaths_per_million = self.create_death_data_per_disease(disease, pre_name)
+            total_deaths_per_million = self.create_death_data_per_disease(pre_name)
             if not total_deaths_per_million:
                 continue
             X.append(popstat_val)
@@ -118,7 +122,7 @@ class MORTALITY_DATA:
             if country not in self.HDI_DATA['Entity'].str.lower().values:
                 continue
             HDI = self.HDI_DATA[self.HDI_DATA['Entity'].str.lower() == country]['Human Development Index'].values[0]
-            total_deaths_per_million = self.create_death_data_per_disease(disease, pre_name)
+            total_deaths_per_million = self.create_death_data_per_disease(pre_name)
             if not total_deaths_per_million:
                 continue
             X.append(HDI)
@@ -137,10 +141,10 @@ class MORTALITY_DATA:
             country = mapping_name(country)
             if country == None:
                 continue
-            if country not in SDI_DATA['Location'].str.lower().values:
+            if country not in self.SDI_DATA['Location'].str.lower().values:
                 continue
-            SDI = SDI_DATA[SDI_DATA['Location'].str.lower() == country][str(self.year)].values[0]
-            total_deaths_per_million = self.create_death_data_per_disease(disease, pre_name)
+            SDI = self.SDI_DATA[self.SDI_DATA['Location'].str.lower() == country][str(self.year)].values[0]
+            total_deaths_per_million = self.create_death_data_per_disease(pre_name)
             if not total_deaths_per_million:
                 continue
             X.append(SDI)
@@ -160,7 +164,7 @@ class MORTALITY_DATA:
             if country not in self.MEDIAN_AGE_DATA['Entity'].str.lower().values:
                 continue
             median_age = self.MEDIAN_AGE_DATA[self.MEDIAN_AGE_DATA['Entity'].str.lower() == country]['Median Age'].values[0]
-            total_deaths_per_million = self.create_death_data_per_disease(disease, pre_name)
+            total_deaths_per_million = self.create_death_data_per_disease(pre_name)
             if not total_deaths_per_million:
                 continue
             X.append(median_age)
@@ -180,7 +184,7 @@ class MORTALITY_DATA:
             if country not in self.GDP_per_capita_data['Entity'].str.lower().values:
                 continue
             GDP_per_capita = self.GDP_per_capita_data[self.GDP_per_capita_data['Entity'].str.lower() == country]['GDP per capita'].values[0]
-            total_deaths_per_million = self.create_death_data_per_disease(disease, pre_name)
+            total_deaths_per_million = self.create_death_data_per_disease(pre_name)
             if not total_deaths_per_million:
                 continue
             X.append(GDP_per_capita)
@@ -200,7 +204,7 @@ class MORTALITY_DATA:
             if country not in self.Pop_Density['Entity'].str.lower().values:
                 continue
             Pop_Density = self.Pop_Density[self.Pop_Density['Entity'].str.lower() == country]['Population density'].values[0]
-            total_deaths_per_million = self.create_death_data_per_disease(disease, pre_name)
+            total_deaths_per_million = self.create_death_data_per_disease(pre_name)
             if not total_deaths_per_million:
                 continue
             X.append(Pop_Density)
@@ -217,10 +221,10 @@ class MORTALITY_DATA:
             country = mapping_name(country)
             if country == None:
                 continue
-            if country not in GINI_DATA['Entity'].str.lower().values:
+            if country not in self.GINI_DATA['Entity'].str.lower().values:
                 continue
-            GINI = GINI_DATA[GINI_DATA['Entity'].str.lower() == country]['Gini coefficient'].values[0]
-            total_deaths_per_million = self.create_death_data_per_disease(disease, pre_name)
+            GINI = self.GINI_DATA[self.GINI_DATA['Entity'].str.lower() == country]['Gini coefficient'].values[0]
+            total_deaths_per_million = self.create_death_data_per_disease(pre_name)
             if not total_deaths_per_million:
                 continue
             X.append(GINI)
@@ -237,10 +241,10 @@ class MORTALITY_DATA:
             country = mapping_name(country)
             if country == None:
                 continue
-            if country not in UHCI_DATA['Entity'].str.lower().values:
+            if country not in self.UHCI_DATA['Entity'].str.lower().values:
                 continue
-            UHCI = UHCI_DATA[UHCI_DATA['Entity'].str.lower() == country]['UHC Service Coverage Index (SDG 3.8.1)'].values[0]
-            total_deaths_per_million = self.create_death_data_per_disease(disease, pre_name)
+            UHCI = self.UHCI_DATA[self.UHCI_DATA['Entity'].str.lower() == country]['UHC Service Coverage Index (SDG 3.8.1)'].values[0]
+            total_deaths_per_million = self.create_death_data_per_disease(pre_name)
             if not total_deaths_per_million:
                 continue
             X.append(UHCI)
@@ -257,10 +261,10 @@ class MORTALITY_DATA:
             country = mapping_name(country)
             if country == None:
                 continue
-            if country not in LIFE_EXPECTANCY_DATA['Entity'].str.lower().values:
+            if country not in self.LIFE_EXPECTANCY_DATA['Entity'].str.lower().values:
                 continue
-            LIFE_EXPECTANCY = LIFE_EXPECTANCY_DATA[LIFE_EXPECTANCY_DATA['Entity'].str.lower() == country]['Period life expectancy at birth - Sex: all - Age: 0'].values[0]
-            total_deaths_per_million = self.create_death_data_per_disease(disease, pre_name)
+            LIFE_EXPECTANCY = self.LIFE_EXPECTANCY_DATA[self.LIFE_EXPECTANCY_DATA['Entity'].str.lower() == country]['Period life expectancy at birth - Sex: all - Age: 0'].values[0]
+            total_deaths_per_million = self.create_death_data_per_disease(pre_name)
             if not total_deaths_per_million:
                 continue
             X.append(LIFE_EXPECTANCY)
@@ -319,7 +323,8 @@ class MORTALITY_DATA:
         print()
 
     def ANALYZER(self):
-        for disease in DEATH_DATA['cause_name'].unique():
+        causes = DEATH_DATA['cause_name'].unique()
+        for disease in causes:
             self.filter_death_data(disease)
             self.create_dataframe_for_diseases(disease)
             self.create_dataframe_for_diseases_HDI(disease)
@@ -378,4 +383,4 @@ class MORTALITY_DATA:
 
 if __name__ == "__main__":
     data = MORTALITY_DATA(2021, "japan")
-    data.ANALYZER_FOR_SELECTED_DISEASES()
+    data.ANALYZER()

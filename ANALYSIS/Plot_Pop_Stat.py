@@ -72,4 +72,3 @@ class PLOT_POP_STAT:
         print()
         return Stats
 
-

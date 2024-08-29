@@ -5,7 +5,7 @@ import pandas as pd
 main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(main_dir)
 
-DATA_PATH = os.path.join(main_dir, 'RESULTS/CORRELATION_DATA_FOR_OTHER_DISEASES/Correlation_Coefficient_japan.csv')
+DATA_PATH = os.path.join(main_dir, 'RESULTS/CORRELATION_DATA_FOR_OTHER_DISEASES/Correlation_Coefficient_japan_KLD.csv')
 
 def EVAL():
     data = pd.read_csv(DATA_PATH)

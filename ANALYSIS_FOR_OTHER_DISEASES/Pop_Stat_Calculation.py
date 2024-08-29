@@ -112,6 +112,6 @@ class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
 
 
 if __name__ == "__main__":
-    disease = 'Meningitis'
-    year = 2019
+    disease = 'Communicable, maternal, neonatal, and nutritional diseases'
+    year = 2021
     POP_STAT_CALCULATION_FOR_OTHER_DISEASES(disease, year).run()

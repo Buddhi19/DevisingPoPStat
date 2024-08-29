@@ -17,6 +17,9 @@ median_age_data_path = os.path.join(main_dir, "DATA", "owid_data_filtered", "med
 gdp_per_capita_data_path = os.path.join(main_dir, "DATA", "owid_data_filtered", "gdp-per-capita.csv")
 population_density_path = os.path.join(main_dir, "DATA", "owid_data_filtered", "population-density.csv")
 sdi_data_path = os.path.join(main_dir, "DATA", "owid_data", "sdi_data.csv")
+GINI_data_path = os.path.join(main_dir, "DATA", "owid_data_filtered", "economic-inequality-gini-index.csv")
+universal_health_coverage_path = os.path.join(main_dir, "DATA", "owid_data_filtered", "universal-health-coverage-index.csv")
+life_expectancy_path = os.path.join(main_dir, "DATA", "owid_data_filtered", "life-expectancy.csv")
 
 DEATH_DATA = pd.read_csv(death_data_path, low_memory=False)
 POPULATION_DATA = pd.read_csv(population_data_path, low_memory=False)
@@ -25,6 +28,9 @@ MEDIAN_AGE_DATA = pd.read_csv(median_age_data_path, low_memory=False)
 GDP_PER_CAPITA_DATA = pd.read_csv(gdp_per_capita_data_path, low_memory=False)
 POPULATION_DENSITY = pd.read_csv(population_density_path, low_memory=False)
 SDI_DATA = pd.read_csv(sdi_data_path, encoding="ISO-8859-1", low_memory=False)
+GINI_DATA = pd.read_csv(GINI_data_path, low_memory=False)
+UHCI_DATA = pd.read_csv(universal_health_coverage_path, low_memory=False)
+LIFE_EXPECTANCY_DATA = pd.read_csv(life_expectancy_path, low_memory=False)
 
 SAVING_PATH_PNG = os.path.join(main_dir, "RESULTS", "CORRELATION_WITH_OTHER_DISEASES", "POPSTAT")
 SAVING_PATH_PNG_HDI = os.path.join(main_dir, "RESULTS", "CORRELATION_WITH_OTHER_DISEASES", "OTHER_METRICS", "HDI")
@@ -33,6 +39,9 @@ SAVING_PATH_PNG_GDP_PER_CAPITA = os.path.join(main_dir, "RESULTS", "CORRELATION_
 SAVING_PATH_PNG_POPULATION_DENSITY = os.path.join(main_dir, "RESULTS", "CORRELATION_WITH_OTHER_DISEASES", "OTHER_METRICS", "POPULATION_DENSITY")
 SAVING_PATH_CSV = os.path.join(main_dir, "RESULTS", "CORRELATION_DATA_FOR_OTHER_DISEASES")
 SAVING_PATH_PNG_SDI = os.path.join(main_dir, "RESULTS", "CORRELATION_WITH_OTHER_DISEASES", "OTHER_METRICS", "SDI")
+SAVING_PATH_PNG_GINI = os.path.join(main_dir, "RESULTS", "CORRELATION_WITH_OTHER_DISEASES", "OTHER_METRICS", "GINI")
+SAVING_PATH_PNG_UHCI = os.path.join(main_dir, "RESULTS", "CORRELATION_WITH_OTHER_DISEASES", "OTHER_METRICS", "UHCI")
+SAVING_PATH_PNG_LIFE_EXPECTANCY = os.path.join(main_dir, "RESULTS", "CORRELATION_WITH_OTHER_DISEASES", "OTHER_METRICS", "LIFE_EXPECTANCY")
 
 COVID_DATA_DIR = os.path.join(main_dir, "DATA", "covid_data_by_country")
 POPSTAT_COVID_DATA_DIR = os.path.join(main_dir, "RESULTS", "POPSTAT_COUNTRY_DATA")
@@ -62,8 +71,13 @@ class MORTALITY_DATA:
         if self.year <= 2019:
             self.SDI_data = SDI_DATA[["Location", str(self.year)]]
 
+        self.data = DEATH_DATA
+
+    def filter_death_data(self, disease):
+        self.data = DEATH_DATA[DEATH_DATA['cause_name'] == disease]
+
     def create_death_data_per_disease(self, disease, country):
-        filtered_data = DEATH_DATA[DEATH_DATA['cause_name'] == disease]
+        filtered_data = self.data
         filtered_data = filtered_data[filtered_data['location_name'] == country]
         year_data = filtered_data[(filtered_data['year'] == self.year)]
         total_death_rate = year_data[year_data['metric_name'] == 'Rate']
@@ -75,7 +89,7 @@ class MORTALITY_DATA:
     def create_dataframe_for_diseases(self, disease):
         X = []
         Y = []
-        data = DEATH_DATA[DEATH_DATA['cause_name'] == disease]
+        data = self.data
         for country in data['location_name'].unique():
             pre_name = country
             country = mapping_name(country)
@@ -95,7 +109,7 @@ class MORTALITY_DATA:
     def create_dataframe_for_diseases_HDI(self, disease):
         X = []
         Y = []
-        data = DEATH_DATA[DEATH_DATA['cause_name'] == disease]
+        data = self.data
         for country in data['location_name'].unique():
             pre_name = country
             country = mapping_name(country)
@@ -117,7 +131,7 @@ class MORTALITY_DATA:
             return
         X = []
         Y = []
-        data = DEATH_DATA[DEATH_DATA['cause_name'] == disease]
+        data = self.data
         for country in data['location_name'].unique():
             pre_name = country
             country = mapping_name(country)
@@ -137,7 +151,7 @@ class MORTALITY_DATA:
     def create_dataframe_for_diseases_MEDIAN_AGE(self, disease):
         X = []
         Y = []
-        data = DEATH_DATA[DEATH_DATA['cause_name'] == disease]
+        data = self.data
         for country in data['location_name'].unique():
             pre_name = country
             country = mapping_name(country)
@@ -157,7 +171,7 @@ class MORTALITY_DATA:
     def create_dataframe_for_diseases_GDP_PER_CAPITA(self, disease):
         X = []
         Y = []
-        data = DEATH_DATA[DEATH_DATA['cause_name'] == disease]
+        data = self.data
         for country in data['location_name'].unique():
             pre_name = country
             country = mapping_name(country)
@@ -177,7 +191,7 @@ class MORTALITY_DATA:
     def create_dataframe_for_diseases_POPULATION_DENSITY(self, disease):
         X = []
         Y = []
-        data = DEATH_DATA[DEATH_DATA['cause_name'] == disease]
+        data = self.data
         for country in data['location_name'].unique():
             pre_name = country
             country = mapping_name(country)
@@ -193,6 +207,66 @@ class MORTALITY_DATA:
             Y.append(total_deaths_per_million)
 
         self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_POPULATION_DENSITY, variable = "Population Density")
+
+    def create_dataframe_for_diseases_GINI(self, disease):
+        X = []
+        Y = []
+        data = self.data
+        for country in data['location_name'].unique():
+            pre_name = country
+            country = mapping_name(country)
+            if country == None:
+                continue
+            if country not in GINI_DATA['Entity'].str.lower().values:
+                continue
+            GINI = GINI_DATA[GINI_DATA['Entity'].str.lower() == country]['Gini coefficient'].values[0]
+            total_deaths_per_million = self.create_death_data_per_disease(disease, pre_name)
+            if not total_deaths_per_million:
+                continue
+            X.append(GINI)
+            Y.append(total_deaths_per_million)
+
+        self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_GINI, variable = "Gini coefficient")
+
+    def create_dataframe_for_diseases_UHCI(self, disease):
+        X = []
+        Y = []
+        data = self.data
+        for country in data['location_name'].unique():
+            pre_name = country
+            country = mapping_name(country)
+            if country == None:
+                continue
+            if country not in UHCI_DATA['Entity'].str.lower().values:
+                continue
+            UHCI = UHCI_DATA[UHCI_DATA['Entity'].str.lower() == country]['UHC Service Coverage Index (SDG 3.8.1)'].values[0]
+            total_deaths_per_million = self.create_death_data_per_disease(disease, pre_name)
+            if not total_deaths_per_million:
+                continue
+            X.append(UHCI)
+            Y.append(total_deaths_per_million)
+
+        self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_UHCI, variable = "UHCI")
+
+    def create_dataframe_for_diseases_LIFE_EXPECTANCY(self, disease):
+        X = []
+        Y = []
+        data = self.data
+        for country in data['location_name'].unique():
+            pre_name = country
+            country = mapping_name(country)
+            if country == None:
+                continue
+            if country not in LIFE_EXPECTANCY_DATA['Entity'].str.lower().values:
+                continue
+            LIFE_EXPECTANCY = LIFE_EXPECTANCY_DATA[LIFE_EXPECTANCY_DATA['Entity'].str.lower() == country]['Period life expectancy at birth - Sex: all - Age: 0'].values[0]
+            total_deaths_per_million = self.create_death_data_per_disease(disease, pre_name)
+            if not total_deaths_per_million:
+                continue
+            X.append(LIFE_EXPECTANCY)
+            Y.append(total_deaths_per_million)
+
+        self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_LIFE_EXPECTANCY, variable = "Life expectancy")
 
     def PLOT(self, X, Y, title, saving_path=SAVING_PATH_PNG,variable = "POPSTAT_COVID19"):
         X = np.array(X)
@@ -246,12 +320,16 @@ class MORTALITY_DATA:
 
     def ANALYZER(self):
         for disease in DEATH_DATA['cause_name'].unique():
+            self.filter_death_data(disease)
             self.create_dataframe_for_diseases(disease)
             self.create_dataframe_for_diseases_HDI(disease)
             self.create_dataframe_for_diseases_MEDIAN_AGE(disease)
             self.create_dataframe_for_diseases_GDP_PER_CAPITA(disease)
             self.create_dataframe_for_diseases_POPULATION_DENSITY(disease)
             self.create_dataframe_for_diseases_SDI(disease)
+            self.create_dataframe_for_diseases_GINI(disease)
+            self.create_dataframe_for_diseases_UHCI(disease)
+            self.create_dataframe_for_diseases_LIFE_EXPECTANCY(disease)
         self.CORR_COEFFICIENT = pd.DataFrame(self.CORR_COEFFICIENT)
         self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, f"Correlation_Coefficient_{self.REFERENCE_COUNTRY}.csv"))
 
@@ -284,17 +362,20 @@ class MORTALITY_DATA:
             "Exposure to forces of nature"
         ]
         for disease in diseases:
+            self.filter_death_data(disease)
             self.create_dataframe_for_diseases(disease)
             self.create_dataframe_for_diseases_GDP_PER_CAPITA(disease)
             self.create_dataframe_for_diseases_HDI(disease)
             self.create_dataframe_for_diseases_MEDIAN_AGE(disease)
             self.create_dataframe_for_diseases_POPULATION_DENSITY(disease)
             self.create_dataframe_for_diseases_SDI(disease)
-
+            self.create_dataframe_for_diseases_GINI(disease)
+            self.create_dataframe_for_diseases_UHCI(disease)
+            self.create_dataframe_for_diseases_LIFE_EXPECTANCY(disease)
         self.CORR_COEFFICIENT = pd.DataFrame(self.CORR_COEFFICIENT)
-        self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, f"Correlation_Coefficient_{self.REFERENCE_COUNTRY}_JS.csv"))
+        self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, f"Correlation_Coefficient_{self.REFERENCE_COUNTRY}_KLD.csv"))
 
 
 if __name__ == "__main__":
-    data = MORTALITY_DATA(2021, "moldova")
+    data = MORTALITY_DATA(2021, "japan")
     data.ANALYZER_FOR_SELECTED_DISEASES()

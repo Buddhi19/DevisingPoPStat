@@ -155,8 +155,3 @@ class POP_STAT_CALCULATION:
 
         return country_correlations_progressive, country_correlations_regressive
 
-
-if __name__ == "__main__":
-    pop_stat_calculator = POP_STAT_CALCULATION()
-    pop_stat_calculator.remove_nan_values()
-    pop_stat_calculator.find_optimal_reference()

@@ -76,6 +76,7 @@ class MORTALITY_DATA:
             self.SDI_data = SDI_DATA[["Location", str(self.year)]]
 
         self.data = DEATH_DATA
+        self.deaths_per_disease: dict = {}
 
     def filter_death_data(self, disease):
         self.data = DEATH_DATA[DEATH_DATA['cause_name'] == disease]
@@ -110,26 +111,6 @@ class MORTALITY_DATA:
 
         self.PLOT(X,Y, disease)
 
-    def create_dataframe_for_diseases_HDI(self, disease):
-        X = []
-        Y = []
-        data = self.data
-        for country in data['location_name'].unique():
-            pre_name = country
-            country = mapping_name(country)
-            if country == None:
-                continue
-            if country not in self.HDI_DATA['Entity'].str.lower().values:
-                continue
-            HDI = self.HDI_DATA[self.HDI_DATA['Entity'].str.lower() == country]['Human Development Index'].values[0]
-            total_deaths_per_million = self.create_death_data_per_disease(pre_name)
-            if not total_deaths_per_million:
-                continue
-            X.append(HDI)
-            Y.append(total_deaths_per_million)
-
-        self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_HDI, variable = "HDI")
-
     def create_dataframe_for_diseases_SDI(self, disease):
         if self.year > 2019:
             return
@@ -152,125 +133,83 @@ class MORTALITY_DATA:
 
         self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_SDI, variable = "SDI")
 
-    def create_dataframe_for_diseases_MEDIAN_AGE(self, disease):
+    def create_dataframe_for_diseases_and_plot(self, disease: str, variable_name: str, DATA: pd.DataFrame, saving_path, variable: str):
+        """
+        disease: disease we are analyzing
+        variable_name: variable on the DATAFRAME 
+        variable: variable name
+        """
         X = []
         Y = []
-        data = self.data
-        for country in data['location_name'].unique():
+        for country in self.data['location_name'].unique():
             pre_name = country
             country = mapping_name(country)
             if country == None:
                 continue
-            if country not in self.MEDIAN_AGE_DATA['Entity'].str.lower().values:
+            if country not in DATA['Entity'].str.lower().values:
                 continue
-            median_age = self.MEDIAN_AGE_DATA[self.MEDIAN_AGE_DATA['Entity'].str.lower() == country]['Median Age'].values[0]
+            val = DATA[DATA['Entity'].str.lower() == country][variable_name].values[0]
             total_deaths_per_million = self.create_death_data_per_disease(pre_name)
             if not total_deaths_per_million:
                 continue
-            X.append(median_age)
+            X.append(val)
             Y.append(total_deaths_per_million)
 
-        self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_MEDIAN_AGE, variable = "Median Age")
-    
-    def create_dataframe_for_diseases_GDP_PER_CAPITA(self, disease):
-        X = []
-        Y = []
-        data = self.data
-        for country in data['location_name'].unique():
-            pre_name = country
-            country = mapping_name(country)
-            if country == None:
-                continue
-            if country not in self.GDP_per_capita_data['Entity'].str.lower().values:
-                continue
-            GDP_per_capita = self.GDP_per_capita_data[self.GDP_per_capita_data['Entity'].str.lower() == country]['GDP per capita'].values[0]
-            total_deaths_per_million = self.create_death_data_per_disease(pre_name)
-            if not total_deaths_per_million:
-                continue
-            X.append(GDP_per_capita)
-            Y.append(total_deaths_per_million)
+        self.PLOT(X,Y, disease, saving_path=saving_path, variable = variable)
 
-        self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_GDP_PER_CAPITA, variable = "GDP per capita")
+    def run(self, disease):
+        self.filter_death_data(disease)
+        self.create_dataframe_for_diseases(disease)
+        self.create_dataframe_for_diseases_and_plot(
+            disease = disease,
+            variable_name = "Human Development Index",
+            DATA = self.HDI_DATA,
+            saving_path = SAVING_PATH_PNG_HDI,
+            variable = "HDI"
+        )
+        self.create_dataframe_for_diseases_and_plot(
+            disease = disease,
+            variable_name = "Median Age",
+            DATA = self.MEDIAN_AGE_DATA,
+            saving_path = SAVING_PATH_PNG_MEDIAN_AGE,
+            variable = "Median Age"
+        )
+        self.create_dataframe_for_diseases_and_plot(
+            disease = disease,
+            variable_name = "GDP per capita",
+            DATA = self.GDP_per_capita_data,
+            saving_path = SAVING_PATH_PNG_GDP_PER_CAPITA,
+            variable = "GDP per capita"
+        )
+        self.create_dataframe_for_diseases_and_plot(
+            disease = disease,
+            variable_name = "Population density",
+            DATA = self.Pop_Density,
+            saving_path = SAVING_PATH_PNG_POPULATION_DENSITY,
+            variable = "Population Density"
+        )
+        self.create_dataframe_for_diseases_and_plot(
+            disease = disease,
+            variable_name = "Gini coefficient",
+            DATA = self.GINI_DATA,
+            saving_path = SAVING_PATH_PNG_GINI,
+            variable = "Gini coefficient"
+        )
+        self.create_dataframe_for_diseases_and_plot(
+            disease = disease,
+            variable_name = "UHC Service Coverage Index (SDG 3.8.1)",
+            DATA = self.UHCI_DATA,
+            saving_path = SAVING_PATH_PNG_UHCI,
+            variable = "UHCI"
+        )
+        self.create_dataframe_for_diseases_and_plot(
+            disease = disease,
+            variable_name = "Period life expectancy at birth - Sex: all - Age: 0",
+            DATA = self.LIFE_EXPECTANCY_DATA,
+            saving_path = SAVING_PATH_PNG_LIFE_EXPECTANCY,
+            variable = "Life expectancy"
+        )
 
-    def create_dataframe_for_diseases_POPULATION_DENSITY(self, disease):
-        X = []
-        Y = []
-        data = self.data
-        for country in data['location_name'].unique():
-            pre_name = country
-            country = mapping_name(country)
-            if country == None:
-                continue
-            if country not in self.Pop_Density['Entity'].str.lower().values:
-                continue
-            Pop_Density = self.Pop_Density[self.Pop_Density['Entity'].str.lower() == country]['Population density'].values[0]
-            total_deaths_per_million = self.create_death_data_per_disease(pre_name)
-            if not total_deaths_per_million:
-                continue
-            X.append(Pop_Density)
-            Y.append(total_deaths_per_million)
-
-        self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_POPULATION_DENSITY, variable = "Population Density")
-
-    def create_dataframe_for_diseases_GINI(self, disease):
-        X = []
-        Y = []
-        data = self.data
-        for country in data['location_name'].unique():
-            pre_name = country
-            country = mapping_name(country)
-            if country == None:
-                continue
-            if country not in self.GINI_DATA['Entity'].str.lower().values:
-                continue
-            GINI = self.GINI_DATA[self.GINI_DATA['Entity'].str.lower() == country]['Gini coefficient'].values[0]
-            total_deaths_per_million = self.create_death_data_per_disease(pre_name)
-            if not total_deaths_per_million:
-                continue
-            X.append(GINI)
-            Y.append(total_deaths_per_million)
-
-        self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_GINI, variable = "Gini coefficient")
-
-    def create_dataframe_for_diseases_UHCI(self, disease):
-        X = []
-        Y = []
-        data = self.data
-        for country in data['location_name'].unique():
-            pre_name = country
-            country = mapping_name(country)
-            if country == None:
-                continue
-            if country not in self.UHCI_DATA['Entity'].str.lower().values:
-                continue
-            UHCI = self.UHCI_DATA[self.UHCI_DATA['Entity'].str.lower() == country]['UHC Service Coverage Index (SDG 3.8.1)'].values[0]
-            total_deaths_per_million = self.create_death_data_per_disease(pre_name)
-            if not total_deaths_per_million:
-                continue
-            X.append(UHCI)
-            Y.append(total_deaths_per_million)
-
-        self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_UHCI, variable = "UHCI")
-
-    def create_dataframe_for_diseases_LIFE_EXPECTANCY(self, disease):
-        X = []
-        Y = []
-        data = self.data
-        for country in data['location_name'].unique():
-            pre_name = country
-            country = mapping_name(country)
-            if country == None:
-                continue
-            if country not in self.LIFE_EXPECTANCY_DATA['Entity'].str.lower().values:
-                continue
-            LIFE_EXPECTANCY = self.LIFE_EXPECTANCY_DATA[self.LIFE_EXPECTANCY_DATA['Entity'].str.lower() == country]['Period life expectancy at birth - Sex: all - Age: 0'].values[0]
-            total_deaths_per_million = self.create_death_data_per_disease(pre_name)
-            if not total_deaths_per_million:
-                continue
-            X.append(LIFE_EXPECTANCY)
-            Y.append(total_deaths_per_million)
-
-        self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_LIFE_EXPECTANCY, variable = "Life expectancy")
 
     def PLOT(self, X, Y, title, saving_path=SAVING_PATH_PNG,variable = "POPSTAT_COVID19"):
         X = np.array(X)
@@ -325,16 +264,7 @@ class MORTALITY_DATA:
     def ANALYZER(self):
         causes = DEATH_DATA['cause_name'].unique()
         for disease in causes:
-            self.filter_death_data(disease)
-            self.create_dataframe_for_diseases(disease)
-            self.create_dataframe_for_diseases_HDI(disease)
-            self.create_dataframe_for_diseases_MEDIAN_AGE(disease)
-            self.create_dataframe_for_diseases_GDP_PER_CAPITA(disease)
-            self.create_dataframe_for_diseases_POPULATION_DENSITY(disease)
-            self.create_dataframe_for_diseases_SDI(disease)
-            self.create_dataframe_for_diseases_GINI(disease)
-            self.create_dataframe_for_diseases_UHCI(disease)
-            self.create_dataframe_for_diseases_LIFE_EXPECTANCY(disease)
+            self.run(disease)
         self.CORR_COEFFICIENT = pd.DataFrame(self.CORR_COEFFICIENT)
         self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, f"Correlation_Coefficient_{self.REFERENCE_COUNTRY}.csv"))
 
@@ -367,20 +297,11 @@ class MORTALITY_DATA:
             "Exposure to forces of nature"
         ]
         for disease in diseases:
-            self.filter_death_data(disease)
-            self.create_dataframe_for_diseases(disease)
-            self.create_dataframe_for_diseases_GDP_PER_CAPITA(disease)
-            self.create_dataframe_for_diseases_HDI(disease)
-            self.create_dataframe_for_diseases_MEDIAN_AGE(disease)
-            self.create_dataframe_for_diseases_POPULATION_DENSITY(disease)
-            self.create_dataframe_for_diseases_SDI(disease)
-            self.create_dataframe_for_diseases_GINI(disease)
-            self.create_dataframe_for_diseases_UHCI(disease)
-            self.create_dataframe_for_diseases_LIFE_EXPECTANCY(disease)
+            self.run(disease)
         self.CORR_COEFFICIENT = pd.DataFrame(self.CORR_COEFFICIENT)
-        self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, f"Correlation_Coefficient_{self.REFERENCE_COUNTRY}_KLD.csv"))
+        self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, f"Correlation_Coefficient_{self.REFERENCE_COUNTRY}_new.csv"))
 
 
 if __name__ == "__main__":
     data = MORTALITY_DATA(2021, "japan")
-    data.ANALYZER()
+    data.ANALYZER_FOR_SELECTED_DISEASES()

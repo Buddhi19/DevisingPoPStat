@@ -55,14 +55,14 @@ class MORTALITY_DATA:
         self.year = year
         DEATH_DATA_PROCESSOR(year)
         POPULATION_DATA_FOR_DATE(year)
-        self.DISTANCES = POP_STAT_CALCULATION()
         self.DEATH_DATA = pd.read_csv(death_data_path, low_memory=False)
         self.CORR_COEFFICIENT = {
             "Parameter": [],
             "Cause of Death": [],
             "r squared value": [],
             "CI": [],
-            "p-value": []
+            "p-value": [],
+            "reference_country": []
         }
         self.HDI_DATA = HDI_DATA[HDI_DATA['Year'] == int(self.year)]
 
@@ -98,17 +98,16 @@ class MORTALITY_DATA:
     def create_dataframe_for_diseases(self, disease):
         X = []
         Y = []
-        name = disease
         reference_country_solver = POP_STAT_CALCULATION_FOR_OTHER_DISEASES(disease, self.year)
-        reference_country = reference_country_solver.run()
-        POPSTAT = self.DISTANCES.POPSTAT_COVID19(reference_country)
+        self.reference_country = reference_country_solver.run()
+        POPSTAT = reference_country_solver.POPSTAT_DISEASE(self.reference_country) 
         data = self.data
         for country in data['location_name'].unique():
             pre_name = country
             country = mapping_name(country)
             if country == None:
                 continue
-            if country not in self.POPSTAT_COVID_DATA["Country"].values:
+            if country not in POPSTAT.keys():
                 continue
             popstat_val = POPSTAT[country]
             total_deaths_per_million = self.create_death_data_per_disease(pre_name)
@@ -255,6 +254,7 @@ class MORTALITY_DATA:
         self.CORR_COEFFICIENT['r squared value'].append(r_squared)
         self.CORR_COEFFICIENT['CI'].append((lo, hi))
         self.CORR_COEFFICIENT['p-value'].append(p_value)
+        self.CORR_COEFFICIENT['reference_country'].append(self.reference_country)
 
         z = np.polyfit(X, Y, 1)
         p = np.poly1d(z)

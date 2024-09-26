@@ -33,17 +33,6 @@ class POP_STAT_CALCULATION:
             total_cases_per_million = data['total_cases_per_million'].tolist()[0]
             self.covid_data[country_name] = total_deaths_per_million*1 
 
-        """
-        self.HDI_data = {}
-        for file_name in os.listdir(COVID_DIR):
-            if not file_name.endswith('.csv'):
-                continue
-            country_name = file_name.split('_')[0]
-            data = pd.read_csv(os.path.join(COVID_DIR, file_name))
-            HDI = data['human_development_index'].tolist()[0]
-            self.HDI_data[country_name] = HDI
-        """
-
         self.common_countries = set(self.population_data.keys()) & set(self.covid_data.keys())
 
     def run(self):
@@ -115,13 +104,10 @@ class POP_STAT_CALCULATION:
         return np.linalg.norm(p - q)
 
     def POPSTAT_COVID19(self,reference_country):
-        print(f"Calculating POPSTAT_COVID19 for {reference_country}")
         reference_dist = self.population_data[reference_country]
-        # HDI_reference = self.HDI_data[reference_country]
         distances = {}
         for country, dist in self.population_data.items():
             if country in self.common_countries:
-                # HDI_country = self.HDI_data[country]
                 distances[country] = self.KL_DIVERGENCE(dist, reference_dist)
         return distances
 
@@ -134,9 +120,10 @@ class POP_STAT_CALCULATION:
             distances = self.POPSTAT_COVID19(reference_country)
 
             common_distances = [distances[country] for country in common_countries]
-            common_covid_data = [self.covid_data[country] for country in common_countries]
+            common_covid_data = [np.log(self.covid_data[country]) for country in common_countries]
 
-            correlation = np.corrcoef(common_distances, common_covid_data)[0, 1]
+            # correlation = np.corrcoef(common_distances, common_covid_data)[0, 1]
+            correlation, _ = pearsonr(common_distances, common_covid_data)
             country_correlations[reference_country] = correlation
 
         country_correlations = sorted(country_correlations.items(), key = lambda x: abs(x[1]), reverse = True)

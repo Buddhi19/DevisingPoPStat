@@ -2,6 +2,7 @@ import os
 import sys
 import numpy as np
 import pandas as pd
+from scipy import stats
 
 main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(main_dir)
@@ -22,7 +23,6 @@ class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
         self.CONSIDERING_COUNTRIES = 2
         self.disease = disease
         self.disease_data = {}
-        DEATH_DATA_PROCESSOR(year)
         DEATH_DATA = pd.read_csv(DEATH_DATA_PATH)
         self.DEATH_DATA = DEATH_DATA[DEATH_DATA['cause_name'] == disease]
         self.DEATH_DATA = self.DEATH_DATA[self.DEATH_DATA['year'] == year]
@@ -57,28 +57,26 @@ class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
     
     def run(self):
         self.remove_nan_values()
-        self.progressive_reference_countries, self.regressive_reference_countries = self.find_optimal_reference()
-        self.progressive_reference_countries = self.progressive_reference_countries[:self.CONSIDERING_COUNTRIES]
-        self.regressive_reference_countries = self.regressive_reference_countries[:self.CONSIDERING_COUNTRIES]
-        for country, correlation in self.progressive_reference_countries:
-            self.create_POPSTAT_DISEASE_data(country)
-        for country, correlation in self.regressive_reference_countries:
-            self.create_POPSTAT_DISEASE_data(country)
-        return self.progressive_reference_countries, self.regressive_reference_countries
-
-    def create_POPSTAT_DISEASE_data(self, reference_country):
-        data = self.POPSTAT_DISEASE(reference_country)
-        data = pd.DataFrame(data.items(), columns = ['Country', f'POPSTAT_COVID19'])
-        try:
-            data.to_csv(os.path.join(RESULTS_DIR, f'{self.disease}/{reference_country}_POPSTAT_COVID19.csv'), index = False)
-        except:
-            os.mkdir(os.path.join(RESULTS_DIR, self.disease))
-            data.to_csv(os.path.join(RESULTS_DIR, f'{self.disease}/{reference_country}_POPSTAT_COVID19.csv'), index = False)
-        
-        print(f"POPSTAT_{self.disease} data saved successfully for {reference_country}")
+        self.reference_country = self.find_optimal_reference()
+        return self.reference_country
 
     def POPSTAT_DISEASE(self, reference_country):
         return super().POPSTAT_COVID19(reference_country)
+
+    @staticmethod
+    def MASK(X, Y):
+        X = np.array(X)
+        Y = np.array(Y)
+        mask = (Y > 0)
+        X = X[mask]
+        Y = Y[mask]
+        Y = np.log(Y)
+        mask = np.isfinite(Y)
+        X = X[mask]
+        Y = Y[mask]
+        if len(X) < 2 or len(Y) < 2:
+            return None, None
+        return X, Y
     
     def find_optimal_reference(self):
         country_correlations = {}
@@ -88,30 +86,35 @@ class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
         for reference_country in common_countries:
             distances = self.POPSTAT_DISEASE(reference_country)
 
-            common_distances = [distances[country] for country in common_countries]
-            common_disease_data = [self.disease_data[country] for country in common_countries]
+            # countries_without_nan = [country for country in common_countries]
 
-            correlation = np.corrcoef(common_distances, common_disease_data)[0, 1]
+            common_distances = [distances[country] for country in common_countries]
+            common_disease_data = [np.log(self.disease_data[country]) for country in common_countries]
+
+            common_distances, common_disease_data = self.MASK(common_distances, common_disease_data)
+            if common_distances is None or common_disease_data is None:
+                country_correlations[reference_country] = 0
+                continue
+
+            correlation, _ = stats.pearsonr(common_distances, common_disease_data)
             country_correlations[reference_country] = correlation
 
-        country_correlations = sorted(country_correlations.items(), key = lambda x: abs(x[1]), reverse = True)
-        country_correlations_progressive = sorted(country_correlations, key = lambda x: x[1], reverse = True)
-        country_correlations_regressive = sorted(country_correlations, key = lambda x: x[1], reverse = False)
+        country_correlations = sorted(country_correlations, key = lambda x: abs(country_correlations[x]), reverse = True)
+        if country_correlations[0] == 0:
+            print(f"Warning: No correlation found for {self.disease} disease thus using Japan as reference")
+            return 'japan'
 
-        print(f"Top {self.CONSIDERING_COUNTRIES} countries with highest correlation with progressive population distribution")
-        for country, correlation in country_correlations_progressive[:self.CONSIDERING_COUNTRIES]:
-            print(f"{country}: {correlation}")
-
-        print()
-
-        print(f"Top {self.CONSIDERING_COUNTRIES} countries with highest correlation with regressive population distribution")
-        for country, correlation in country_correlations_regressive[:self.CONSIDERING_COUNTRIES]:
-            print(f"{country}: {correlation}")
-
-        return country_correlations_progressive, country_correlations_regressive
+        print(f"Optimal reference for {self.disease} disease is {country_correlations[0]}")
+        return country_correlations[0]
+        
 
 
 if __name__ == "__main__":
-    disease = 'Communicable, maternal, neonatal, and nutritional diseases'
-    year = 2021
-    POP_STAT_CALCULATION_FOR_OTHER_DISEASES(disease, year).run()
+    data = pd.read_csv(os.path.join(main_dir, 'DATA/death_data/DEATH_DATA.csv')) 
+    diseases = data['cause_name'].unique()
+    year = 2020
+    DEATH_DATA_PROCESSOR(year)
+    for disease in diseases:
+        print(f"Calculating POPSTAT for {disease} disease")
+        POP_STAT_CALCULATION_FOR_OTHER_DISEASES(disease, year).run()
+        print()

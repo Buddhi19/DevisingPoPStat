@@ -19,4 +19,4 @@ def EVAL(name: str = 'japan'):
 
 
 if __name__ == '__main__':
-    EVAL()
+    EVAL('custom')

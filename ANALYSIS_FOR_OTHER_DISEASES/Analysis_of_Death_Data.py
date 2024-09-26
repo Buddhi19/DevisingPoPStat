@@ -9,6 +9,10 @@ main_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(main_dir)
 
 from ANALYSIS.COUNTRIES import mapping_name
+from ANALYSIS_FOR_OTHER_DISEASES.Death_data_Processor import DEATH_DATA_PROCESSOR
+from ANALYSIS_FOR_OTHER_DISEASES.Pop_Stat_Calculation import POP_STAT_CALCULATION_FOR_OTHER_DISEASES
+from ANALYSIS.Pop_Stat_Calculation import POP_STAT_CALCULATION
+from ANALYSIS.Population_Data_For_Date import POPULATION_DATA_FOR_DATE
 
 death_data_path = os.path.join(main_dir, "DATA", "death_data", "DEATH_DATA.csv")
 population_data_path = os.path.join(main_dir, "DATA", "population_data_with_age", "age_data.csv")
@@ -21,7 +25,6 @@ GINI_data_path = os.path.join(main_dir, "DATA", "owid_data_filtered", "economic-
 universal_health_coverage_path = os.path.join(main_dir, "DATA", "owid_data_filtered", "universal-health-coverage-index.csv")
 life_expectancy_path = os.path.join(main_dir, "DATA", "owid_data_filtered", "life-expectancy.csv")
 
-DEATH_DATA = pd.read_csv(death_data_path, low_memory=False)
 POPULATION_DATA = pd.read_csv(population_data_path, low_memory=False)
 HDI_DATA = pd.read_csv(hdi_data_path, low_memory=False)
 MEDIAN_AGE_DATA = pd.read_csv(median_age_data_path, low_memory=False)
@@ -45,14 +48,15 @@ SAVING_PATH_PNG_LIFE_EXPECTANCY = os.path.join(main_dir, "RESULTS", "CORRELATION
 
 COVID_DATA_DIR = os.path.join(main_dir, "DATA", "covid_data_by_country")
 POPSTAT_COVID_DATA_DIR = os.path.join(main_dir, "RESULTS", "POPSTAT_COUNTRY_DATA")
-POPSTAT_DISEASE_DATA_DIR = os.path.join(main_dir, "RESULTS", "POPSTAT_OTHER_DISEASES", "Meningitis")
+POPSTAT_DISEASE_DATA_DIR = os.path.join(main_dir, "RESULTS", "POPSTAT_OTHER_DISEASES")
 
 class MORTALITY_DATA:
-    def __init__(self, year, country):
-        self.REFERENCE_COUNTRY = country
-        self.POPSTAT_COVID_DATA = pd.read_csv(os.path.join(POPSTAT_COVID_DATA_DIR, f"{country}_POPSTAT_COVID19.csv"))
+    def __init__(self, year):
         self.year = year
-
+        DEATH_DATA_PROCESSOR(year)
+        POPULATION_DATA_FOR_DATE(year)
+        self.DISTANCES = POP_STAT_CALCULATION()
+        self.DEATH_DATA = pd.read_csv(death_data_path, low_memory=False)
         self.CORR_COEFFICIENT = {
             "Parameter": [],
             "Cause of Death": [],
@@ -75,11 +79,11 @@ class MORTALITY_DATA:
         if self.year <= 2019:
             self.SDI_data = SDI_DATA[["Location", str(self.year)]]
 
-        self.data = DEATH_DATA
+        self.data = self.DEATH_DATA
         self.deaths_per_disease: dict = {}
 
     def filter_death_data(self, disease):
-        self.data = DEATH_DATA[DEATH_DATA['cause_name'] == disease]
+        self.data = self.DEATH_DATA[self.DEATH_DATA['cause_name'] == disease]
 
     def create_death_data_per_disease(self, country):
         filtered_data = self.data
@@ -94,6 +98,10 @@ class MORTALITY_DATA:
     def create_dataframe_for_diseases(self, disease):
         X = []
         Y = []
+        name = disease
+        reference_country_solver = POP_STAT_CALCULATION_FOR_OTHER_DISEASES(disease, self.year)
+        reference_country = reference_country_solver.run()
+        POPSTAT = self.DISTANCES.POPSTAT_COVID19(reference_country)
         data = self.data
         for country in data['location_name'].unique():
             pre_name = country
@@ -102,7 +110,7 @@ class MORTALITY_DATA:
                 continue
             if country not in self.POPSTAT_COVID_DATA["Country"].values:
                 continue
-            popstat_val = self.POPSTAT_COVID_DATA[self.POPSTAT_COVID_DATA["Country"] == country]["POPSTAT_COVID19"].values[0]
+            popstat_val = POPSTAT[country]
             total_deaths_per_million = self.create_death_data_per_disease(pre_name)
             if not total_deaths_per_million:
                 continue
@@ -262,11 +270,11 @@ class MORTALITY_DATA:
         print()
 
     def ANALYZER(self):
-        causes = DEATH_DATA['cause_name'].unique()
+        causes = self.DEATH_DATA['cause_name'].unique()
         for disease in causes:
             self.run(disease)
         self.CORR_COEFFICIENT = pd.DataFrame(self.CORR_COEFFICIENT)
-        self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, f"Correlation_Coefficient_{self.REFERENCE_COUNTRY}.csv"))
+        self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, f"Correlation_Coefficient_custom.csv"))
 
     def ANALYZER_FOR_SELECTED_DISEASES(self):
         diseases = [
@@ -299,9 +307,9 @@ class MORTALITY_DATA:
         for disease in diseases:
             self.run(disease)
         self.CORR_COEFFICIENT = pd.DataFrame(self.CORR_COEFFICIENT)
-        self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, f"Correlation_Coefficient_{self.REFERENCE_COUNTRY}_new.csv"))
+        self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, f"Correlation_Coefficient_custom_selected.csv"))
 
 
 if __name__ == "__main__":
-    data = MORTALITY_DATA(2021, "japan")
-    data.ANALYZER_FOR_SELECTED_DISEASES()
+    data = MORTALITY_DATA(2021)
+    data.ANALYZER()

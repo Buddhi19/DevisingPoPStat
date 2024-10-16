@@ -16,6 +16,7 @@ SAVE_DIR_REGRESSIVE = os.path.join(main_dir, 'RESULTS/POPSTATCOVID/PLOTS/REGRESS
 
 class PLOT_POP_STAT:
     def __init__(self,country,progressive:bool):
+        self.MODE = "PROGRESSIVE" if progressive else "REGRESSIVE"
         self.SAVE_DIR = SAVE_DIR_PROGRESSIVE if progressive else SAVE_DIR_REGRESSIVE
         self.country = country
         self.POP_STAT_DATA = pd.read_csv(os.path.join(POP_STAT_DIR, f'{self.country}_POPSTAT_COVID19.csv'))
@@ -56,9 +57,13 @@ class PLOT_POP_STAT:
         p = np.poly1d(z)
         plt.plot(X, p(X), "r--")
 
-        plt.text(0.05, 0.95, f'R² = {r_squared:.3f}',
-                     transform=plt.gca().transAxes, verticalalignment='top')
-        plt.title(f"Reference Country: {self.country}")
+        if self.MODE == "PROGRESSIVE":
+            plt.text(0.05, 0.95, f'R² = {r_squared:.3f}',
+                        transform=plt.gca().transAxes, verticalalignment='top')
+        else:
+            plt.text(0.75, 0.95, f'R² = {r_squared:.3f}',
+                        transform=plt.gca().transAxes, verticalalignment='top',fontsize = 'large')
+        # plt.title(f"Reference Country: {self.country}")
         plt.savefig(os.path.join(self.SAVE_DIR, f'{title}/Total_{title}_per_million_with_reference_{self.country}.png'))
         plt.close()
 

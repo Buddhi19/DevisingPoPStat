@@ -116,7 +116,7 @@ class MORTALITY_DATA:
             X.append(popstat_val)
             Y.append(total_deaths_per_million)
 
-        self.PLOT(X,Y, disease)
+        self.PLOT(X,Y, disease, variable=f"POPSTAT_{disease}")
 
     def create_dataframe_for_diseases_SDI(self, disease):
         if self.year > 2019:
@@ -260,8 +260,8 @@ class MORTALITY_DATA:
         p = np.poly1d(z)
         plt.plot(X, p(X), "r--")
 
-        plt.text(0.05, 0.95, f'R² = {r_squared:.3f}',
-                        transform=plt.gca().transAxes, verticalalignment='top')
+        plt.text(0.75, 0.95, f'R² = {r_squared:.3f}',
+                        transform=plt.gca().transAxes, verticalalignment='top', fontsize = 'large')
         title = title.replace("/", "")
         plt.savefig(os.path.join(saving_path, f'{title}_deaths.png'))
         plt.close()

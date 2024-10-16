@@ -58,8 +58,8 @@ class ANALYSIS:
         Stats = plotter.MEDIAN_AGE()
         self.update_POPSTAT_DATAFRAME(Stats, "Median Age")
 
-        Stats = plotter.GDP_PER_CAPITA()
-        self.update_POPSTAT_DATAFRAME(Stats, "GDP Per Capita")
+        Stats = plotter.GDP_PER_CAPITA() if int(self.year) <= 2022 else None
+        self.update_POPSTAT_DATAFRAME(Stats, "GDP Per Capita") if Stats is not None else None
 
         Stats = plotter.POPULATION_DENSITY()
         self.update_POPSTAT_DATAFRAME(Stats, "Population Density")
@@ -67,17 +67,17 @@ class ANALYSIS:
         Stats = plotter.HUMAN_DEVELOPMENT_INDEX()
         self.update_POPSTAT_DATAFRAME(Stats, "Human Development Index")
 
-        Stats = plotter.LIFE_EXPECTANCY()
-        self.update_POPSTAT_DATAFRAME(Stats, "Life Expectancy")
+        Stats = plotter.LIFE_EXPECTANCY() if int(self.year) <= 2021 else None
+        self.update_POPSTAT_DATAFRAME(Stats, "Life Expectancy") if Stats is not None else None
 
         Stats = plotter.SDI()
         self.update_POPSTAT_DATAFRAME(Stats, "SDI") if Stats is not None else None
 
-        Stats = plotter.GNI()
-        self.update_POPSTAT_DATAFRAME(Stats, "GNI")
+        Stats = plotter.GNI() if int(self.year) <= 2021 else None
+        self.update_POPSTAT_DATAFRAME(Stats, "GNI") if Stats is not None else None
 
-        Stats = plotter.UNIVERSAL_HEALTH_COVERAGE()
-        self.update_POPSTAT_DATAFRAME(Stats, "Universal Health Coverage")
+        Stats = plotter.UNIVERSAL_HEALTH_COVERAGE() if int(self.year) <= 2021 else None
+        self.update_POPSTAT_DATAFRAME(Stats, "Universal Health Coverage") if Stats is not None else None
 
         Stats = plotter.GNI_INDEX()
         self.update_POPSTAT_DATAFRAME(Stats, "GNI Index")

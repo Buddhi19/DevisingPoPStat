@@ -10,7 +10,9 @@ DATA_PATH = os.path.join(main_dir,'RESULTS/CORRELATION_DATA_FOR_OTHER_DISEASES/C
 DATAFRAME = {
         'Cause of Death': [],
         'PoPStat': [],
+        'Reference': [],
         'HDI': [],
+        'SDI': [],
         'Median Age': [],
         'GDP per capita': [],
         'Population Density': [],
@@ -26,7 +28,7 @@ def EVAL_FOR_BEST(num: int):
         data_per_disease = data[data['Cause of Death'] == disease]
         Dict = {}
         for parameter in [
-            'HDI', 'Median Age', 'GDP per capita', 'Population Density', 'Gini coefficient', 'UHCI', 'Life expectancy', f'POPSTAT_{disease}'
+            'HDI', 'SDI', 'Median Age', 'GDP per capita', 'Population Density', 'Gini coefficient', 'UHCI', 'Life expectancy', f'POPSTAT_{disease}'
         ]:
             try:
                 Dict[parameter] = data_per_disease[data_per_disease['Parameter'] == parameter]['r squared value'].values[0]
@@ -40,9 +42,11 @@ def EVAL_FOR_BEST(num: int):
             DATAFRAME['Cause of Death'].append(disease)
             PoPStat_data = data_per_disease[data_per_disease['Parameter'] == f'POPSTAT_{disease}']['r squared value'].values[0]
             DATAFRAME['PoPStat'].append(PoPStat_data)
-
+            DATAFRAME['Reference'].append(
+                data_per_disease[data_per_disease['Parameter'] == f'POPSTAT_{disease}']['reference_country'].values[0]
+            )
             for parameter in [
-                'HDI', 'Median Age', 'GDP per capita', 'Population Density', 'Gini coefficient', 'UHCI', 'Life expectancy'
+                'HDI', 'SDI', 'Median Age', 'GDP per capita', 'Population Density', 'Gini coefficient', 'UHCI', 'Life expectancy'
             ]:
                 DATAFRAME[parameter].append(
                     data_per_disease[data_per_disease['Parameter'] == parameter]['r squared value'].values[0]
@@ -50,12 +54,11 @@ def EVAL_FOR_BEST(num: int):
             count += 1
         
     print(f"Total of {count} diseases are ranked {num} with POPSTAT")
-    for key in DATAFRAME:
-        DATAFRAME[key].append("")
 
 
 if __name__ == '__main__':
-    EVAL_FOR_BEST(1)
-    EVAL_FOR_BEST(2)
-    EVAL_FOR_BEST(3)
-    pd.DataFrame(DATAFRAME).to_csv('RESULTS/POPSTAT_OTHER_DISEASES/Best_Results.csv', index=False)
+    INDEX = 6
+    EVAL_FOR_BEST(INDEX)
+    DATAFRAME = pd.DataFrame(DATAFRAME)
+    DATAFRAME = DATAFRAME.sort_values(by='PoPStat', ascending=False)
+    pd.DataFrame(DATAFRAME).to_csv(f'RESULTS/POPSTAT_OTHER_DISEASES/Best_Results_{INDEX}.csv', index=False)

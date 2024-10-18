@@ -76,8 +76,7 @@ class MORTALITY_DATA:
         self.UHCI_DATA = UHCI_DATA[UHCI_DATA['Year'] == int(self.year)]
         self.LIFE_EXPECTANCY_DATA = LIFE_EXPECTANCY_DATA[LIFE_EXPECTANCY_DATA['Year'] == int(self.year)]
 
-        if self.year <= 2019:
-            self.SDI_data = SDI_DATA[["Location", str(self.year)]]
+        self.SDI_DATA = SDI_DATA[["Location", str(self.year) if self.year < 2019 else "2019"]]
 
         self.data = self.DEATH_DATA
         self.deaths_per_disease: dict = {}
@@ -119,8 +118,9 @@ class MORTALITY_DATA:
         self.PLOT(X,Y, disease, variable=f"POPSTAT_{disease}")
 
     def create_dataframe_for_diseases_SDI(self, disease):
+        SDI_YEAR = self.year
         if self.year > 2019:
-            return
+            SDI_YEAR = 2019
         X = []
         Y = []
         data = self.data
@@ -131,7 +131,7 @@ class MORTALITY_DATA:
                 continue
             if country not in self.SDI_DATA['Location'].str.lower().values:
                 continue
-            SDI = self.SDI_DATA[self.SDI_DATA['Location'].str.lower() == country][str(self.year)].values[0]
+            SDI = self.SDI_DATA[self.SDI_DATA['Location'].str.lower() == country][str(SDI_YEAR)].values[0]
             total_deaths_per_million = self.create_death_data_per_disease(pre_name)
             if not total_deaths_per_million:
                 continue
@@ -167,6 +167,7 @@ class MORTALITY_DATA:
     def run(self, disease):
         self.filter_death_data(disease)
         self.create_dataframe_for_diseases(disease)
+        self.create_dataframe_for_diseases_SDI(disease)
         self.create_dataframe_for_diseases_and_plot(
             disease = disease,
             variable_name = "Human Development Index",

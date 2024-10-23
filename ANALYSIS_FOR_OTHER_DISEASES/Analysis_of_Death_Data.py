@@ -60,6 +60,7 @@ class MORTALITY_DATA:
             "Parameter": [],
             "Cause of Death": [],
             "r squared value": [],
+            "R value" : [],
             "CI": [],
             "p-value": [],
             "reference_country": []
@@ -253,6 +254,7 @@ class MORTALITY_DATA:
         self.CORR_COEFFICIENT['Parameter'].append(variable)
         self.CORR_COEFFICIENT['Cause of Death'].append(title)
         self.CORR_COEFFICIENT['r squared value'].append(r_squared)
+        self.CORR_COEFFICIENT['R value'].append(correalation_coefficient)
         self.CORR_COEFFICIENT['CI'].append((lo, hi))
         self.CORR_COEFFICIENT['p-value'].append(p_value)
         self.CORR_COEFFICIENT['reference_country'].append(self.reference_country)

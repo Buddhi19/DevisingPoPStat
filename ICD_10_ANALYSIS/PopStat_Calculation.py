@@ -9,13 +9,11 @@ sys.path.append(main_dir)
 
 from ANALYSIS.COUNTRIES import mapping_name
 from ANALYSIS.Pop_Stat_Calculation import POP_STAT_CALCULATION
-from ANALYSIS_FOR_OTHER_DISEASES.Death_data_Processor import DEATH_DATA_PROCESSOR
 
 
-DEATH_DATA_PATH = os.path.join(main_dir,"DATA/death_data/DEATH_DATA.csv")
-
+DEATH_DATA_DIR = os.path.join(main_dir, 'ICD-10-DATA/Death_Data')
 POPULATION_DIR = os.path.join(main_dir, 'DATA/population_data_by_country')
-RESULTS_DIR = os.path.join(main_dir, 'RESULTS/POPSTAT_OTHER_DISEASES')
+RESULTS_DIR = os.path.join(main_dir, 'ICD-10-RESULTS')
 
 class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
     def __init__(self, disease, year):
@@ -23,19 +21,14 @@ class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
         self.CONSIDERING_COUNTRIES = 2
         self.disease = disease
         self.disease_data = {}
-        DEATH_DATA = pd.read_csv(DEATH_DATA_PATH)
-        self.DEATH_DATA = DEATH_DATA[DEATH_DATA['cause_name'] == disease]
-        self.DEATH_DATA = self.DEATH_DATA[self.DEATH_DATA['year'] == year]
+        DEATH_DATA = pd.read_csv(os.path.join(DEATH_DATA_DIR, f'Death_Data_By_Disease_{year}.csv'))
+        self.DEATH_DATA = DEATH_DATA[DEATH_DATA['Cause Code'] == disease]
 
-        for country in self.DEATH_DATA['location_name'].unique():
-            pre_name = country
-            country = mapping_name(country)
-            if country is None:
-                continue
-            death_data_per_country = self.DEATH_DATA[self.DEATH_DATA['location_name'] == pre_name]
-            death_data_per_country = death_data_per_country[death_data_per_country["metric_name"] == "Rate"]
-            total_deaths_per_million = death_data_per_country["val"].values[0]
+        for country in self.DEATH_DATA['Country'].unique():
+            death_data_per_country = self.DEATH_DATA[self.DEATH_DATA['Country'] == country]
+            total_deaths_per_million = death_data_per_country["Deaths per Million"].values[0]
             self.disease_data[country] = total_deaths_per_million
+
 
         self.common_countries = set(self.population_data.keys() & self.disease_data.keys())
 
@@ -86,8 +79,6 @@ class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
         for reference_country in common_countries:
             distances = self.POPSTAT_DISEASE(reference_country)
 
-            # countries_without_nan = [country for country in common_countries]
-
             common_distances = [distances[country] for country in common_countries]
             common_disease_data = [self.disease_data[country] for country in common_countries]
 
@@ -99,23 +90,21 @@ class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
             correlation, _ = stats.pearsonr(common_distances, common_disease_data)
             country_correlations[reference_country] = correlation
 
-        country_correlations = sorted(country_correlations.items(), key=lambda x: abs(x[1]), reverse=True)
-        if country_correlations[0][1] == 0:
+
+        country_correlations = sorted(country_correlations.items(), key=lambda x: x[1], reverse=True)
+        # print(country_correlations)
+
+        if not country_correlations:
             print(f"Warning: No correlation found for {self.disease} disease thus using Japan as reference")
             return 'japan'
 
-        print(f"Optimal reference for {self.disease} disease is {country_correlations[0][0]}")
+        print(f"Optimal reference for {self.disease} disease is {country_correlations[0][0]} with correlation {country_correlations[0][1]}")
         return country_correlations[0][0]
         
 
-
 if __name__ == "__main__":
-    data = pd.read_csv(os.path.join(main_dir, 'DATA/death_data/DEATH_DATA.csv')) 
-    diseases = data['cause_name'].unique()
-    year = 2021
-    DEATH_DATA_PROCESSOR(year)
-    for disease in diseases:
-        print(f"Calculating POPSTAT for {disease} disease")
-        POP_STAT_CALCULATION_FOR_OTHER_DISEASES("Parkinson's disease", year).run()
-        print()
-        exit()
+    for disease in [
+        "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"
+    ]:
+        pop_stat = POP_STAT_CALCULATION_FOR_OTHER_DISEASES(disease, 2021)
+        reference_country = pop_stat.run()

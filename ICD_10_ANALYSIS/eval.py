@@ -5,7 +5,7 @@ import pandas as pd
 main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(main_dir)
 
-DATA_PATH = os.path.join(main_dir,'RESULTS/CORRELATION_DATA_FOR_OTHER_DISEASES/Correlation_Coefficient_custom.csv')
+DATA_PATH = os.path.join(main_dir,'ICD-10-RESULTS/CORRELATION_DATA_FOR_OTHER_DISEASES/Correlation_Coefficient_custom.csv')
 
 DATAFRAME = {
         'Cause of Death': [],
@@ -60,8 +60,8 @@ def EVAL_FOR_BEST(num: int):
 
 
 if __name__ == '__main__':
-    INDEX = 6
+    INDEX = 1
     EVAL_FOR_BEST(INDEX)
     DATAFRAME = pd.DataFrame(DATAFRAME)
     DATAFRAME = DATAFRAME.sort_values(by='PoPStat', ascending=False)
-    pd.DataFrame(DATAFRAME).to_csv(f'RESULTS/POPSTAT_OTHER_DISEASES/Best_Results_{INDEX}.csv', index=False)
+    pd.DataFrame(DATAFRAME).to_csv(f'ICD-10-RESULTS/POPSTAT_OTHER_DISEASES/Best_Results_{INDEX}.csv', index=False)

@@ -20,7 +20,7 @@ RESULTS_DIR = os.path.join(main_dir, 'RESULTS/POPSTAT_OTHER_DISEASES')
 class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
     def __init__(self, disease, year):
         super().__init__()
-        self.CONSIDERING_COUNTRIES = 2
+        self.CONSIDERING_COUNTRIES = 30
         self.disease = disease
         self.disease_data = {}
         DEATH_DATA = pd.read_csv(DEATH_DATA_PATH)
@@ -81,6 +81,10 @@ class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
     def find_optimal_reference(self):
         country_correlations = {}
 
+        Confidence_intervals = {}
+        P_values = {}
+        MSE_loss = {}
+
         common_countries = set(self.population_data.keys()) & set(self.disease_data.keys())
 
         for reference_country in common_countries:
@@ -96,17 +100,63 @@ class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
                 country_correlations[reference_country] = 0
                 continue
 
-            correlation, _ = stats.pearsonr(common_distances, common_disease_data)
+            correlation, p_val = stats.pearsonr(common_distances, common_disease_data)
+
+            n = len(common_distances)
+            r_z = np.arctanh(correlation)
+            se = 1/np.sqrt(n-3)
+            z = stats.norm.ppf((1+0.95)/2)
+            lo_z, hi_z = r_z-z*se, r_z+z*se
+            lo, hi = np.tanh((lo_z, hi_z)) 
+
+            Confidence_intervals[reference_country] = (lo, hi)
+            P_values[reference_country] = p_val
             country_correlations[reference_country] = correlation
 
+            y_pred = np.polyval(np.polyfit(common_distances, common_disease_data, 1), common_distances)
+            MSE_loss[reference_country] = np.square(np.subtract(common_disease_data, y_pred)).mean()
+
         country_correlations = sorted(country_correlations.items(), key=lambda x: abs(x[1]), reverse=True)
+        self.save_results(self.disease, country_correlations, P_values, Confidence_intervals, MSE_loss)
         if country_correlations[0][1] == 0:
             print(f"Warning: No correlation found for {self.disease} disease thus using Japan as reference")
             return 'japan'
 
         print(f"Optimal reference for {self.disease} disease is {country_correlations[0][0]}")
         return country_correlations[0][0]
-        
+    
+    def save_results(self,disease, country_correlations, P_values, Confidence_intervals, MSE_loss):
+        self.DATAFRAME = {
+            'Reference' : [],
+            'Deaths per million' : [],
+            'r squared val' : [],
+            'r value' : [],
+            'p value' : [],
+            'Confidence Interval' : [],
+            'MSE Loss' : []
+        }
+        for i in range(self.CONSIDERING_COUNTRIES):
+            if i >= len(country_correlations):
+                break
+            self.DATAFRAME['Reference'].append(country_correlations[i][0])
+            self.DATAFRAME['Deaths per million'].append(
+                self.disease_data[country_correlations[i][0]]
+            )
+            self.DATAFRAME['r squared val'].append(country_correlations[i][1]**2)
+            self.DATAFRAME['r value'].append(country_correlations[i][1])
+            self.DATAFRAME['p value'].append(P_values[country_correlations[i][0]])
+            self.DATAFRAME['Confidence Interval'].append(Confidence_intervals[country_correlations[i][0]])
+            self.DATAFRAME['MSE Loss'].append(MSE_loss[country_correlations[i][0]])
+
+        self.DATAFRAME = pd.DataFrame(self.DATAFRAME)
+        disease = disease.replace('/', '_')
+        self.DATAFRAME.to_csv(
+            os.path.join(
+                RESULTS_DIR,'MULTIPLE_REFERENCES', f'{self.CONSIDERING_COUNTRIES}_Best_References_for_{disease}.csv'
+            ), index=False
+        )
+
+
 
 
 if __name__ == "__main__":
@@ -116,6 +166,4 @@ if __name__ == "__main__":
     DEATH_DATA_PROCESSOR(year)
     for disease in diseases:
         print(f"Calculating POPSTAT for {disease} disease")
-        POP_STAT_CALCULATION_FOR_OTHER_DISEASES("Parkinson's disease", year).run()
-        print()
-        exit()
+        POP_STAT_CALCULATION_FOR_OTHER_DISEASES(disease, year).run()

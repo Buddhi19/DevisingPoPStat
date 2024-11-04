@@ -116,17 +116,17 @@ class MORTALITY_DATA:
             X.append(popstat_val)
             Y.append(total_deaths_per_million)
 
-        # POPSTAT_REVERSE = {v:k for k,v in POPSTAT.items()}
-        # DATAFRAME_PAPER = {
-        #     "Country": [],
-        #     "POPSTAT": [],
-        #     "Deaths": []
-        # }
-        # for i in range(len(X)):
-        #     country = POPSTAT_REVERSE[X[i]]
-        #     DATAFRAME_PAPER["Country"].append(country)
-        #     DATAFRAME_PAPER["POPSTAT"].append(X[i])
-        #     DATAFRAME_PAPER["Deaths"].append(Y[i])
+        POPSTAT_REVERSE = {v:k for k,v in POPSTAT.items()}
+        DATAFRAME_PAPER = {
+            "Country": [],
+            "POPSTAT": [],
+            "Deaths": []
+        }
+        for i in range(len(X)):
+            country = POPSTAT_REVERSE[X[i]]
+            DATAFRAME_PAPER["Country"].append(country)
+            DATAFRAME_PAPER["POPSTAT"].append(X[i])
+            DATAFRAME_PAPER["Deaths"].append(Y[i])
 
         # DATAFRAME_PAPER = pd.DataFrame(DATAFRAME_PAPER)
         # DATAFRAME_PAPER = DATAFRAME_PAPER.sort_values(by="POPSTAT", ascending=True)
@@ -139,6 +139,7 @@ class MORTALITY_DATA:
         # return ### Research purpose only
 
         self.PLOT(X,Y, disease, variable=f"POPSTAT_{disease}")
+        return X,Y, DATAFRAME_PAPER
 
     def create_dataframe_for_diseases_SDI(self, disease):
         SDI_YEAR = self.year

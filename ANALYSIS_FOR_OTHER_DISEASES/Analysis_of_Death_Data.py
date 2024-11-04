@@ -9,10 +9,10 @@ main_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(main_dir)
 
 from ANALYSIS.COUNTRIES import mapping_name
+from ANALYSIS.Population_Data_For_Date import POPULATION_DATA_FOR_DATE
 from ANALYSIS_FOR_OTHER_DISEASES.Death_data_Processor import DEATH_DATA_PROCESSOR
 from ANALYSIS_FOR_OTHER_DISEASES.Pop_Stat_Calculation import POP_STAT_CALCULATION_FOR_OTHER_DISEASES
-from ANALYSIS.Pop_Stat_Calculation import POP_STAT_CALCULATION
-from ANALYSIS.Population_Data_For_Date import POPULATION_DATA_FOR_DATE
+from ANALYSIS_FOR_OTHER_DISEASES.Plotter import PLOTTER
 
 death_data_path = os.path.join(main_dir, "DATA", "death_data", "DEATH_DATA.csv")
 population_data_path = os.path.join(main_dir, "DATA", "population_data_with_age", "age_data.csv")
@@ -115,6 +115,28 @@ class MORTALITY_DATA:
                 continue
             X.append(popstat_val)
             Y.append(total_deaths_per_million)
+
+        # POPSTAT_REVERSE = {v:k for k,v in POPSTAT.items()}
+        # DATAFRAME_PAPER = {
+        #     "Country": [],
+        #     "POPSTAT": [],
+        #     "Deaths": []
+        # }
+        # for i in range(len(X)):
+        #     country = POPSTAT_REVERSE[X[i]]
+        #     DATAFRAME_PAPER["Country"].append(country)
+        #     DATAFRAME_PAPER["POPSTAT"].append(X[i])
+        #     DATAFRAME_PAPER["Deaths"].append(Y[i])
+
+        # DATAFRAME_PAPER = pd.DataFrame(DATAFRAME_PAPER)
+        # DATAFRAME_PAPER = DATAFRAME_PAPER.sort_values(by="POPSTAT", ascending=True)
+        # DATAFRAME_PAPER.to_csv(os.path.join(POPSTAT_DISEASE_DATA_DIR,"POPSTAT_VARIATIONS", f"{disease}_POPSTAT_data.csv"))
+        
+        # Plotter = PLOTTER(POPSTAT, POPSTAT_REVERSE)
+        # if not Plotter.pre_process(X, Y):
+        #     return
+        # Plotter.plot(disease, SAVING_PATH_PNG, "POPSTAT", disease)
+        # return ### Research purpose only
 
         self.PLOT(X,Y, disease, variable=f"POPSTAT_{disease}")
 
@@ -281,36 +303,14 @@ class MORTALITY_DATA:
 
     def ANALYZER_FOR_SELECTED_DISEASES(self):
         diseases = [
-            "Cardiovascular diseases",
-            "Acute hepatitis",
-            "Meningitis",
-            "Maternal disorders",
-            "Nutritional deficiencies",
-            "Tuberculosis",
-            "Neonatal disorders",
-            "Parkinson's disease",
-            "Alzheimer's disease and other dementias",
-            "HIV/AIDS",
-            "Malaria",
-            "Diarrheal diseases",
+            "Maternal and neonatal disorders",
+            "Neurological disorders", 
             "Neoplasms",
-            "Protein-energy malnutrition",
-            "Chronic kidney disease",
-            "Chronic respiratory diseases",
-            "Cirrhosis and other chronic liver diseases",
-            "Diabetes mellitus",
-            "Digestive diseases",
-            "Lower respiratory infections",
-            "Conflict and terrorism",
-            "Drowning",
-            "Drug use disorders",
-            "Environmental heat and cold exposure",
-            "Exposure to forces of nature"
+            "Neglected tropical diseases and malaria",
         ]
         for disease in diseases:
-            self.run(disease)
-        self.CORR_COEFFICIENT = pd.DataFrame(self.CORR_COEFFICIENT)
-        self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, f"Correlation_Coefficient_custom_selected.csv"))
+            self.filter_death_data(disease)
+            self.create_dataframe_for_diseases(disease)
 
 
 if __name__ == "__main__":

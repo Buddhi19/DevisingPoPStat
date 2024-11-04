@@ -50,6 +50,7 @@ class POP_STAT_CALCULATION:
     def create_POPSTAT_COVID19_data(self, reference_country):
         data = self.POPSTAT_COVID19(reference_country)
         data = pd.DataFrame(data.items(), columns = ['Country', 'POPSTAT_COVID19'])
+        data = data.sort_values(by = 'POPSTAT_COVID19', ascending = True)
         data.to_csv(os.path.join(RESULTS_DIR, f'{reference_country}_POPSTAT_COVID19.csv'), index = False)
         print(f"POPSTAT_COVID19 data saved successfully for {reference_country}")   
 
@@ -142,3 +143,8 @@ class POP_STAT_CALCULATION:
 
         return country_correlations_progressive, country_correlations_regressive
 
+if __name__ == '__main__':
+    pop_stat = POP_STAT_CALCULATION()
+    countries = pop_stat.population_data.keys()
+    for country in countries:
+        pop_stat.create_POPSTAT_COVID19_data(country)

@@ -15,6 +15,32 @@ class PLOTTER:
         self.Y = None
         self.POPSTAT = POPSTAT
         self.POPSTAT_REVERSE = POPSTAT_REVERSE
+        self.dark_colors = [
+            "#ef4444",  # Coral Red
+            "#10b981",  # Emerald Green
+            "#8b5cf6",  # Royal Purple
+            "#f97316",  # Sunset Orange
+            "#e11d48",  # Rose Red
+            "#22c55e",  # Spring Green
+            "#a855f7",  # Orchid Purple
+            "#ea580c",  # Burnt Orange
+            "#059669",  # Forest Green
+            "#db2777",  # Deep Pink
+            "#7c3aed",  # Electric Purple
+            "#d97706",  # Amber
+            "#dc2626",  # Ruby Red
+            "#15803d",  # Hunter Green
+            "#e879f9",  # Bright Pink
+            "#92400e",  # Terracotta
+            "#be185d",  # Raspberry
+            "#16a34a",  # Garden Green
+            "#9333ea",  # Amethyst Purple
+            "#854d0e",  # Rich Bronze
+            "#f43f5e",  # Strawberry
+            "#a16207",  # Antique Gold
+            "#ec4899",  # Magenta Pink
+            "#b45309"   # Bronze
+        ]
 
     def pre_process(self, X, Y):
         X = np.array(X)
@@ -104,32 +130,6 @@ class PLOTTER:
 
         idx1, idx2, idx3, idx4, idx5 = self.select_countries()
 
-        dark_colors = [
-            "#ef4444",  # Coral Red
-            "#10b981",  # Emerald Green
-            "#8b5cf6",  # Royal Purple
-            "#f97316",  # Sunset Orange
-            "#e11d48",  # Rose Red
-            "#22c55e",  # Spring Green
-            "#a855f7",  # Orchid Purple
-            "#ea580c",  # Burnt Orange
-            "#059669",  # Forest Green
-            "#db2777",  # Deep Pink
-            "#7c3aed",  # Electric Purple
-            "#d97706",  # Amber
-            "#dc2626",  # Ruby Red
-            "#15803d",  # Hunter Green
-            "#e879f9",  # Bright Pink
-            "#92400e",  # Terracotta
-            "#be185d",  # Raspberry
-            "#16a34a",  # Garden Green
-            "#9333ea",  # Amethyst Purple
-            "#854d0e",  # Rich Bronze
-            "#f43f5e",  # Strawberry
-            "#a16207",  # Antique Gold
-            "#ec4899",  # Magenta Pink
-            "#b45309"   # Bronze
-        ]
         color_index = 0
         plt.plot(self.X, (m * self.X + b), color='red', linewidth=1)
         idx1, idx2, idx3, idx4, idx5 = list(idx1), list(idx2), list(idx3), list(idx4), list(idx5)
@@ -145,10 +145,10 @@ class PLOTTER:
             other_X, other_Y, color = "blue"
         )
 
-        for idx, _ in zip([idx1, idx2, idx3, idx4, idx5], dark_colors):
+        for idx, _ in zip([idx1, idx2, idx3, idx4, idx5], self.dark_colors):
             for i in idx:
                 plt.scatter(
-                    self.X[i], self.Y[i], color=dark_colors[color_index],
+                    self.X[i], self.Y[i], color=self.dark_colors[color_index],
                     s = 80, label=self.country_name_formatter(self.POPSTAT_REVERSE[self.X[i]])
                 )
                 color_index += 1
@@ -163,7 +163,65 @@ class PLOTTER:
         )
         plt.close()
 
+    def custom_plotter(self,title, saving_path, variable,disease):
+        
+        self.countries = [
+            "congo",
+            "benin",
+            "sierra leone",
+            "pakistan",
+            "samoa",
+            "jordan",
+            "belize",
+            "belize",
+            "el salvador",
+            "kazakhstan",
+            "tunisia",
+            "sri lanka",
+            "bahamas",
+            "moldova",
+            "united states",
+            "sweden",
+            "france",
+            "finland",
+            "italy"
+        ]
+        values_filtered = [
+            self.POPSTAT[country] for country in self.countries
+        ]
+        idx_values_filtered = list(np.where(np.isin(self.X, values_filtered))[0])
 
+        other_X = [
+            self.X[i] for i in range(len(self.X)) if i not in idx_values_filtered
+        ]
+        other_Y = [
+            self.Y[i] for i in range(len(self.Y)) if i not in idx_values_filtered
+        ]
 
+        plt.figure(figsize=(10, 6))
+        m, b = np.polyfit(self.X, self.Y, 1)
+        plt.plot(self.X, (m * self.X + b), color='red', linewidth=1)
+        plt.scatter(
+            other_X, other_Y, color = "blue"
+        )
 
+        color_index = 0
+        for country in self.countries:
+            idx = self.POPSTAT[country]
+            idx = np.where(self.X == idx)[0][0]
+            plt.scatter(
+                self.X[idx], self.Y[idx], color=self.dark_colors[color_index],
+                s = 80, label=self.country_name_formatter(country)
+            )
+            color_index += 1
+
+        plt.xlabel(f'{variable} {disease}')
+        plt.ylabel('Natural Log of Deaths per Million')
+        plt.title(title)
+        plt.legend(frameon=False, bbox_to_anchor=(1.05, 0.95), loc='upper left')
+        plt.tight_layout()
+        plt.savefig(
+            os.path.join(saving_path, f'{disease}_deaths.png')
+        )
+        plt.close()
 

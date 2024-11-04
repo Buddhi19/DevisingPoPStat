@@ -118,6 +118,9 @@ class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
 
         country_correlations = sorted(country_correlations.items(), key=lambda x: abs(x[1]), reverse=True)
         self.save_results(self.disease, country_correlations, P_values, Confidence_intervals, MSE_loss)
+        if not country_correlations:
+            print(f"Warning: No correlation found for {self.disease} disease thus using Japan as reference")
+            return 'japan'
         if country_correlations[0][1] == 0:
             print(f"Warning: No correlation found for {self.disease} disease thus using Japan as reference")
             return 'japan'

@@ -7,7 +7,8 @@ sys.path.append(main_dir)
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-
+from scipy.stats import pearsonr
+from scipy import stats
 
 class PLOTTER:
     def __init__(self, POPSTAT,POPSTAT_REVERSE):
@@ -153,15 +154,32 @@ class PLOTTER:
                 )
                 color_index += 1
 
+        correalation_coefficient, p_value = pearsonr(self.X, self.Y)
+        r_squared = correalation_coefficient ** 2
+
+        n = len(self.X)
+        r_z = np.arctanh(correalation_coefficient)
+        se = 1/np.sqrt(n-3)
+        z = stats.norm.ppf((1+0.95)/2)
+        lo_z, hi_z = r_z-z*se, r_z+z*se
+        lo, hi = np.tanh((lo_z, hi_z))
+
         plt.xlabel(f'{variable} {disease}')
         plt.ylabel('Natural Log of Deaths per Million')
         plt.title(title)
         plt.legend(frameon=False, bbox_to_anchor=(1.05, 1), loc='upper left')
         plt.tight_layout()
+        disease_name = disease.replace("/", " ")
         plt.savefig(
-            os.path.join(saving_path, f'{disease}_deaths.png')
+            os.path.join(saving_path, f'{disease_name}_deaths.png')
         )
         plt.close()
+        return {
+            "correalation_coefficient": correalation_coefficient,
+            "p_value": p_value,
+            "r_squared": r_squared,
+            "CI": (lo, hi)
+        }
 
     def custom_plotter(self,title, saving_path, variable,disease):
         

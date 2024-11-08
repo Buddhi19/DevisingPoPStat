@@ -57,13 +57,52 @@ class MORTALITY_DATA:
         POPULATION_DATA_FOR_DATE(year)
         self.DEATH_DATA = pd.read_csv(death_data_path, low_memory=False)
         self.CORR_COEFFICIENT = {
-            "Parameter": [],
-            "Cause of Death": [],
-            "r squared value": [],
-            "R value" : [],
-            "CI": [],
-            "p-value": [],
-            "reference_country": []
+            "Disease" : [],
+            "PoPStat r" : [], 
+            "PoPStat CI" : [], 
+            "PoPStat p-value" : [], 
+            "PoPStat reference country" : [], 
+            "PoPStat r squared" : [], 
+
+            "HDI r" : [], 
+            "HDI CI" : [], 
+            "HDI p-value" : [], 
+            "HDI r squared" : [], 
+
+            "SDI r" : [], 
+            "SDI CI" : [], 
+            "SDI p-value" : [], 
+            "SDI r squared" : [], 
+
+            "Median Age r" : [], 
+            "Median Age CI" : [], 
+            "Median Age p-value" : [], 
+            "Median Age r squared" : [], 
+
+            "GDP per capita r" : [], 
+            "GDP per capita CI" : [], 
+            "GDP per capita p-value" : [], 
+            "GDP per capita r squared" : [], 
+
+            "Population density r" : [], 
+            "Population density CI" : [], 
+            "Population density p-value" : [], 
+            "Population density r squared" : [], 
+
+            "Gini coefficient r" : [], 
+            "Gini coefficient CI" : [], 
+            "Gini coefficient p-value" : [], 
+            "Gini coefficient r squared" : [], 
+
+            "UHCI r" : [], 
+            "UHCI CI" : [], 
+            "UHCI p-value" : [], 
+            "UHCI r squared" : [], 
+
+            "Life expectancy r" : [], 
+            "Life expectancy CI" : [], 
+            "Life expectancy p-value" : [], 
+            "Life expectancy r squared" : []
         }
         self.HDI_DATA = HDI_DATA[HDI_DATA['Year'] == int(self.year)]
 
@@ -82,6 +121,18 @@ class MORTALITY_DATA:
         self.data = self.DEATH_DATA
         self.deaths_per_disease: dict = {}
 
+        self.DUMMY = {
+            "correalation_coefficient": 0,
+            "p_value": 0,
+            "r_squared": 0,
+            "CI": (0, 0)
+        }
+
+        self.ALL_PARAMETERS = [
+            "PoPStat","HDI","SDI","Median Age","GDP per capita","Population density",
+            "Gini coefficient","UHCI","Life expectancy"
+        ]
+
     def filter_death_data(self, disease):
         self.data = self.DEATH_DATA[self.DEATH_DATA['cause_name'] == disease]
 
@@ -95,7 +146,7 @@ class MORTALITY_DATA:
         total_deaths = total_death_rate['val'].values[0]
         return total_deaths
     
-    def create_dataframe_for_diseases(self, disease):
+    def create_dataframe_for_diseases(self, disease,plot = True):
         X = []
         Y = []
         reference_country_solver = POP_STAT_CALCULATION_FOR_OTHER_DISEASES(disease, self.year)
@@ -116,32 +167,24 @@ class MORTALITY_DATA:
             X.append(popstat_val)
             Y.append(total_deaths_per_million)
 
-        POPSTAT_REVERSE = {v:k for k,v in POPSTAT.items()}
-        DATAFRAME_PAPER = {
-            "Country": [],
-            "POPSTAT": [],
-            "Deaths": []
-        }
-        for i in range(len(X)):
-            country = POPSTAT_REVERSE[X[i]]
-            DATAFRAME_PAPER["Country"].append(country)
-            DATAFRAME_PAPER["POPSTAT"].append(X[i])
-            DATAFRAME_PAPER["Deaths"].append(Y[i])
+        if plot:
+            POPSTAT_REVERSE = {v:k for k,v in POPSTAT.items()} 
+            Plotter = PLOTTER(POPSTAT, POPSTAT_REVERSE)
+            if not Plotter.pre_process(X, Y):
+                return {
+                    "correalation_coefficient": 0,
+                    "p_value": 0,
+                    "r_squared": 0,
+                    "CI": (0, 0),
+                    "reference_country": "None"
+                }
+            data = Plotter.plot(disease, SAVING_PATH_PNG, "POPSTAT", disease)
+            data["reference_country"] = self.reference_country
+            return data
+        else:
+            return X,Y
 
-        # DATAFRAME_PAPER = pd.DataFrame(DATAFRAME_PAPER)
-        # DATAFRAME_PAPER = DATAFRAME_PAPER.sort_values(by="POPSTAT", ascending=True)
-        # DATAFRAME_PAPER.to_csv(os.path.join(POPSTAT_DISEASE_DATA_DIR,"POPSTAT_VARIATIONS", f"{disease}_POPSTAT_data.csv"))
-        
-        # Plotter = PLOTTER(POPSTAT, POPSTAT_REVERSE)
-        # if not Plotter.pre_process(X, Y):
-        #     return
-        # Plotter.plot(disease, SAVING_PATH_PNG, "POPSTAT", disease)
-        # return ### Research purpose only
-
-        self.PLOT(X,Y, disease, variable=f"POPSTAT_{disease}")
-        return X,Y, DATAFRAME_PAPER
-
-    def create_dataframe_for_diseases_SDI(self, disease):
+    def create_dataframe_for_diseases_SDI(self, disease, plot = True):
         SDI_YEAR = self.year
         if self.year > 2019:
             SDI_YEAR = 2019
@@ -162,9 +205,13 @@ class MORTALITY_DATA:
             X.append(SDI)
             Y.append(total_deaths_per_million)
 
-        self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_SDI, variable = "SDI")
+        if plot:
+            return self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_SDI, variable = "SDI")
+        else:
+            return X,Y
 
-    def create_dataframe_for_diseases_and_plot(self, disease: str, variable_name: str, DATA: pd.DataFrame, saving_path, variable: str):
+    def create_dataframe_for_diseases_and_plot(self, disease: str, variable_name: str, DATA: pd.DataFrame, 
+                                               saving_path, variable: str, plot = True):
         """
         disease: disease we are analyzing
         variable_name: variable on the DATAFRAME 
@@ -186,61 +233,75 @@ class MORTALITY_DATA:
             X.append(val)
             Y.append(total_deaths_per_million)
 
-        self.PLOT(X,Y, disease, saving_path=saving_path, variable = variable)
+        if plot:
+            return self.PLOT(X,Y, disease, saving_path=saving_path, variable = variable)
+        else:
+            return X,Y
 
     def run(self, disease):
         self.filter_death_data(disease)
-        self.create_dataframe_for_diseases(disease)
-        self.create_dataframe_for_diseases_SDI(disease)
-        self.create_dataframe_for_diseases_and_plot(
+        POPSTAT_data = self.create_dataframe_for_diseases(disease)
+        SDI_data = self.create_dataframe_for_diseases_SDI(disease)
+        HDI_data = self.create_dataframe_for_diseases_and_plot(
             disease = disease,
             variable_name = "Human Development Index",
             DATA = self.HDI_DATA,
             saving_path = SAVING_PATH_PNG_HDI,
             variable = "HDI"
         )
-        self.create_dataframe_for_diseases_and_plot(
+        MEDIAN_AGE_data = self.create_dataframe_for_diseases_and_plot(
             disease = disease,
             variable_name = "Median Age",
             DATA = self.MEDIAN_AGE_DATA,
             saving_path = SAVING_PATH_PNG_MEDIAN_AGE,
             variable = "Median Age"
         )
-        self.create_dataframe_for_diseases_and_plot(
+        GDP_PER_CAPITA_data = self.create_dataframe_for_diseases_and_plot(
             disease = disease,
             variable_name = "GDP per capita",
             DATA = self.GDP_per_capita_data,
             saving_path = SAVING_PATH_PNG_GDP_PER_CAPITA,
             variable = "GDP per capita"
         )
-        self.create_dataframe_for_diseases_and_plot(
+        POPULATION_DENSITY_data = self.create_dataframe_for_diseases_and_plot(
             disease = disease,
             variable_name = "Population density",
             DATA = self.Pop_Density,
             saving_path = SAVING_PATH_PNG_POPULATION_DENSITY,
             variable = "Population Density"
         )
-        self.create_dataframe_for_diseases_and_plot(
+        GINI_data = self.create_dataframe_for_diseases_and_plot(
             disease = disease,
             variable_name = "Gini coefficient",
             DATA = self.GINI_DATA,
             saving_path = SAVING_PATH_PNG_GINI,
             variable = "Gini coefficient"
         )
-        self.create_dataframe_for_diseases_and_plot(
+        UHCI_data = self.create_dataframe_for_diseases_and_plot(
             disease = disease,
             variable_name = "UHC Service Coverage Index (SDG 3.8.1)",
             DATA = self.UHCI_DATA,
             saving_path = SAVING_PATH_PNG_UHCI,
             variable = "UHCI"
         )
-        self.create_dataframe_for_diseases_and_plot(
+        LIFE_EXPECTANCY_data = self.create_dataframe_for_diseases_and_plot(
             disease = disease,
             variable_name = "Period life expectancy at birth - Sex: all - Age: 0",
             DATA = self.LIFE_EXPECTANCY_DATA,
             saving_path = SAVING_PATH_PNG_LIFE_EXPECTANCY,
             variable = "Life expectancy"
         )
+        self.CORR_COEFFICIENT["Disease"].append(disease) 
+        self.CORR_COEFFICIENT["PoPStat reference country"].append(POPSTAT_data["reference_country"])
+        for data, key in zip(
+            [POPSTAT_data, HDI_data, SDI_data, MEDIAN_AGE_data, GDP_PER_CAPITA_data, POPULATION_DENSITY_data, GINI_data, UHCI_data, LIFE_EXPECTANCY_data],
+            self.ALL_PARAMETERS
+        ):
+            self.CORR_COEFFICIENT[f"{key} r"].append(data["correalation_coefficient"])
+            self.CORR_COEFFICIENT[f"{key} CI"].append(data["CI"])
+            self.CORR_COEFFICIENT[f"{key} p-value"].append(data["p_value"])
+            self.CORR_COEFFICIENT[f"{key} r squared"].append(data["r_squared"])
+
 
 
     def PLOT(self, X, Y, title, saving_path=SAVING_PATH_PNG,variable = "POPSTAT_COVID19"):
@@ -254,7 +315,7 @@ class MORTALITY_DATA:
         X = X[mask]
         Y = Y[mask] 
         if len(X) < 2 or len(Y) < 2:
-            return
+            return self.DUMMY
         plt.scatter(X, Y)
         plt.xlabel(f"{variable}")
         plt.ylabel(f"{title} Deaths/Log")
@@ -274,14 +335,6 @@ class MORTALITY_DATA:
         print(f"95% confidence interval: {lo:.3f} to {hi:.3f} for {title} deaths")
         print(f"p-value = {p_value:.6f} for {title} deaths")
 
-        self.CORR_COEFFICIENT['Parameter'].append(variable)
-        self.CORR_COEFFICIENT['Cause of Death'].append(title)
-        self.CORR_COEFFICIENT['r squared value'].append(r_squared)
-        self.CORR_COEFFICIENT['R value'].append(correalation_coefficient)
-        self.CORR_COEFFICIENT['CI'].append((lo, hi))
-        self.CORR_COEFFICIENT['p-value'].append(p_value)
-        self.CORR_COEFFICIENT['reference_country'].append(self.reference_country)
-
         z = np.polyfit(X, Y, 1)
         p = np.poly1d(z)
         plt.plot(X, p(X), "r--")
@@ -294,6 +347,12 @@ class MORTALITY_DATA:
 
         print(f"Data for {title} has been plotted with {len(X)} countries for {variable}")
         print()
+        return {
+            "correalation_coefficient": correalation_coefficient,
+            "p_value": p_value,
+            "r_squared": r_squared,
+            "CI": (lo, hi)
+        }
 
     def ANALYZER(self):
         causes = self.DEATH_DATA['cause_name'].unique()
@@ -313,7 +372,66 @@ class MORTALITY_DATA:
             self.filter_death_data(disease)
             self.create_dataframe_for_diseases(disease)
 
+    def save_plot_data(self):
+        for disease in self.DEATH_DATA['cause_name'].unique():
+            self.filter_death_data(disease)
+            X, Y = self.create_dataframe_for_diseases(disease, plot = False)
+            data = pd.DataFrame({"X": X, "Y": Y})
+            disease_name = disease.replace("/", " ")
+            saving_path_XY = os.path.join(
+                main_dir, "RESULTS","FOR_UI", f"{disease_name}_POPSTAT.csv"
+            )
+            data.to_csv(saving_path_XY, index = False)
+            X, Y = self.create_dataframe_for_diseases_SDI(disease, plot = False)
+            data = pd.DataFrame({"X": X, "Y": Y})
+            saving_path_XY = os.path.join(
+                main_dir, "RESULTS","FOR_UI", f"{disease_name}_SDI.csv"
+            )
+            data.to_csv(saving_path_XY, index = False)
+
+            for variable_name, DATA, variable in zip(
+                [
+                    "Human Development Index",
+                    "Median Age",
+                    "GDP per capita",
+                    "Population density",
+                    "Gini coefficient",
+                    "UHC Service Coverage Index (SDG 3.8.1)",
+                    "Period life expectancy at birth - Sex: all - Age: 0"
+                ],
+                [
+                    self.HDI_DATA,
+                    self.MEDIAN_AGE_DATA,
+                    self.GDP_per_capita_data,
+                    self.Pop_Density,
+                    self.GINI_DATA,
+                    self.UHCI_DATA,
+                    self.LIFE_EXPECTANCY_DATA
+                ],
+                [
+                    "HDI",
+                    "Median Age",
+                    "GDP per capita",
+                    "Population Density",
+                    "Gini coefficient",
+                    "UHCI",
+                    "Life expectancy"
+                ]
+            ):
+                X, Y = self.create_dataframe_for_diseases_and_plot(
+                    disease = disease,
+                    variable_name = variable_name,
+                    DATA = DATA,
+                    saving_path = None,
+                    variable = variable,
+                    plot = False
+                )
+                data = pd.DataFrame({"X": X, "Y": Y})
+                saving_path_XY = os.path.join(
+                    main_dir, "RESULTS","FOR_UI", f"{disease_name}_{variable}.csv"
+                )
+                data.to_csv(saving_path_XY, index = False)
 
 if __name__ == "__main__":
     data = MORTALITY_DATA(2021)
-    data.ANALYZER()
+    data.save_plot_data()

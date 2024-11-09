@@ -13,17 +13,18 @@ from ANALYSIS_FOR_OTHER_DISEASES.Death_data_Processor import DEATH_DATA_PROCESSO
 
 
 DEATH_DATA_PATH = os.path.join(main_dir,"DATA/death_data/DEATH_DATA.csv")
+DEATH_DATA_PATH_FOR_SPAN = os.path.join(main_dir,"DATA/death_data/DEATH_DATA_FOR_SPAN.csv")
 
 POPULATION_DIR = os.path.join(main_dir, 'DATA/population_data_by_country')
 RESULTS_DIR = os.path.join(main_dir, 'RESULTS/POPSTAT_OTHER_DISEASES')
 
 class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
-    def __init__(self, disease, year):
+    def __init__(self, disease, year, singleMode = True):
         super().__init__()
         self.CONSIDERING_COUNTRIES = 30
         self.disease = disease
         self.disease_data = {}
-        DEATH_DATA = pd.read_csv(DEATH_DATA_PATH)
+        DEATH_DATA = pd.read_csv(DEATH_DATA_PATH) if singleMode else pd.read_csv(DEATH_DATA_PATH_FOR_SPAN)
         self.DEATH_DATA = DEATH_DATA[DEATH_DATA['cause_name'] == disease]
         self.DEATH_DATA = self.DEATH_DATA[self.DEATH_DATA['year'] == year]
 

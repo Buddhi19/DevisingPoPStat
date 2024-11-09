@@ -107,7 +107,19 @@ def SAVING_PATH_CSV_FOR_YEAR(year:str):
     return path
 
 def FOR_UI_PATH_FOR_YEAR(year:str):
-    path = os.path.join(main_dir, "RESULTS", f"FOR_UI_{year}")
+    path = os.path.join(main_dir, "RESULTS", f"FOR_UI_{year}","DEATH_DATA")
+    if not os.path.exists(path):
+        os.makedirs(path)
+    return path
+
+def FOR_UI_POPSTAT_PATH_FOR_YEAR(year:str):
+    path = os.path.join(main_dir, "RESULTS", f"FOR_UI_{year}","POPSTAT_COUNTRY_DATA")
+    if not os.path.exists(path):
+        os.makedirs(path)
+    return path
+
+def FOR_UI_PYRAMIDS_PATH_FOR_YEAR(year:str):
+    path = os.path.join(main_dir, "RESULTS", f"FOR_UI_{year}","PYRAMIDS")
     if not os.path.exists(path):
         os.makedirs(path)
     return path

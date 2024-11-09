@@ -6,6 +6,8 @@ import sys
 main_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(main_dir)
 
+PYRAMIDS_RESULT_DIR = os.path.join(main_dir, 'RESULTS/PYRAMIDS')
+
 class PLOT_POPULATION_DATA:
     def __init__(self):
         self.files_with_population_data = [x for x in os.listdir(os.path.join(main_dir,'DATA/population_data_by_country')) if x.endswith('.csv')]
@@ -23,6 +25,28 @@ class PLOT_POPULATION_DATA:
     def run(self):
         for file_name in self.files_with_population_data:
             self.plotter(file_name)
+
+    def generate_all_pyramids(self, saving_dir):
+        for file_name in self.files_with_population_data:
+            data = pd.read_csv(os.path.join(self.parent_dir, file_name))
+            data_frame = {
+                'AGE': self.AGES,
+                'MALES': data["male"],
+                'FEMALES': data["female"],
+                'TOTAL': data["total"],
+                'PERCENTAGE' : []
+            }
+
+            total_population = data["total"].sum()
+            percentages = [x/total_population * 100 for x in data["total"]]
+            data_frame["PERCENTAGE"] = percentages
+            
+            self.age_groups = data_frame['AGE']
+            self.males = data_frame['MALES']
+            self.females = data_frame['FEMALES']
+            self.percentages = data_frame['PERCENTAGE']
+
+            self.make_pyramid(file_name,saving_dir)
 
     def plotter(self,file_name):
         data = pd.read_csv(os.path.join(self.parent_dir, file_name))
@@ -46,7 +70,7 @@ class PLOT_POPULATION_DATA:
         self.make_pyramid(file_name)
         self.make_percentage_plot(file_name)   
 
-    def make_pyramid(self,file_name):
+    def make_pyramid(self,file_name,saving_path = PYRAMIDS_RESULT_DIR):
         fig, ax = plt.subplots()
         ax.barh(self.age_groups, -self.males, color = 'blue',label = 'males', height = 0.9)
 
@@ -63,7 +87,7 @@ class PLOT_POPULATION_DATA:
         
         plt.tight_layout()
         file_name = file_name.split('.')[0]+'.png'
-        plt.savefig(os.path.join(self.pyramids_results_dir, file_name))
+        plt.savefig(os.path.join(saving_path, file_name))
         plt.close()
         print("Done plotting POPULATION PYRAMID for {}".format(file_name))
 

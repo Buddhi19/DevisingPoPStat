@@ -118,7 +118,7 @@ class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
             MSE_loss[reference_country] = np.square(np.subtract(common_disease_data, y_pred)).mean()
 
         country_correlations = sorted(country_correlations.items(), key=lambda x: abs(x[1]), reverse=True)
-        self.save_results(self.disease, country_correlations, P_values, Confidence_intervals, MSE_loss)
+        # self.save_results(self.disease, country_correlations, P_values, Confidence_intervals, MSE_loss)
         if not country_correlations:
             print(f"Warning: No correlation found for {self.disease} disease thus using Japan as reference")
             return 'japan'

@@ -9,6 +9,8 @@ main_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(main_dir)
 
 from ANALYSIS.COUNTRIES import mapping_name
+from ANALYSIS.Plot_Population_Data import PLOT_POPULATION_DATA
+from ANALYSIS.Pop_Stat_Calculation import POP_STAT_CALCULATION
 from ANALYSIS.Population_Data_For_Date import POPULATION_DATA_FOR_DATE
 from ANALYSIS_FOR_OTHER_DISEASES.Death_data_Processor import DEATH_DATA_PROCESSOR, DEATH_DATA_PROCESSOR_FOR_SPAN
 from ANALYSIS_FOR_OTHER_DISEASES.Pop_Stat_Calculation import POP_STAT_CALCULATION_FOR_OTHER_DISEASES
@@ -131,7 +133,15 @@ class MORTALITY_DATA:
         reference_country_solver = POP_STAT_CALCULATION_FOR_OTHER_DISEASES(disease, self.year) if self.singleMode else POP_STAT_CALCULATION_FOR_OTHER_DISEASES(
             disease, f"{self.start_year}-{self.end_year}", singleMode = False)
         self.reference_country = reference_country_solver.run()
-        POPSTAT = reference_country_solver.POPSTAT_DISEASE(self.reference_country) 
+        POPSTAT = reference_country_solver.POPSTAT_DISEASE(self.reference_country)
+        if not plot:
+            POPSTAT_DATAFRAME = pd.DataFrame(POPSTAT.items(), columns = ["Country", "POPSTAT"])
+            disease_name = disease.replace("/", "")
+            POPSTAT_DATAFRAME.to_csv(
+                os.path.join(FOR_UI_POPSTAT_PATH_FOR_YEAR(str(self.year)), f"{disease_name}_POPSTAT.csv") if self.singleMode else os.path.join(
+                    FOR_UI_POPSTAT_PATH_FOR_YEAR(f"{self.start_year}_{self.end_year}"), f"{disease_name}_POPSTAT.csv"
+                ), index = False
+            )
         data = self.data
         for country in data['location_name'].unique():
             pre_name = country
@@ -420,6 +430,10 @@ class MORTALITY_DATA:
                     FOR_UI_PATH_FOR_YEAR(f"{self.start_year}_{self.end_year}"), f"{disease_name}_{variable}.csv")
                 data.to_csv(saving_path_XY, index = False)
 
+        pyramids = PLOT_POPULATION_DATA()
+        pyramids.generate_all_pyramids(FOR_UI_PYRAMIDS_PATH_FOR_YEAR(str(self.year)) if self.singleMode else FOR_UI_PYRAMIDS_PATH_FOR_YEAR(f"{self.start_year}_{self.end_year}"))
+
+
 if __name__ == "__main__":
-    data = MORTALITY_DATA.for_span(2017, 2021)
-    data.ANALYZER()
+    M = MORTALITY_DATA.for_span(2011, 2021)
+    M.save_plot_data()

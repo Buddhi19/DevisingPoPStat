@@ -13,6 +13,8 @@ from ANALYSIS.Process_Owid_Data import process_country_names
 from ANALYSIS.Plot_other_Metrics import PLOT_OTHER_METRICS
 from ANALYSIS.Population_Data_For_Date import POPULATION_DATA_FOR_DATE
 
+from ANALYSIS.GET_PATHS import *
+
 SAVING_DIR = os.path.join(main_dir, "RESULTS/POPSTATCOVID")
 
 class ANALYSIS:
@@ -36,16 +38,20 @@ class ANALYSIS:
         self.year = date
         POPULATION_DATA_FOR_DATE(date)
 
-    @staticmethod
-    def create_country_covid_data():
+    def create_country_covid_data(self):
         DATE_AS_PER_PAPER = '2023-05-05'
         date = input(f"Date in YYYY-MM-DD or Press Enter to set date as {DATE_AS_PER_PAPER} : ")
         if date == "":
             date = DATE_AS_PER_PAPER
         COVID_DATA_FOR_DATE(date)
 
-    @staticmethod
-    def plot_population_data():
+    def plot_population_data(self,UI = False):
+        if UI:
+            plotter = PLOT_POPULATION_DATA()
+            plotter.generate_all_pyramids(
+                get_pyramids_dir(self.year)
+            )
+            return
         plotter = PLOT_POPULATION_DATA()
         plotter.run()
 
@@ -99,7 +105,23 @@ class ANALYSIS:
         self.POPSTAT_DATAFRAME["CI_deaths"].append(Stats["deaths"][1])
         self.POPSTAT_DATAFRAME["p_value_deaths"].append(Stats["deaths"][2])
 
-    def plot_pop_stat(self):
+    def plot_pop_stat(self, UI = False):
+        if UI:
+            best_reference_country = self.regressive_reference_countries[0][0]
+            plotter = PLOT_POP_STAT(best_reference_country, False)
+            X_cases, Y_cases, X_deaths, Y_deaths, POPSTAT_DATA= plotter.run(True)
+            POPSTAT_DATA.to_csv(os.path.join(get_popstat_dir(self.covid_year), f'COVID_POPSTAT.csv'), index = False)
+            DATAFRAME_CASES = pd.DataFrame({
+                "X": X_cases,
+                "Y": Y_cases
+            })
+            DATAFRAME_DEATHS = pd.DataFrame({
+                "X": X_deaths,
+                "Y": Y_deaths
+            })
+            DATAFRAME_CASES.to_csv(os.path.join(get_case_dir(self.covid_year), f'COVID_POPSTAT.csv'), index = False)  
+            DATAFRAME_DEATHS.to_csv(os.path.join(get_death_dir(self.covid_year), f'COVID_POPSTAT.csv'), index = False)
+            return
         for country, _ in self.progressive_reference_countries:
             plotter = PLOT_POP_STAT(country, True)
             Stats = plotter.run()
@@ -111,12 +133,12 @@ class ANALYSIS:
             self.update_POPSTAT_DATAFRAME(Stats, country)
 
 
-    def run(self):
+    def run(self, UI = False):
         self.create_country_population_data()
         self.create_country_covid_data()
-        self.plot_population_data()
+        self.plot_population_data(UI)
         self.calculate_pop_stat()
-        self.plot_pop_stat()
+        self.plot_pop_stat(UI)
         self.prepare_data()
         self.plot_other_metrics()
 
@@ -135,4 +157,4 @@ class ANALYSIS:
         pd.DataFrame(self.POPSTAT_DATAFRAME).to_csv(os.path.join(SAVING_DIR, f'POPSTAT_COVID19_KL_DIVERGENCE.csv'), index = False)
 
 if __name__ == "__main__":
-        ANALYSIS().run()
+        ANALYSIS().run(UI = True)

@@ -20,15 +20,18 @@ class PLOT_POP_STAT:
         self.SAVE_DIR = SAVE_DIR_PROGRESSIVE if progressive else SAVE_DIR_REGRESSIVE
         self.country = country
         self.POP_STAT_DATA = pd.read_csv(os.path.join(POP_STAT_DIR, f'{self.country}_POPSTAT_COVID19.csv'))
+        
 
-    def POP_STAT_PLOT(self,title):
+    def POP_STAT_PLOT(self,title,UI = False):
         X = []
         Y = []
+        Y_FOR_UI = []
         for country in self.POP_STAT_DATA["Country"]:
             x = self.POP_STAT_DATA[self.POP_STAT_DATA["Country"] == country]["POPSTAT_COVID19"].values[0]
             X.append(x)
             covid_data = pd.read_csv(os.path.join(COVID_DIR, f'{country}_covid_data.csv'))
             Y.append(np.log(covid_data[f"total_{title}_per_million"].values[0]))
+            Y_FOR_UI.append(covid_data[f"total_{title}_per_million"].values[0])
             
         correlation_coefficient, p_value = stats.pearsonr(X, Y)
         r_squared = correlation_coefficient ** 2
@@ -44,6 +47,8 @@ class PLOT_POP_STAT:
         print(f"Correlation coefficient = {correlation_coefficient:.3f} for {title}")
         print(f"95% confidence interval: {lo:.3f} to {hi:.3f} for {title}")
         print(f"p-value = {p_value:.6f} for {title}")
+        if UI:
+            return X,Y_FOR_UI, self.POP_STAT_DATA
         self.plotter(X,Y,r_squared,title)
         return r_squared, f"{lo:.3f} to {hi:.3f}", p_value
     
@@ -67,7 +72,11 @@ class PLOT_POP_STAT:
         plt.savefig(os.path.join(self.SAVE_DIR, f'{title}/Total_{title}_per_million_with_reference_{self.country}.png'))
         plt.close()
 
-    def run(self):
+    def run(self,UI = False):
+        if UI:
+            X_cases,Y_cases,POPSTAT_DATA = self.POP_STAT_PLOT("cases",UI)
+            X_deaths,Y_deaths,POPSTAT_DATA = self.POP_STAT_PLOT("deaths",UI)
+            return X_cases,Y_cases,X_deaths,Y_deaths, POPSTAT_DATA
         Stats = {}
         r_squared, range, p_value = self.POP_STAT_PLOT("cases")
         Stats["cases"] = (r_squared, range, p_value)

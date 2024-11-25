@@ -358,14 +358,41 @@ class MORTALITY_DATA:
 
     def ANALYZER_FOR_SELECTED_DISEASES(self):
         diseases = [
-            "Maternal and neonatal disorders",
-            "Neurological disorders", 
-            "Neoplasms",
-            "Neglected tropical diseases and malaria",
+            "Ischemic heart disease",
+            "Stroke",
+            "Pulmonary Arterial Hypertension",
+            "Chronic obstructive pulmonary disease",
+            "Asthma",
+            "Breast cancer",
+            "Colon and rectum cancer",
+            "Cervical cancer",
+            "Prostate cancer",
+            "Liver cancer",
+            "Cirrhosis and other chronic liver diseases",
+            "Inflammatory bowel disease",
+            "Alzheimer's disease and other dementias",
+            "Parkinson's disease",
+            "Alcohol use disorders",
+            "Diabetes mellitus",
+            "Chronic kidney disease",
+            "Rheumatoid arthritis",
+            "Maternal disorders",
+            "Neonatal disorders",
+            "Self-harm",
+            "Interpersonal violence",
+            "HIV/AIDS",
+            "Tuberculosis",
+            "Dengue",
+            "Protein-energy malnutrition"
         ]
         for disease in diseases:
-            self.filter_death_data(disease)
-            self.create_dataframe_for_diseases(disease)
+            self.run(disease)
+        # remove other metrics columns
+        self.CORR_COEFFICIENT = {
+            v: self.CORR_COEFFICIENT[v] for v in self.CORR_COEFFICIENT if v in ["Disease", "PoPStat r", "PoPStat CI", "PoPStat p-value", "PoPStat reference country", "PoPStat r squared"]
+        }
+        self.CORR_COEFFICIENT = pd.DataFrame(self.CORR_COEFFICIENT)
+        self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, f"Correlation_Coefficient_selected.csv"), index = False)
 
     def save_plot_data(self):
         for disease in self.DEATH_DATA['cause_name'].unique():
@@ -435,5 +462,5 @@ class MORTALITY_DATA:
 
 
 if __name__ == "__main__":
-    M = MORTALITY_DATA.for_span(2011, 2021)
-    M.save_plot_data()
+    M = MORTALITY_DATA(2021)
+    M.ANALYZER_FOR_SELECTED_DISEASES()

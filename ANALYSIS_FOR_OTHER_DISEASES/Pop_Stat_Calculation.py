@@ -21,7 +21,7 @@ RESULTS_DIR = os.path.join(main_dir, 'RESULTS/POPSTAT_OTHER_DISEASES')
 class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
     def __init__(self, disease, year, singleMode = True):
         super().__init__()
-        self.CONSIDERING_COUNTRIES = 30
+        self.CONSIDERING_COUNTRIES = 4
         self.disease = disease
         self.disease_data = {}
         DEATH_DATA = pd.read_csv(DEATH_DATA_PATH) if singleMode else pd.read_csv(DEATH_DATA_PATH_FOR_SPAN)
@@ -118,6 +118,8 @@ class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
             MSE_loss[reference_country] = np.square(np.subtract(common_disease_data, y_pred)).mean()
 
         country_correlations = sorted(country_correlations.items(), key=lambda x: abs(x[1]), reverse=True)
+
+        # return disease, country_correlations
         # self.save_results(self.disease, country_correlations, P_values, Confidence_intervals, MSE_loss)
         if not country_correlations:
             print(f"Warning: No correlation found for {self.disease} disease thus using Japan as reference")
@@ -160,14 +162,74 @@ class POP_STAT_CALCULATION_FOR_OTHER_DISEASES(POP_STAT_CALCULATION):
             ), index=False
         )
 
+class UPDATE_RESULTS_FOR_OTHER_DISEASES:
+    def __init__(self):
+        self.CONSIDERING_COUNTRIES = 4
+        self.save_results_for_dataset()
+    
+    def save_results_for_dataset(self):
+        dataset = pd.read_csv(os.path.join(main_dir, 'RESULTS',"CORRELATION_DATA_FOR_OTHER_DISEASES",
+                                           "Correlation_coefficient_selected.csv"))
+        new_dataframe = {
+            v : dataset[v].values for v in dataset.columns
+        }
+        for i in range(self.CONSIDERING_COUNTRIES):
+            new_dataframe[f'Reference {i+2}'] = [None for _ in range(len(dataset))]
+
+        self.new_dataframe = new_dataframe
+
+    def update_new_dataframe(self,disease, country_correlations):
+        index = self.new_dataframe['Disease'].tolist().index(disease)
+        for i in range(self.CONSIDERING_COUNTRIES):
+            if i >= len(country_correlations):
+                break
+            self.new_dataframe[f'Reference {i+2}'][index] = country_correlations[i][0]
+
+    def save_new_dataframe(self):
+        new_dataframe = pd.DataFrame(self.new_dataframe)
+        new_dataframe.to_csv(
+            os.path.join(
+                main_dir,'RESULTS', 'CORRELATION_DATA_FOR_OTHER_DISEASES', 'Correlation_selected.csv'
+            ), index=False
+        )
+
 
 
 
 if __name__ == "__main__":
-    data = pd.read_csv(os.path.join(main_dir, 'DATA/death_data/DEATH_DATA.csv')) 
-    diseases = data['cause_name'].unique()
+    diseases = [
+            "Ischemic heart disease",
+            "Stroke",
+            "Pulmonary Arterial Hypertension",
+            "Chronic obstructive pulmonary disease",
+            "Asthma",
+            "Breast cancer",
+            "Colon and rectum cancer",
+            "Cervical cancer",
+            "Prostate cancer",
+            "Cirrhosis and other chronic liver diseases",
+            "Inflammatory bowel disease",
+            "Alzheimer's disease and other dementias",
+            "Parkinson's disease",
+            "Alcohol use disorders",
+            "Diabetes mellitus",
+            "Chronic kidney disease",
+            "Rheumatoid arthritis",
+            "Maternal disorders",
+            "Neonatal disorders",
+            "Self-harm",
+            "Interpersonal violence",
+            "HIV/AIDS",
+            "Tuberculosis",
+            "Dengue",
+            "Protein-energy malnutrition"
+        ]
     year = 2021
     DEATH_DATA_PROCESSOR(year)
+    M = UPDATE_RESULTS_FOR_OTHER_DISEASES()
     for disease in diseases:
         print(f"Calculating POPSTAT for {disease} disease")
-        POP_STAT_CALCULATION_FOR_OTHER_DISEASES(disease, year).run()
+        disease, country_correlations = POP_STAT_CALCULATION_FOR_OTHER_DISEASES(disease, year).run()
+        M.update_new_dataframe(disease, country_correlations)
+    
+    M.save_new_dataframe()

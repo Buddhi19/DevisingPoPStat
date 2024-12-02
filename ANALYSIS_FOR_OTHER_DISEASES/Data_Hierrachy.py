@@ -22,45 +22,9 @@ def get_all_level_Diseases(level:int):
 
 def filter_diseases_by_level(level:int):
     list_all_diseases = get_all_level_Diseases(level)[0]
-    filtered_data = DEATH_DATA_RESULTS[DEATH_DATA_RESULTS['Cause of Death'].isin(list_all_diseases)]
-
-    DATAFRAME = {
-        'Cause of Death': [],
-        'PoPStat': [],
-        'PoPStat R value' : [],
-        'Reference': [],
-        'HDI': [],
-        'SDI': [],
-        'Median Age': [],
-        'GDP per capita': [],
-        'Population Density': [],
-        'Gini coefficient': [],
-        'UHCI': [],
-        'Life expectancy': []
-    }
-
-    for disease in filtered_data['Cause of Death'].unique():
-        DATAFRAME['Cause of Death'].append(disease)
-        data_per_disease = filtered_data[filtered_data['Cause of Death'] == disease]
-        PoPStat_data = data_per_disease[data_per_disease['Parameter'] == f'POPSTAT_{disease}']['r squared value'].values[0]
-        PoPStat_R_val = data_per_disease[data_per_disease['Parameter'] == f'POPSTAT_{disease}']['R value'].values[0]
-        DATAFRAME['PoPStat'].append(PoPStat_data)
-        DATAFRAME['Reference'].append(
-            data_per_disease[data_per_disease['Parameter'] == f'POPSTAT_{disease}']['reference_country'].values[0]
-        )
-        DATAFRAME['PoPStat R value'].append(PoPStat_R_val)
-        for parameter in [
-            'HDI', 'SDI', 'Median Age', 'GDP per capita', 'Population Density', 'Gini coefficient', 'UHCI', 'Life expectancy'
-        ]:
-            try:
-                DATAFRAME[parameter].append(
-                    data_per_disease[data_per_disease['Parameter'] == parameter]['r squared value'].values[0]
-                )
-            except:
-                DATAFRAME[parameter].append(None)
-
+    DATAFRAME = DEATH_DATA_RESULTS[DEATH_DATA_RESULTS['Disease'].isin(list_all_diseases)]
     DATAFRAME = pd.DataFrame(DATAFRAME)
-    DATAFRAME = DATAFRAME.sort_values(by='PoPStat', ascending=False)
+    DATAFRAME = DATAFRAME.sort_values(by='PoPStat r squared', ascending=False)
     DATAFRAME.to_csv(os.path.join(main_dir, 'RESULTS', 'POPSTAT_OTHER_DISEASES',
                                       f'Correlation_for_level{level}_diseases.csv'), index=False)
 

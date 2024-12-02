@@ -168,8 +168,15 @@ class MORTALITY_DATA:
                     "CI": (0, 0),
                     "reference_country": "None"
                 }
-            data = Plotter.plot(disease, SAVING_PATH_PNG_FOR_YEAR(str(self.year)), "POPSTAT", disease) if self.singleMode else Plotter.plot(
-                disease, SAVING_PATH_PNG_FOR_YEAR(f"{self.start_year}_{self.end_year}"), "POPSTAT", disease
+            """Advanced plotter with countries"""
+            # data = Plotter.plot(disease, SAVING_PATH_PNG_FOR_YEAR(str(self.year)), "POPSTAT", disease) if self.singleMode else Plotter.plot(
+            #     disease, SAVING_PATH_PNG_FOR_YEAR(f"{self.start_year}_{self.end_year}"), "POPSTAT", disease
+            # )
+            # data["reference_country"] = self.reference_country
+            # return data
+            """Simple plotter without countries"""
+            data =  self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_FOR_YEAR(str(self.year)), variable = "POPSTAT") if self.singleMode else self.PLOT(
+                X,Y, disease, saving_path=SAVING_PATH_PNG_FOR_YEAR(f"{self.start_year}_{self.end_year}"), variable = "POPSTAT"
             )
             data["reference_country"] = self.reference_country
             return data
@@ -463,4 +470,4 @@ class MORTALITY_DATA:
 
 if __name__ == "__main__":
     M = MORTALITY_DATA(2021)
-    M.ANALYZER_FOR_SELECTED_DISEASES()
+    M.ANALYZER()

@@ -73,6 +73,18 @@ class MORTALITY_DATA:
             "Life expectancy p-value" : [], 
             "Life expectancy r squared" : []
         }
+
+        self.CLOSEST_COUNTRIES = {
+            "Disease" : [],
+            "reference" : [],
+            "popstat" : [],
+            "r^squared" : [],
+            "p-value" : [],
+            "country 1" : [],
+            "country 2" : [],
+            "country 3" : []
+        }
+
         self.HDI_DATA = HDI_DATA[HDI_DATA['Year'] == int(self.year)]
 
         self.MEDIAN_AGE_DATA = MEDIAN_AGE_DATA[MEDIAN_AGE_DATA['Year'] == int(self.year)]
@@ -127,7 +139,7 @@ class MORTALITY_DATA:
         total_deaths = total_death_rate['val'].values[0]
         return total_deaths
     
-    def create_dataframe_for_diseases(self, disease,plot = True):
+    def create_dataframe_for_diseases(self, disease,plot = True,advanced = False):
         X = []
         Y = []
         reference_country_solver = POP_STAT_CALCULATION_FOR_OTHER_DISEASES(disease, self.year) if self.singleMode else POP_STAT_CALCULATION_FOR_OTHER_DISEASES(
@@ -169,16 +181,29 @@ class MORTALITY_DATA:
                     "reference_country": "None"
                 }
             """Advanced plotter with countries"""
-            # data = Plotter.plot(disease, SAVING_PATH_PNG_FOR_YEAR(str(self.year)), "POPSTAT", disease) if self.singleMode else Plotter.plot(
-            #     disease, SAVING_PATH_PNG_FOR_YEAR(f"{self.start_year}_{self.end_year}"), "POPSTAT", disease
-            # )
-            # data["reference_country"] = self.reference_country
-            # return data
+            if advanced:
+                data = Plotter.plot(disease, SAVING_PATH_PNG_FOR_YEAR(str(self.year)), "POPSTAT", disease) if self.singleMode else Plotter.plot(
+                    disease, SAVING_PATH_PNG_FOR_YEAR(f"{self.start_year}_{self.end_year}"), "POPSTAT", disease
+                )
+                data["reference_country"] = self.reference_country
+                return data
             """Simple plotter without countries"""
-            data =  self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_FOR_YEAR(str(self.year)), variable = "POPSTAT") if self.singleMode else self.PLOT(
+            data =  self.PLOT(X,Y, disease, saving_path=SAVING_PATH_PNG_FOR_YEAR(str(self.year)), variable = "PoPDivergence") if self.singleMode else self.PLOT(
                 X,Y, disease, saving_path=SAVING_PATH_PNG_FOR_YEAR(f"{self.start_year}_{self.end_year}"), variable = "POPSTAT"
             )
             data["reference_country"] = self.reference_country
+
+            self.CLOSEST_COUNTRIES["Disease"].append(disease)
+            self.CLOSEST_COUNTRIES["reference"].append(self.reference_country)
+            self.CLOSEST_COUNTRIES["popstat"].append(data["correalation_coefficient"])
+            self.CLOSEST_COUNTRIES["r^squared"].append(data["correalation_coefficient"]**2)
+            self.CLOSEST_COUNTRIES["p-value"].append(data["p_value"])
+            X_sorted = sorted(X)
+            self.CLOSEST_COUNTRIES["country 1"].append(POPSTAT_REVERSE[X_sorted[1]])
+            self.CLOSEST_COUNTRIES["country 2"].append(POPSTAT_REVERSE[X_sorted[2]])
+            self.CLOSEST_COUNTRIES["country 3"].append(POPSTAT_REVERSE[X_sorted[3]])
+
+
             return data
         else:
             return X,Y
@@ -239,9 +264,9 @@ class MORTALITY_DATA:
         else:
             return X,Y
 
-    def run(self, disease):
+    def run(self, disease, advanced = False):
         self.filter_death_data(disease)
-        POPSTAT_data = self.create_dataframe_for_diseases(disease)
+        POPSTAT_data = self.create_dataframe_for_diseases(disease, advanced = advanced)
         SDI_data = self.create_dataframe_for_diseases_SDI(disease)
         HDI_data = self.create_dataframe_for_diseases_and_plot(
             disease = disease,
@@ -318,8 +343,8 @@ class MORTALITY_DATA:
         if len(X) < 2 or len(Y) < 2:
             return self.DUMMY
         plt.scatter(X, Y)
-        plt.xlabel(f"{variable}")
-        plt.ylabel(f"{title} Deaths/Log")
+        plt.xlabel(f"{variable}", fontsize=18)
+        plt.ylabel(f"Deaths per Million/log", fontsize=18)
 
         correalation_coefficient, p_value = stats.pearsonr(X, Y)
         r_squared = correalation_coefficient ** 2
@@ -338,11 +363,21 @@ class MORTALITY_DATA:
 
         z = np.polyfit(X, Y, 1)
         p = np.poly1d(z)
-        plt.plot(X, p(X), "r--")
+        plt.plot(X, p(X), "r")
 
-        plt.text(0.75, 0.95, f'R² = {r_squared:.3f}',
-                        transform=plt.gca().transAxes, verticalalignment='top', fontsize = 'large')
+        LABEL_ON_PLOT = False
+        if LABEL_ON_PLOT:
+            if variable == "POPSTAT":
+                plt.text(0.5, 0.95, f'PoPStat = {correalation_coefficient:.3f}({self.reference_country},<0.001)',
+                            transform=plt.gca().transAxes, verticalalignment='top')
+            else:
+                plt.text(0.75, 0.95, f'r-value = {correalation_coefficient:.3f}',
+                                transform=plt.gca().transAxes, verticalalignment='top')
         title = title.replace("/", "")
+        # remove background
+        plt.gcf().patch.set_visible(False)
+        plt.gca().set_facecolor('none')
+        
         plt.savefig(os.path.join(saving_path, f'{title}_deaths.png'))
         plt.close()
 
@@ -355,17 +390,17 @@ class MORTALITY_DATA:
             "CI": (lo, hi)
         }
 
-    def ANALYZER(self):
+    def ANALYZER(self, advanced = False):
         causes = self.DEATH_DATA['cause_name'].unique()
         for disease in causes:
-            self.run(disease)
+            self.run(disease,advanced=advanced)
         self.CORR_COEFFICIENT = pd.DataFrame(self.CORR_COEFFICIENT)
         SAVING_PATH_CSV = SAVING_PATH_CSV_FOR_YEAR(str(self.year)) if self.singleMode else SAVING_PATH_CSV_FOR_YEAR(f"{self.start_year}_{self.end_year}")
         self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, f"Correlation_Coefficient_custom.csv"))
 
     def ANALYZER_FOR_SELECTED_DISEASES(self):
         diseases = [
-            "Ischemic heart disease",
+            "Ischemic heart disease"
             "Stroke",
             "Pulmonary Arterial Hypertension",
             "Chronic obstructive pulmonary disease",
@@ -394,7 +429,6 @@ class MORTALITY_DATA:
         ]
         for disease in diseases:
             self.run(disease)
-        # remove other metrics columns
         self.CORR_COEFFICIENT = {
             v: self.CORR_COEFFICIENT[v] for v in self.CORR_COEFFICIENT if v in ["Disease", "PoPStat r", "PoPStat CI", "PoPStat p-value", "PoPStat reference country", "PoPStat r squared"]
         }
@@ -402,6 +436,9 @@ class MORTALITY_DATA:
         self.CORR_COEFFICIENT.to_csv(os.path.join(SAVING_PATH_CSV, f"Correlation_Coefficient_selected.csv"), index = False)
 
     def save_plot_data(self):
+        """
+        Data for Pop-pyramid UI
+        """
         for disease in self.DEATH_DATA['cause_name'].unique():
             self.filter_death_data(disease)
             X, Y = self.create_dataframe_for_diseases(disease, plot = False)
@@ -466,6 +503,9 @@ class MORTALITY_DATA:
 
         pyramids = PLOT_POPULATION_DATA()
         pyramids.generate_all_pyramids(FOR_UI_PYRAMIDS_PATH_FOR_YEAR(str(self.year)) if self.singleMode else FOR_UI_PYRAMIDS_PATH_FOR_YEAR(f"{self.start_year}_{self.end_year}"))
+
+
+
 
 
 if __name__ == "__main__":

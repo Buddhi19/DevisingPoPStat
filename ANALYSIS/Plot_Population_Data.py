@@ -84,10 +84,13 @@ class PLOT_POPULATION_DATA:
 
         ax.get_yaxis().set_visible(False)
         ax.get_xaxis().set_visible(False)
+        # remove background
+        ax.patch.set_visible(False)
         
         plt.tight_layout()
         file_name = file_name.split('.')[0]+'.png'
         plt.savefig(os.path.join(saving_path, file_name))
+        print(os.path.join(saving_path, file_name))
         plt.close()
         print("Done plotting POPULATION PYRAMID for {}".format(file_name))
 

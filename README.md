@@ -1,7 +1,36 @@
 # Devising PoPStat: A metric bridging population pyramids with global disease mortality
 
 ## Abstract
-Understanding the relationship between population dynamics and disease-specific mortality is central to evidence-based health policy. This study introduces two novel metrics, PoPDivergence and PoPStat, one to quantify the difference between population pyramids and the other to assess the strength and nature of their association with the mortality of a given disease. PoPDivergence, based on Kullback-Leibler divergence, measures deviations between a country’s population pyramid and a reference pyramid. PoPStat is the correlation between these deviations and the log form of disease-specific mortality rates. The reference population is selected by a brute-force optimization that maximizes this correlation.  Utilizing mortality data from the Global Burden of Disease 2021 and population statistics from the United Nations, we applied these metrics to 371 diseases across 204 countries. Results reveal that PoPStat outperforms traditional indicators such as median age, GDP per capita, and Human Development Index in explaining the mortality of most diseases. Noncommunicable diseases (NCDs) like neurological disorders and cancers, communicable diseases (CDs) like neglected tropical diseases, and maternal and neonatal diseases were tightly bound to the underlying demographic attributes whereas NCDs like diabetes, CDs like respiratory infections and injuries including self-harm and interpersonal violence were weakly associated with population pyramid shapes. Notably, except for diabetes, the NCD mortality burden was shared by constrictive population pyramids, while mortality of communicable diseases, maternal and neonatal causes and injuries were largely borne by expansive pyramids. Therefore, PoPStat provides insights into demographic determinants of health and empirical support for models on epidemiological transition. By condensing the multi-dimensional population pyramid to a scalar variable, PoPDivergence allows us to examine the relationship of any variable of interest with the underlying population structure. These metrics have the potential to advance future global health and population research.
+
+**Background** Traditional demographic indicators offer a limited view of a country’s population structure and may not
+capture demographic influences on mortality patterns comprehensively. We aimed to bridge this gap by developing
+novel scalar metrics that condense the information in population pyramids and assess their association with disease
+specific mortality.
+
+
+**Methods** Country specific population pyramids were constructed using the United Nations World Population Prospects
+2024, while mortality data for 371 diseases across 180 countries were extracted from the Global Burden of Disease
+Study 2021. We then developed two metrics: PoPDivergence, which quantifies the difference between a country’s
+population pyramid and an optimized reference pyramid using Kullback Leibler divergence, and PoPStat, which is the
+correlation between PoPDivergence and cause specific mortality rates.
+
+
+**Findings** Non communicable diseases (NCDs) showed a strong PoPStat of –0.84 (optimized reference: Japan, p<0.001)
+with mortality concentrated to constrictive pyramids. Communicable, maternal, neonatal, and nutritional diseases
+had a moderate PoPStat of 0.50 (Singapore, p<0.001) with mortality linked to expansive pyramids. Injuries exhibited
+a weak PoPStat (0.291, Singapore, < 0.001). In more granular analyses, NCDs like neurological disorders and
+neoplasms, communicable diseases (CDs) like neglected tropical diseases, and other infections showed a strong PoPStat.
+Nevertheless, NCDs like diabetes, cirrhosis, and other chronic liver diseases, CDs like respiratory infections and
+tuberculosis carried a weak PoPStat indicating minimal influence of population pyramid on their mortality.
+Interpretations This study, its devised metrics, demonstrates the degree to which the mortality of different diseases
+is bound to the underlying population structure and reveals what type of population pyramids will carry the highest
+mortality attributed to those diseases.
+
+
+**Funding** This study received no external funding.
+
+
+**Keywords** Population Pyramids, Demographic Transition, Epidemiology, PopDivergence, PoPStat
 
 ## [Find Our Paper Here](https://arxiv.org/abs/2501.11514)
 
@@ -38,7 +67,7 @@ The following datasets are required for analysis. Download them and place them i
 - 🏙️ [**Population Density**](https://ourworldindata.org/grapher/population-density?tab=table)
 - ⚰️ [**Mortality Data**](https://vizhub.healthdata.org/gbd-results/)
 
-Alternatively, download the pre-structured data folder from [Google Drive](https://drive.google.com/drive/folders/1-0MWgPvg8C7oSzcWMlH5UEoBzkjJ4G5Y?usp=sharing).
+Alternatively, download the pre-structured data folder from [Google Drive](https://drive.google.com/drive/folders/1w31NAs-HzlxPql89kmXfEh3liHzjt0S1?usp=sharing).
 
 ---
 
